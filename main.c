@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
         //TODO zkontrolovat číslo erroru
         return INTERNAL_ERROR;
     }
-
+    //TODO ošetření vracené hodnoty
     run_parser(source_code);
 
     fclose(source_code);
