@@ -7,4 +7,4 @@
 #include <stdio.h>
 #include "token.h"
 
-Token get_token(FILE *source_code);
+struct tToken get_token(FILE *source_code);

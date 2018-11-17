@@ -16,4 +16,4 @@ typedef struct {
     tDLElemPtr First;
     tDLElemPtr Act;
     tDLElemPtr Last;
-} tDLList;
+} tToken_list;
