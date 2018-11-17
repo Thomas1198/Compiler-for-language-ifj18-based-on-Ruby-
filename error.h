@@ -5,6 +5,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 enum ERROR_CODE {
     SCANNER_ERROR = 1,         // Lexical analysis error
