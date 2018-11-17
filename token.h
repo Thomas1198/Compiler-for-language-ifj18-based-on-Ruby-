@@ -18,3 +18,4 @@ typedef struct {
     enum data_type;                 /// Data type (int,char...)
     enum set_type;                  /// To which set token belogs (sign, variable...)
 } Token;
+
