@@ -20,6 +20,5 @@ enum ERROR_CODE {
  * @brief Prints error message with coresponding error code.
  * @param err_code error number
  * @param msg Message to print.
- * @param ... Any other parameter (adding functionality of printf)
  */
 void ErrorPrint(enum ERROR_CODE err_code, const char *msg);
