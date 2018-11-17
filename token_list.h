@@ -17,3 +17,5 @@ typedef struct {
     tDLElemPtr Act;
     tDLElemPtr Last;
 } tToken_list;
+
+bool add_to_token_list(tToken_list *token_list,struct tToken token);
