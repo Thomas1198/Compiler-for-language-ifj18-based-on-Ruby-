@@ -15,7 +15,7 @@ void DLInitList (tDList *L) {
 void DLDisposeList (tDList *L) {
     while (L->First != NULL) {
         tDLElemPtr tmp = L->First;
-        L->First = L->First->rptr;  //presmerovani zacatku na prvek napravo
+        L->First = L->First->rptr;
         free(tmp);
     }
 
@@ -34,7 +34,7 @@ void DLInsertFirst (tDList *L, struct tToken val) {
         newElement->rptr = L->First;
 
         if (L->First == NULL)
-            L->Last = newElement; //jednina polozka => je zaroven i konec
+            L->Last = newElement;
         else
             L->First->lptr = newElement;
 
@@ -52,7 +52,7 @@ void DLInsertLast(tDList *L, struct tToken val) {
         newElement->rptr = NULL;
 
         if (L->First == NULL)
-            L->First = newElement;  //jednina polozka => je zaroven i zacatek
+            L->First = newElement;
         else
             L->Last->rptr = newElement;
 
