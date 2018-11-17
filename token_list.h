@@ -19,7 +19,7 @@ typedef struct{
     tDLElemPtr Last;
 } tDList;
 
-//TODO: upravit
+//TODO: upravit komentare
 /*
 ** Provede inicializaci seznamu L před jeho prvním použitím (tzn. žádná
 ** z následujících funkcí nebude volána nad neinicializovaným seznamem).
@@ -41,14 +41,14 @@ void DLDisposeList (tDList *L);
 ** V případě, že není dostatek paměti pro nový prvek při operaci malloc,
 ** volá funkci DLError().
 **/
-void DLInsertFirst (tDList *L, struct tToken var);
+void DLInsertFirst (tDList *L, struct tToken val);
 
 /*
 ** Vloží nový prvek na konec seznamu L (symetrická operace k DLInsertFirst).
 ** V případě, že není dostatek paměti pro nový prvek při operaci malloc,
 ** volá funkci DLError().
 **/
-void DLInsertLast(tDList *L, struct tToken var);
+void DLInsertLast(tDList *L, struct tToken val);
 
 /*
 ** Nastaví aktivitu na první prvek seznamu L.
