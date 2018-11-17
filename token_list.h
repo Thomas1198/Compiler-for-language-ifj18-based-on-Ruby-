@@ -62,7 +62,7 @@ void DLFirst (tDList *L);
 ** Funkci implementujte jako jediný příkaz (nepočítáme-li return),
 ** aniž byste testovali, zda je seznam L prázdný.
 **/
-void DLLast (tDList *L)
+void DLLast (tDList *L);
 
 /*
 ** Prostřednictvím parametru val vrátí hodnotu prvního prvku seznamu L.
