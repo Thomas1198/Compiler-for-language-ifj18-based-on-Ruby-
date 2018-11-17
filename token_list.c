@@ -6,13 +6,13 @@
 
 #include "token_list.h"
 
-void DLInitList (tDLList *L) {
+void DLInitList (tDList *L) {
     L->First = NULL;
     L->Act = NULL;
     L->Last = NULL;
 }
 
-void DLDisposeList (tDLList *L) {
+void DLDisposeList (tDList *L) {
     while (L->First != NULL) {
         tDLElemPtr tmp = L->First;
         L->First = L->First->rptr;  //presmerovani zacatku na prvek napravo
@@ -23,12 +23,13 @@ void DLDisposeList (tDLList *L) {
     L->Last = NULL;
 }
 
-void DLInsertFirst (tDLList *L, int val) {
+void DLInsertFirst (tDList *L, struct tToken val) {
     tDLElemPtr newElement = malloc(sizeof(struct tDLElem));
     if (newElement == NULL)
-        DLError();
+        ErrorPrint(INTERNAL_ERROR,"Error in token_list.c");
+
     else {
-        newElement->data = val;
+        newElement->token = val;
         newElement->lptr = NULL;
         newElement->rptr = L->First;
 
@@ -41,12 +42,12 @@ void DLInsertFirst (tDLList *L, int val) {
     }
 }
 
-void DLInsertLast(tDLList *L, int val) {
+void DLInsertLast(tDList *L, struct tToken val) {
     tDLElemPtr newElement = malloc(sizeof(struct tDLElem));
     if (newElement == NULL)
-        DLError();
+        ErrorPrint(INTERNAL_ERROR,"Error in token_list.c");
     else {
-        newElement->data = val;
+        newElement->token = val;
         newElement->lptr = L->Last;
         newElement->rptr = NULL;
 
@@ -59,29 +60,29 @@ void DLInsertLast(tDLList *L, int val) {
     }
 }
 
-void DLFirst (tDLList *L) {
+void DLFirst (tDList *L) {
     L->Act = L->First;
 }
 
-void DLLast (tDLList *L) {
+void DLLast (tDList *L) {
     L->Act = L->Last;
 }
 
-void DLCopyFirst (tDLList *L, int *val) {
+void DLCopyFirst (tDList *L, struct tToken *val) {
     if (L->First != NULL)
-        *val = L->First->data;
+        *val = L->First->token;
     else
-        DLError();
+        ErrorPrint(INTERNAL_ERROR,"Error in token_list.c");
 }
 
-void DLCopyLast (tDLList *L, int *val) {
+void DLCopyLast (tDList *L, struct tToken *val) {
     if (L->First != NULL)
-        *val = L->Last->data;
+        *val = L->Last->token;
     else
-        DLError();
+        ErrorPrint(INTERNAL_ERROR,"Error in token_list.c");
 }
 
-void DLDeleteFirst (tDLList *L) {
+void DLDeleteFirst (tDList *L) {
 
     if(L->First != NULL) {
         if (L->First == L->Act)
@@ -102,7 +103,7 @@ void DLDeleteFirst (tDLList *L) {
     }
 }
 
-void DLDeleteLast (tDLList *L) {
+void DLDeleteLast (tDList *L) {
     if(L->First != NULL) {
         if (L->Last == L->Act)
             L->Act = NULL;
@@ -122,7 +123,7 @@ void DLDeleteLast (tDLList *L) {
     }
 }
 
-void DLPostDelete (tDLList *L) {
+void DLPostDelete (tDList *L) {
     if (L->First != NULL && L->Act != NULL && L->Act != L->Last) {
         tDLElemPtr tmp = L->Act->rptr;
         L->Act->rptr = tmp->rptr;
@@ -135,7 +136,7 @@ void DLPostDelete (tDLList *L) {
     }
 }
 
-void DLPreDelete (tDLList *L) {
+void DLPreDelete (tDList *L) {
     if (L->First != NULL && L->Act != NULL && L->Act != L->First) {
         tDLElemPtr tmp = L->Act->lptr;
         L->Act->lptr = tmp->lptr;
@@ -148,13 +149,13 @@ void DLPreDelete (tDLList *L) {
     }
 }
 
-void DLPostInsert (tDLList *L, int val) {
+void DLPostInsert (tDList *L, struct tToken val) {
     if (L->Act != NULL) {
         tDLElemPtr newElement = malloc(sizeof(struct tDLElem));
         if (newElement == NULL)
-            DLError();
+            ErrorPrint(INTERNAL_ERROR,"Error in token_list.c");
         else {
-            newElement->data = val;
+            newElement->token = val;
             newElement->lptr = L->Act;
             newElement->rptr = L->Act->rptr;
 
@@ -168,13 +169,13 @@ void DLPostInsert (tDLList *L, int val) {
     }
 }
 
-void DLPreInsert (tDLList *L, int val) {
+void DLPreInsert (tDList *L, struct tToken val) {
     if (L->Act != NULL) {
         tDLElemPtr newElement = malloc(sizeof(struct tDLElem));
         if (newElement == NULL)
-            DLError();
+            ErrorPrint(INTERNAL_ERROR,"Error in token_list.c");
         else {
-            newElement->data = val;
+            newElement->token = val;
             newElement->lptr = L->Act->lptr;
             newElement->rptr = L->Act;
 
@@ -188,29 +189,29 @@ void DLPreInsert (tDLList *L, int val) {
     }
 }
 
-void DLCopy (tDLList *L, int *val) {
+void DLCopy (tDList *L, struct tToken *val) {
     if (L->Act != NULL)
-        *val = L->Act->data;
+        *val = L->Act->token;
     else
-        DLError();
+        ErrorPrint(INTERNAL_ERROR,"Error in token_list.c");
 }
 
-void DLActualize (tDLList *L, int val) {
+void DLActualize (tDList *L, struct tToken val) {
     if (L->Act != NULL)
-        L->Act->data = val;
+        L->Act->token = val;
 }
 
-void DLSucc (tDLList *L) {
+void DLSucc (tDList *L) {
     if (L->Act != NULL)
         L->Act = L->Act->rptr;
 }
 
 
-void DLPred (tDLList *L) {
+void DLPred (tDList *L) {
     if (L->Act != NULL)
         L->Act = L->Act->lptr;
 }
 
-int DLActive (tDLList *L) {
+int DLActive (tDList *L) {
     return L->Act != NULL;
 }
