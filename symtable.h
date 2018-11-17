@@ -14,7 +14,7 @@
  * @struct Symbol table item representation
  */
 typedef struct htab_listitem {
-    Dynamic_string *key; /// identifier
-    Token data; /// data
+    Dynamic_string *key;     /// identifier
+    struct tToken data;      /// data
     struct htab_listitem *next; /// pointer to next item
 } Titem;
