@@ -4,6 +4,10 @@
  * @brief
  */
 
+#include <stdbool.h>
+
+#include "dynamic_string.h"
+
 /**
  * @struct Token representation
  */

@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(ifj C)
 
 set(CMAKE_CXX_STANDARD 99)
 
-add_executable(ifj main.c error.c error.h scanner.c scanner.h symtable.c symtable.h parser.c parser.h parser.c)
+add_executable(ifj main.c error.c error.h scanner.c scanner.h symtable.c symtable.h parser.c parser.h parser.c token.c token.h)
