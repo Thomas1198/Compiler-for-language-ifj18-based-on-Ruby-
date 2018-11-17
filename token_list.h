@@ -8,7 +8,7 @@
 #include "error.h"
 
 typedef struct tDLElem {
-    struct tToken var token;
+    struct tToken token;
     struct tDLElem *lptr;
     struct tDLElem *rptr;
 } *tDLElemPtr;
@@ -19,6 +19,7 @@ typedef struct{
     tDLElemPtr Last;
 } tDList;
 
+//TODO: upravit
 /*
 ** Provede inicializaci seznamu L před jeho prvním použitím (tzn. žádná
 ** z následujících funkcí nebude volána nad neinicializovaným seznamem).
@@ -40,14 +41,14 @@ void DLDisposeList (tDList *L);
 ** V případě, že není dostatek paměti pro nový prvek při operaci malloc,
 ** volá funkci DLError().
 **/
-void DLInsertFirst (tDList *L, struct tToken var var);
+void DLInsertFirst (tDList *L, struct tToken var);
 
 /*
 ** Vloží nový prvek na konec seznamu L (symetrická operace k DLInsertFirst).
 ** V případě, že není dostatek paměti pro nový prvek při operaci malloc,
 ** volá funkci DLError().
 **/
-void DLInsertLast(tDList *L, struct tToken var var);
+void DLInsertLast(tDList *L, struct tToken var);
 
 /*
 ** Nastaví aktivitu na první prvek seznamu L.
@@ -67,13 +68,13 @@ void DLLast (tDList *L)
 ** Prostřednictvím parametru val vrátí hodnotu prvního prvku seznamu L.
 ** Pokud je seznam L prázdný, volá funkci DLError().
 **/
-void DLCopyFirst (tDList *L, int *val);
+void DLCopyFirst (tDList *L, struct tToken *val);
 
 /*
 ** Prostřednictvím parametru val vrátí hodnotu posledního prvku seznamu L.
 ** Pokud je seznam L prázdný, volá funkci DLError().
 **/
-void DLCopyLast (tDList *L, int *val);
+void DLCopyLast (tDList *L, struct tToken *val);
 
 /*
 ** Zruší první prvek seznamu L. Pokud byl první prvek aktivní, aktivita
@@ -107,7 +108,7 @@ void DLPreDelete (tDList *L);
 ** V případě, že není dostatek paměti pro nový prvek při operaci malloc,
 ** volá funkci DLError().
 **/
-void DLPostInsert (tDList *L, struct tToken var);
+void DLPostInsert (tDList *L, struct tToken val);
 
 /*
 ** Vloží prvek před aktivní prvek seznamu L.
@@ -115,19 +116,19 @@ void DLPostInsert (tDList *L, struct tToken var);
 ** V případě, že není dostatek paměti pro nový prvek při operaci malloc,
 ** volá funkci DLError().
 **/
-void DLPreInsert (tDList *L, struct tToken var);
+void DLPreInsert (tDList *L, struct tToken val);
 
 /*
 ** Prostřednictvím parametru val vrátí hodnotu aktivního prvku seznamu L.
 ** Pokud seznam L není aktivní, volá funkci DLError ().
 **/
-void DLCopy (tDList *L, int *val);
+void DLCopy (tDList *L, struct tToken *val);
 
 /*
 ** Přepíše obsah aktivního prvku seznamu L.
 ** Pokud seznam L není aktivní, nedělá nic.
 **/
-void DLActualize (tDList *L, struct tToken var);
+void DLActualize (tDList *L, struct tToken val);
 
 /*
 ** Posune aktivitu na následující prvek seznamu L.
