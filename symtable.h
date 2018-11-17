@@ -15,6 +15,6 @@
  */
 typedef struct htab_listitem {
     Dynamic_string *key;     /// identifier
-    Token data;             /// data
+    struct tToken data;      /// data
     struct htab_listitem *next; /// pointer to next item
 } Titem;
