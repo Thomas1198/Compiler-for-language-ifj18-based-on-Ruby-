@@ -59,11 +59,11 @@ void getToken(tToken *token)
 			}
 			else if (c == '_' || isalpha(c))
 			{
-				//current_state = ;
+				current_state = KEYWORD;
 			}
 			else if (isdigit(c))
 			{
-				//current_state = EOL;
+				current_state = NUMBER;
 			}
 			else if (c == '<')
 			{
@@ -75,11 +75,11 @@ void getToken(tToken *token)
 			}
 			else if (c == '=')
 			{
-				//current_state = ;
+				token->set_type_of_token = CHAR_ASSIGN;
 			}
 			else if (isspace(c))
 			{
-				current_state = EOL;
+				current_state = START;
 			}
 			
 			else
@@ -97,6 +97,77 @@ void getToken(tToken *token)
 				ungetc(c, source_file);
 				token->set_type_of_token = CHAR_EOF;
 
+			case (NUMBER):
+				if (isdigit(c))
+				{
+					if ()// ALLOC CHECK
+
+				}
+				else if (c == '.')
+				{
+					state = NUMBER_DEC;
+				}
+				else if (tolower(c) == 'e')
+				{
+					state = NUMBER_EXP;
+				}
+				else
+				{
+					ungetc(c, source_file);
+					//process_integer
+				}
+
+				break;
+
+			case (NUMBER_DEC):
+			
+				if (isdigit(c))
+				{
+					state = NUMBER_DOUBLE;
+				}
+				else //clean
+
+				break;
+
+			case (NUMBER_DOUBLE):
+			
+				if (isdigit(c))
+				{
+					//addto string
+
+				}
+
+				else if (tolower(c) == 'e')
+				{
+					state = NUMBER_EXP;
+					//add
+				}
+
+				else
+				{
+					ungetc(c, source_file);
+					//process_decimal
+				}
+				break;
+
+				case (NUMBER_EXP):
+					if (isdigit(c))
+					{
+						state = NUMBER_EXP_DONE;
+						//add;
+					}
+					else if (c == '-' || c == '+')
+					{
+						state = NUMBER_EXP_SIGN;
+						//add;
+					}
+					else //return free;
+
+					break;
+
+
+			}
+			}
 		
 	}
 
