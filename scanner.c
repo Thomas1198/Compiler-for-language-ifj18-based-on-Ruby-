@@ -1,6 +1,6 @@
 /**
- * @file scanner.h
- * @author Tomas Dorda (xdorda00), Jakub Konetzny ()
+ * @file scanner.c
+ * @author Patrik Strnad (xstrna11)
  * @brief Error codes constants and function to print errors.
  */
 
@@ -15,23 +15,27 @@
 
 //end of includes
 
-Dynamic_string *contentstring;
+Dynamic_string *content_string;
 FILE *source_file;
 
 void getToken(tToken *token)
 {
-	if (dynamic_string == NULL || source_file == NULL)
+	if (content_string == NULL || source_file == NULL)
 	{
             ErrorPrint(1,"");
 	}
 
 
-	token->content_string = dynamic_string;
-
+	token->content_string = content_string;
 
 	//Setuji STATE na DEFAULT
 	SCANNER_STATE current_state = START;
 	token->set_type_of_token = EMPTY;
+
+	if (!dynamic_string_init(content_string))
+	{
+		ErrorPrint(1,"");
+	}
 
 	//Declaration of the scanner char
 	char c = 0;
@@ -59,10 +63,20 @@ void getToken(tToken *token)
 			}
 			else if (c == '_' || isalpha(c))
 			{
+				if (!dynamic_string_add_char(str, (char) tolower(c)))
+				{
+					dynamic_string_free(str);
+					return;
+				}
 				current_state = KEYWORD;
 			}
 			else if (isdigit(c))
 			{
+				if (!dynamic_string_add_char(str, c))
+				{
+					dynamic_string_free(str);
+					ErrorPrint(1,"");
+				}
 				current_state = NUMBER;
 			}
 			else if (c == '<')
@@ -76,12 +90,57 @@ void getToken(tToken *token)
 			else if (c == '=')
 			{
 				token->set_type_of_token = CHAR_ASSIGN;
+				dynamic_string_free(str);
+				return;
 			}
 			else if (isspace(c))
 			{
 				current_state = START;
 			}
-			
+
+			else if (c == '+')
+			{
+				token->set_type_of_token = CHAR_OPERATOR_PLUS;
+				dynamic_string_free(str);
+				return;
+			}
+			else if (c == '-')
+			{
+				token->set_type_of_token = CHAR_OPERATOR_MINUS;
+				dynamic_string_free(str);
+				return;
+			}
+			else if (c == '*')
+			{
+				token->set_type_of_token = CHAR_OPERATOR_MUL;
+				dynamic_string_free(str);
+				return;
+			}
+			else if (c == ',')
+			{
+				token->set_type_of_token = CHAR_COMMA;
+				dynamic_string_free(str);
+				return;
+			}
+			else if (c == '(')
+			{
+				token->set_type_of_token = CHAR_LEFT_BRACKET;
+				dynamic_string_free(str);
+				return;
+			}
+			else if (c == ')')
+			{
+				token->set_type_of_token = CHAR_RIGHT_BRACKET;
+				dynamic_string_free(str);
+				return;
+			}
+			else if (c == ';')
+			{
+				token->set_type_of_token = CHAR_SEMICOLON;
+				dynamic_string_free(str);
+				return;
+			}
+
 			else
 			{
 			
@@ -100,7 +159,11 @@ void getToken(tToken *token)
 			case (NUMBER):
 				if (isdigit(c))
 				{
-					if ()// ALLOC CHECK
+					if (!dynamic_string_add_char(str, c))
+					{
+						dynamic_string_free(str);
+						ErrorPrint(1,"");
+					}
 
 				}
 				else if (c == '.')
@@ -125,7 +188,7 @@ void getToken(tToken *token)
 				{
 					state = NUMBER_DOUBLE;
 				}
-				else //clean
+				else dynamic_string_free(str);
 
 				break;
 
@@ -133,14 +196,22 @@ void getToken(tToken *token)
 			
 				if (isdigit(c))
 				{
-					//addto string
+					if (!dynamic_string_add_char(str, c))
+					{
+						dynamic_string_free(str);
+						ErrorPrint(1,"");
+					}
 
 				}
 
 				else if (tolower(c) == 'e')
 				{
 					state = NUMBER_EXP;
-					//add
+					if (!dynamic_string_add_char(str, c))
+					{
+						dynamic_string_free(str);
+						ErrorPrint(1,"");
+					}
 				}
 
 				else
@@ -154,16 +225,39 @@ void getToken(tToken *token)
 					if (isdigit(c))
 					{
 						state = NUMBER_EXP_DONE;
-						//add;
+						if (!dynamic_string_add_char(str, c))
+					{
+						dynamic_string_free(str);
+						ErrorPrint(1,"");
+					}
 					}
 					else if (c == '-' || c == '+')
 					{
 						state = NUMBER_EXP_SIGN;
-						//add;
+						if (!dynamic_string_add_char(str, c))
+					{
+						dynamic_string_free(str);
+						ErrorPrint(1,"");
 					}
-					else //return free;
+					}
+					else dynamic_string_free(str);
 
 					break;
+
+				case (SCANNER_STATE_BACKSLASH):
+				if (c == '\'')
+				{
+					state = COMMENTARY;
+				}
+				else
+				{
+					ungetc(c, source_file);
+					token->set_type_of_token = CHAR_OPERATOR_DIV;
+					dynamic_string_free(str);
+					return;
+				}
+
+				break;
 
 
 			}
