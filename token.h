@@ -64,6 +64,7 @@ typedef enum {
     KEY_WORD_FOLLOWED_BY_CONDITION,
     KEY_WORD_NIL,
     KEY_WORD_DEF,
+	EMPTY
 
 
 
