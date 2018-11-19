@@ -61,7 +61,7 @@ typedef enum {
     CHAR_EOL,
     IDENTIFIER_NAME,
     CHAR_LEFT_BRACKET,
-    CHAR_RIGTH_BRACKET,
+    CHAR_RIGHT_BRACKET,
     LITERAL_NAME,
     KEY_WORD_FOLLOWED_BY_EOL,
     KEY_WORD_FOLLOWED_BY_CONDITION,
@@ -85,10 +85,10 @@ typedef enum {
 
 typedef struct tToken {
     Dynamic_string *content_string; ///identifier (key)
-    union value;                    /// Data type of symbol / return type of function
-    bool defined;                    /// Defined if current function was defined
-    data_type data_type_of_token;            /// Data type (int,char...)
-    set_type set_type_of_token;                  /// To which set token belogs (sign, variable...)
+    union value_union value;
+    bool defined;
+    enum data_type data_type_of_token;            /// Data type (int,char...)
+    enum set_type set_type_of_token;                  /// Which set token belongs to (sign, variable...)
 };
 
 

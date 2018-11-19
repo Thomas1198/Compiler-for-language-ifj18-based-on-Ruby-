@@ -16,8 +16,7 @@
  * @struct Symbol table item representation
  */
 typedef struct htab_item {
-    Dynamic_string *key;     /// identifier
-    struct tToken data;      /// data
+    struct tToken *data;      /// pointer to token
     struct htab_item *next; /// pointer to next item
 } Titem;
 
@@ -34,13 +33,12 @@ typedef Titem* Symtable[MAX_TABLE_SIZE];
 void symtable_create(Symtable *tab);
 
 /**
- * @brief Appends item to table
+ * @brief Inserts item to table
  *
  * @param table pointer to table.
- * @param key function identifier or variable
- * @return NULL if error or item is existing else returns pointer to added item.
+ * @param token token
  */
-struct tToken *symtable_insert(Symtable *table, const char *key);
+void *symtable_insert(Symtable *table, struct tToken token);
 
 /**
  * @brief finds symbol and returns its data
@@ -49,7 +47,7 @@ struct tToken *symtable_insert(Symtable *table, const char *key);
  * @param key function identifier or variable
  * @return NULL if not existing symbol, pointer to data of symbol if successfully found.
  */
-struct tToken *symtable_get(Symtable *table, const char *key);
+struct tToken *symtable_get(Symtable *table, Dynamic_string *key);
 
 
 /**
@@ -59,10 +57,10 @@ struct tToken *symtable_get(Symtable *table, const char *key);
  * @param key function identifier or variable
  * @return true if successful, false if unsuccessful.
  */
-bool symtable_remove(Symtable *table, const char *key);
+bool symtable_remove(Symtable *table, Dynamic_string *key);
 
 /**
- * @brief frees resources
+ * @brief destroys table and frees resources
  *
  * @param table pointer to table
  */
