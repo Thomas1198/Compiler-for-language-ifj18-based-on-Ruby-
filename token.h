@@ -87,7 +87,7 @@ typedef struct tToken {
     Dynamic_string *content_string; ///identifier (key)
     union value;                    /// Data type of symbol / return type of function
     bool defined;                    /// Defined if current function was defined
-    enum data_type data_type_of_token;            /// Data type (int,char...)
+    data_type data_type_of_token;            /// Data type (int,char...)
     set_type set_type_of_token;                  /// To which set token belogs (sign, variable...)
 };
 

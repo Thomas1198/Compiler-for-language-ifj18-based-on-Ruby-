@@ -11,3 +11,6 @@ void first_run(tDList *token_list, FILE *source_code);
 
 int parsing(tDList token_list);
 
+int parse_def(tDList *token_list);
+
+int parse_def_arguments(tDList *token_list);
