@@ -1,1 +1,2 @@
 git rm --cached CMakeLists.txt
+git rm --cached .idea
