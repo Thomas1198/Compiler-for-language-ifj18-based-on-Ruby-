@@ -11,13 +11,13 @@
 
 #define DYNAMIC_STRING_LENGTH 8
 
-void dynamic_str_clear(Dynamic_string *s)
+void dynamic_string_clear(Dynamic_string *s)
 {
     s->length = 0;
     s->str[s->length]= '\0';
 }
 
-bool dynamic_str_init(Dynamic_string *s)
+bool dynamic_string_init(Dynamic_string *s)
 {
     if((s->str =(char *) malloc(DYNAMIC_STRING_LENGTH)))
     {
@@ -31,12 +31,12 @@ bool dynamic_str_init(Dynamic_string *s)
     }
 }
 
-void dynamic_str_free(Dynamic_string *s)
+void dynamic_string_free(Dynamic_string *s)
 {
     free(s->str);
 }
 
-bool dynamic_str_add_char(Dynamic_string *s, char c)
+bool dynamic_string_add_char(Dynamic_string *s, char c)
 {
     if ((s->str +1) >= s->alloc_size)
     {
@@ -54,7 +54,7 @@ bool dynamic_str_add_char(Dynamic_string *s, char c)
     s->str[s->length]= '\0';
     return true;
 }
-bool dynamic_str_add_const_str(Dynamic_string *s, const char *const_string)
+bool dynamic_string_add_const_str(Dynamic_string *s, const char *const_string)
 {
     unsigned int const_str_len = (unsigned int) strlen(const_string);
     if ((s->length +const_str_len +1) >= s->alloc_size)
@@ -74,12 +74,12 @@ bool dynamic_str_add_const_str(Dynamic_string *s, const char *const_string)
     s->str[s->length]= '\0';
     return true;
 }
-int dynamic_str_cmp_const_str(Dynamic_string *dynamic_string, const char *const_string)
+int dynamic_string_cmp_const_str(Dynamic_string *dynamic_string, const char *const_string)
 {
     int result=strcmp(dynamic_string->str,const_string);
     return result;
 }
-bool dynamic_str_copy(Dynamic_string *src, Dynamic_string *dest)
+bool dynamic_string_copy(Dynamic_string *src, Dynamic_string *dest)
 {
     unsigned int new_len = src->length;
     if(new_len >= dest->alloc_size)

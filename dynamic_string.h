@@ -23,19 +23,19 @@ typedef struct
  * @param s Pointer to dynamic string
  * @return true if its ok
  */
-bool  dynamic_str_init(Dynamic_string *s);
+bool  dynamic_string_init(Dynamic_string *s);
 
 /**
  * Frees alocated memory
  * @param s Pointer to dynamic string
  */
-void dynamic_str_free(Dynamic_string *s);
+void dynamic_string_free(Dynamic_string *s);
 
 /**
  * Clean dynamic string
  * @param s Pointer to dynamic string
  */
-void dynamic_str_clear(Dynamic_string *s);
+void dynamic_string_clear(Dynamic_string *s);
 
 /**
  * Add char to the end of string
@@ -43,7 +43,7 @@ void dynamic_str_clear(Dynamic_string *s);
  * @param c char to add
  * @return true if its ok
  */
-bool dynamic_str_add_char(Dynamic_string *s, char c);
+bool dynamic_string_add_char(Dynamic_string *s, char c);
 
 /**
  * Add string to the end of string
@@ -51,7 +51,7 @@ bool dynamic_str_add_char(Dynamic_string *s, char c);
  * @param const_string String to add
  * @return true if its ok
  */
-bool dynamic_str_add_const_str(Dynamic_string *s, const char *const_string);
+bool dynamic_string_add_const_str(Dynamic_string *s, const char *const_string);
 
 /**
  * Compare dynamic string with constante string
@@ -59,7 +59,7 @@ bool dynamic_str_add_const_str(Dynamic_string *s, const char *const_string);
  * @param const_string constant string
  * @return 1 if s1 is greater than s2, 0 if itd equal, -1 if its less
  */
-int dynamic_str_cmp_const_str(Dynamic_string *dynamic_string, const char *const_string);
+int dynamic_string_cmp_const_str(Dynamic_string *dynamic_string, const char *const_string);
 
 /**
  * Copy string to destination
@@ -67,6 +67,6 @@ int dynamic_str_cmp_const_str(Dynamic_string *dynamic_string, const char *const_
  * @param dest destination to copy
  * @return True if its ok
  */
-bool dynamic_str_copy(Dynamic_string *src, Dynamic_string *dest);
+bool dynamic_string_copy(Dynamic_string *src, Dynamic_string *dest);
 
 #endif // _DYNAMIC_STRING_H
