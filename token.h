@@ -87,8 +87,8 @@ typedef struct tToken {
     Dynamic_string *content_string; ///identifier (key)
     union value_union value;
     bool defined;
-    enum data_type data_type_of_token;            /// Data type (int,char...)
-    enum set_type set_type_of_token;                  /// Which set token belongs to (sign, variable...)
+    data_type data_type_of_token;            /// Data type (int,char...)
+    set_type set_type_of_token;                  /// Which set token belongs to (sign, variable...)
 };
 
 
