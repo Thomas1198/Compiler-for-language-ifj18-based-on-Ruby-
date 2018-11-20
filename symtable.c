@@ -12,11 +12,10 @@
  * @param str string which is used to calculate hash
  * @return table index.
  */
-static unsigned long hash(Dynamic_string *str) {
-    const char *key = dynamic_string_to_string(str);    //TODO vytvorit tuto funkci
+static unsigned long hash(const char *str) {
     unsigned int h = 0;
     const unsigned char *p;
-    for(p = (const unsigned char*) key; *p != '\0'; p++)
+    for(p = (const unsigned char*) str; *p != '\0'; p++)
         h = 65599*h + *p;
 
     return h % MAX_TABLE_SIZE;
@@ -36,20 +35,20 @@ void symtable_insert(Symtable *table, struct tToken *token ) {
     if (new_item == NULL)
         ErrorPrint(INTERNAL_ERROR,"Neuspesna alokace nove polozky tabulky v symtable.c");
 
-    unsigned long index = hash(token->content_string);
-    new_item->next = table[index];
-    table[index] = new_item;
+    unsigned long index = hash(token->content_string->str);
+    new_item->next = *table[index];  //TODO jak?
+    *table[index] = new_item;
 }
 
 struct tToken *symtable_get(Symtable *table, Dynamic_string *key) {
     if (table == NULL || key == NULL)
         ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky nebo klice v symtable.c");
 
-    unsigned long index = hash(key);
+    unsigned long index = hash(key->str);
 
     for (Titem *tmp = (*table)[index]; tmp != NULL; tmp = tmp->next)
-        if (!dynamic_string_cmp_const_str(tmp->data.content_string, key))
-            return &tmp->data;
+        if (!dynamic_string_cmp_const_str(tmp->data.content_string, key->str))
+            return tmp->data;
 
     return NULL;
 }
@@ -58,10 +57,10 @@ void symtable_remove(Symtable *table, Dynamic_string *key){
     if (table == NULL || key == NULL)
         ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky nebo klice v symtable.c");
 
-    unsigned long index = hash(key);
+    unsigned long index = hash(key->str);
     Titem *previous = (*table)[index];
     for (Titem *tmp = (*table)[index]; tmp != NULL; tmp = tmp->next){
-        if (!dynamic_string_cmp_const_str(tmp->data->content_string, dynamic_string_to_string(key))) {
+        if (!dynamic_string_cmp_const_str(tmp->data->content_string, key->str)) {
             previous->next = tmp->next;
             free(tmp);
             break;

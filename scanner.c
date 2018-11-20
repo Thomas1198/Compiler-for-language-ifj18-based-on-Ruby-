@@ -57,7 +57,7 @@ void getToken(tToken *token)
 			{
 				current_state = BACKSLASH;
 			}
-			else if (c == '\'')
+			else if (c == '#')
 			{
 				current_state = COMMENT_START;
 			}
@@ -89,9 +89,7 @@ void getToken(tToken *token)
 			}
 			else if (c == '=')
 			{
-				token->set_type_of_token = CHAR_ASSIGN;
-				dynamic_string_free(str);
-				return;
+				current_state = EQUALS;
 			}
 			else if (isspace(c))
 			{
@@ -141,11 +139,21 @@ void getToken(tToken *token)
 				return;
 			}
 
+			else if (c == EOF)
+				{
+					token->type = CHAR_EOF;
+					dynamic_string_free(str);
+					return;
+				}
+
 			else
 			{
-			
+				dynamic_string_free(str);
+				return false;
 			}
 			break;
+			
+			//__________________
 
 			case (SCANNER_STATE_EOL):
 				if (isspace(c))
@@ -244,10 +252,10 @@ void getToken(tToken *token)
 
 					break;
 
-				case (SCANNER_STATE_BACKSLASH):
-				if (c == '\'')
+				case (BACKSLASH):
+				if (c == '/')
 				{
-					state = COMMENTARY;
+					state = BACKSLASH;
 				}
 				else
 				{
@@ -259,7 +267,22 @@ void getToken(tToken *token)
 
 				break;
 
+				case (COMMENTARY):
+					if (c == '\n' || c == EOF)
+				{
+					state = START;
+					ungetc(c, source_file);
+				}
+				break;
 
+				case (EQUALS):
+				if (isalpha(c))
+				{
+					if (!dynamic_string_add_char(str, (char) tolower(c)))
+					{
+						//FSEEK VOLE
+					}
+				}
 			}
 			}
 		

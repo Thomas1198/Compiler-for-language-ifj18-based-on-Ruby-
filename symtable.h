@@ -38,7 +38,7 @@ void symtable_create(Symtable *tab);
  * @param table pointer to table.
  * @param token token
  */
-void *symtable_insert(Symtable *table, struct tToken token);
+void symtable_insert(Symtable *table, struct tToken *token);
 
 /**
  * @brief finds symbol and returns its data
@@ -57,7 +57,7 @@ struct tToken *symtable_get(Symtable *table, Dynamic_string *key);
  * @param key function identifier or variable
  * @return true if successful, false if unsuccessful.
  */
-bool symtable_remove(Symtable *table, Dynamic_string *key);
+void symtable_remove(Symtable *table, Dynamic_string *key);
 
 /**
  * @brief destroys table and frees resources
