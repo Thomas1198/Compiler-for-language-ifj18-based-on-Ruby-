@@ -21,7 +21,7 @@ bool dynamic_string_init(Dynamic_string *s)
 {
     if((s->str =(char *) malloc(DYNAMIC_STRING_LENGTH)))
     {
-        dynamic_str_clear(s);
+        dynamic_string_clear(s);
         s->alloc_size=DYNAMIC_STRING_LENGTH;
         return true;
     }
