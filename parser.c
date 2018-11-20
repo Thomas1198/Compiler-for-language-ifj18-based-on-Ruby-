@@ -34,6 +34,7 @@ int parsing(tDList token_list) {
         return 0;
     }
     act = token_list.First;
+    DLFirst(&token_list);
 
     /*typedef enum {
 	CHAR_OPERATOR_PLUS,
@@ -113,7 +114,7 @@ int parse_def(tDList *token_list) {
     check_set_type(token_actual, CHAR_LEFT_BRACKET);
 
     if((err_code=parse_def_arguments(&token_list))!=0){
-        return 2;
+        return err_code;
     }
 
     return check_end_of_line(&token_list) ;
