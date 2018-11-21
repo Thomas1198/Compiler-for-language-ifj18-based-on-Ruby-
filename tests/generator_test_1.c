@@ -7,7 +7,7 @@
  * @author Jan Osolsobe (xosols00)
  */
 
-#include "code_generator.h"
+#include "../code_generator.h"
 
 int main()
 {
