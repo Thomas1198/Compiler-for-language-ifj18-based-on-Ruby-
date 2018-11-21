@@ -7,7 +7,12 @@
 #ifndef _DYNAMIC_STRING_H
 #define _DYNAMIC_STRING_H
 
+#include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
+
+#define DYNAMIC_STRING_LENGTH 8
+
 /**
  * @struct Dynamic string
  */
