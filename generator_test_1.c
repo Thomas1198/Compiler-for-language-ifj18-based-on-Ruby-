@@ -7,9 +7,6 @@
  * @author Jan Osolsobe (xosols00)
  */
 
-
-#include <ctype.h>
-
 #include "code_generator.h"
 
 int main()

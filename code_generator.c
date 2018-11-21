@@ -6,6 +6,7 @@
 
 
 #include <ctype.h>
+#include <stdio.h>
 
 #include "dynamic_string.h"
 #include "code_generator.h"
