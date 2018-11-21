@@ -71,6 +71,7 @@ typedef enum {
 	CHAR_SEMICOLON,
 	CHAR_COMMA,
 	CHAR_EOF,
+	UNDEFINED_SET,
 
 
 }set_type;
@@ -82,6 +83,13 @@ typedef enum {
     BOOLEAN,
     UNDEFINED,
 }data_type;
+
+union value_union {
+    int i;
+    float f;
+    double d;
+    char str[20];
+};
 
 typedef struct tToken {
     Dynamic_string *content_string; ///identifier (key)
