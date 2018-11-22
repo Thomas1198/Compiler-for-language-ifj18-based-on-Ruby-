@@ -16,6 +16,7 @@ void DLDisposeList (tDList *L) {
     while (L->First != NULL) {
         tDLElemPtr tmp = L->First;
         L->First = L->First->rptr;
+        dynamic_string_free(tmp->token.content_string);
         free(tmp);
     }
 

@@ -16,25 +16,26 @@
 //end of includes
 
 Dynamic_string *content_string;
-FILE *source_file;
+//FILE *source_file;
 
-void getToken(tToken *token)
+tToken getToken(FILE *source_file)
 {
-	if (content_string == NULL || source_file == NULL)
+	if (source_file == NULL)
 	{
-            ErrorPrint(1,"");
+            ErrorPrint(99,"failed mount");
 	}
-
-
+        
+        
+        tToken *token;
 	token->content_string = content_string;
 
-	//Setuji STATE na DEFAULT
+	//Setuji current_state na DEFAULT
 	SCANNER_STATE current_state = START;
 	token->set_type_of_token = EMPTY;
 
 	if (!dynamic_string_init(content_string))
 	{
-		ErrorPrint(1,"");
+		ErrorPrint(99,"Failed dyn string initialization");
 	}
 
 	//Declaration of the scanner char
@@ -59,23 +60,23 @@ void getToken(tToken *token)
 			}
 			else if (c == '#')
 			{
-				current_state = COMMENT_START;
+				current_state = CHUNK_COMMENTARY;
 			}
 			else if (c == '_' || isalpha(c))
 			{
-				if (!dynamic_string_add_char(str, (char) tolower(c)))
+				if (!dynamic_string_add_char(content_string, (char) tolower(c)))
 				{
-					dynamic_string_free(str);
-					return;
+					dynamic_string_free(content_string);
+					ErrorPrint(99,"stringadd error");
 				}
 				current_state = KEYWORD;
 			}
 			else if (isdigit(c))
 			{
-				if (!dynamic_string_add_char(str, c))
+				if (!dynamic_string_add_char(content_string, c))
 				{
-					dynamic_string_free(str);
-					ErrorPrint(1,"");
+					dynamic_string_free(content_string);
+					ErrorPrint(99,"stringadd error");
 				}
 				current_state = NUMBER;
 			}
@@ -99,63 +100,73 @@ void getToken(tToken *token)
 			else if (c == '+')
 			{
 				token->set_type_of_token = CHAR_OPERATOR_PLUS;
-				dynamic_string_free(str);
-				return;
+				dynamic_string_free(content_string);
+				return token;
 			}
 			else if (c == '-')
 			{
 				token->set_type_of_token = CHAR_OPERATOR_MINUS;
-				dynamic_string_free(str);
-				return;
+				dynamic_string_free(content_string);
+				return token;
 			}
 			else if (c == '*')
 			{
 				token->set_type_of_token = CHAR_OPERATOR_MUL;
-				dynamic_string_free(str);
-				return;
+				dynamic_string_free(content_string);
+				return token;
 			}
 			else if (c == ',')
 			{
 				token->set_type_of_token = CHAR_COMMA;
-				dynamic_string_free(str);
-				return;
+				dynamic_string_free(content_string);
+				return token;
 			}
 			else if (c == '(')
 			{
 				token->set_type_of_token = CHAR_LEFT_BRACKET;
-				dynamic_string_free(str);
-				return;
+				dynamic_string_free(content_string);
+				return token;
 			}
 			else if (c == ')')
 			{
 				token->set_type_of_token = CHAR_RIGHT_BRACKET;
-				dynamic_string_free(str);
-				return;
+				dynamic_string_free(content_string);
+				return token;
 			}
 			else if (c == ';')
 			{
 				token->set_type_of_token = CHAR_SEMICOLON;
-				dynamic_string_free(str);
-				return;
+				dynamic_string_free(content_string);
+				return token;
+			}
+
+			else if (c == '"')
+			{
+				current_state = STRING_START;
+			}
+
+			else if (c == '!')
+			{
+				current_state = EXCLAMATION;
 			}
 
 			else if (c == EOF)
 				{
-					token->type = CHAR_EOF;
-					dynamic_string_free(str);
-					return;
+					token->set_type_of_token = CHAR_EOF;
+					dynamic_string_free(content_string);
+					return token;
 				}
 
 			else
 			{
-				dynamic_string_free(str);
-				return false;
+				dynamic_string_free(content_string);
+				ErrorPrint(99,"cannot read content of source_file");
 			}
 			break;
 			
 			//__________________
 
-			case (SCANNER_STATE_EOL):
+			case (EOL):
 				if (isspace(c))
 				{
 					break;
@@ -163,24 +174,41 @@ void getToken(tToken *token)
 
 				ungetc(c, source_file);
 				token->set_type_of_token = CHAR_EOF;
+				return token;
+			break;
+
+			case (EXCLAMATION):
+			if (isspace(c) || (c == '\n'))
+			{
+				token->set_type_of_token = CHAR_EXCLAMATION;
+			}
+			else if (c == "=")
+			{
+				token->set_type_of_token = CHAR_NEQ;
+			}
+			return token;
+			break;
+
+
+
 
 			case (NUMBER):
 				if (isdigit(c))
 				{
-					if (!dynamic_string_add_char(str, c))
+					if (!dynamic_string_add_char(content_string, c))
 					{
-						dynamic_string_free(str);
-						ErrorPrint(1,"");
+						dynamic_string_free(content_string);
+						ErrorPrint(99,"cannot add char");
 					}
 
 				}
 				else if (c == '.')
 				{
-					state = NUMBER_DEC;
+					current_state = NUMBER_DEC;
 				}
 				else if (tolower(c) == 'e')
 				{
-					state = NUMBER_EXP;
+					current_state = NUMBER_EXP;
 				}
 				else
 				{
@@ -194,9 +222,9 @@ void getToken(tToken *token)
 			
 				if (isdigit(c))
 				{
-					state = NUMBER_DOUBLE;
+					current_state = NUMBER_DOUBLE;
 				}
-				else dynamic_string_free(str);
+				else dynamic_string_free(content_string);
 
 				break;
 
@@ -204,21 +232,21 @@ void getToken(tToken *token)
 			
 				if (isdigit(c))
 				{
-					if (!dynamic_string_add_char(str, c))
+					if (!dynamic_string_add_char(content_string, c))
 					{
-						dynamic_string_free(str);
-						ErrorPrint(1,"");
+						dynamic_string_free(content_string);
+						ErrorPrint(1,"lex error");
 					}
 
 				}
 
 				else if (tolower(c) == 'e')
 				{
-					state = NUMBER_EXP;
-					if (!dynamic_string_add_char(str, c))
+					current_state = NUMBER_EXP;
+					if (!dynamic_string_add_char(content_string, c))
 					{
-						dynamic_string_free(str);
-						ErrorPrint(1,"");
+						dynamic_string_free(content_string);
+						ErrorPrint(99,"cannot add char");
 					}
 				}
 
@@ -232,36 +260,78 @@ void getToken(tToken *token)
 				case (NUMBER_EXP):
 					if (isdigit(c))
 					{
-						state = NUMBER_EXP_DONE;
-						if (!dynamic_string_add_char(str, c))
-					{
-						dynamic_string_free(str);
-						ErrorPrint(1,"");
-					}
+						current_state = NUMBER_EXP_DONE;
+						if (!dynamic_string_add_char(content_string, c))
+						{
+							dynamic_string_free(content_string);
+							ErrorPrint(99,"cannot add char");
+						}
 					}
 					else if (c == '-' || c == '+')
 					{
-						state = NUMBER_EXP_SIGN;
-						if (!dynamic_string_add_char(str, c))
-					{
-						dynamic_string_free(str);
-						ErrorPrint(1,"");
+						current_state = NUMBER_EXP_SIGN;
+						if (!dynamic_string_add_char(content_string, c))
+						{
+							dynamic_string_free(content_string);
+							ErrorPrint(99,"cannot add char");
+						}
 					}
+					else 
+					{	
+						dynamic_string_free(content_string);
+						ErrorPrint(1,"lex error");
 					}
-					else dynamic_string_free(str);
+				break;
 
-					break;
+				case (NUMBER_EXP_DONE):
+				
+				break;
+
+				case (NUMBER_EXP_SIGN):
+				if (isdigit(c))
+				{
+					current_state = NUMBER_EXP_DONE_LAST;
+					if (!dynamic_string_add_char(content_string, c))
+						{
+							dynamic_string_free(content_string);
+							ErrorPrint(99,"cannot add char");
+						}
+				}
+				else
+				{
+					dynamic_string_free(content_string);
+					ErrorPrint(1,"lex error");
+				}
+				
+				break;
+
+
+				case (NUMBER_EXP_DONE_LAST):
+				if (isdigit(c))
+				{
+					if (!dynamic_string_add_char(content_string, c))
+						{
+							dynamic_string_free(content_string);
+							ErrorPrint(99,"cannot add char");
+						}
+				}
+				else
+				{
+					ungetc(c, source_file);
+					//process_decimal;
+				}
+				break;
 
 				case (BACKSLASH):
 				if (c == '/')
 				{
-					state = BACKSLASH;
+					current_state = BACKSLASH;
 				}
 				else
 				{
 					ungetc(c, source_file);
 					token->set_type_of_token = CHAR_OPERATOR_DIV;
-					dynamic_string_free(str);
+					dynamic_string_free(content_string);
 					return;
 				}
 
@@ -270,7 +340,7 @@ void getToken(tToken *token)
 				case (COMMENTARY):
 					if (c == '\n' || c == EOF)
 				{
-					state = START;
+					current_state = START;
 					ungetc(c, source_file);
 				}
 				break;
@@ -278,18 +348,83 @@ void getToken(tToken *token)
 				case (EQUALS):
 				if (isalpha(c))
 				{
-					if (!dynamic_string_add_char(str, (char) tolower(c)))
+					if (!dynamic_string_add_char(content_string, (char) tolower(c)))
 					{
 						//FSEEK VOLE
 					}
 				}
+
+				break;
+
+				case (STRING_START):
+				if (c < 32)
+				{
+					dynamic_string_free(content_string);
+					ErrorPrint(1,"lex error");
+				}
+				else if (c == '"')
+				{
+					if (!dynamic_string_copy(content_string, token->attribute.string))
+						{
+							dynamic_string_free(content_string);
+							ErrorPrint(99,"cannot copy string");
+						}
+					token->set_type_of_token = STRING;
+					return token;
+					dynamic_string_free(content_string);
+				}
+				else
+				{
+					if (!dynamic_string_add_char(content_string, c))
+						{
+							dynamic_string_free(content_string);
+							ErrorPrint(99,"cannot add char");
+						}
+				}
+				
+				break;
+
+
+
 			}
 			}
 		
 	}
 
+	int process_integer(Dynamic_string *content, tToken *token)
+	{
+		char *arrayofchars;
+		int value = strtol(content_string->content_string, &arrayofchars, 10);
+		if (*arrayofchars)
+		{
+			dynamic_string_free(content_string);
+			ErrorPrint(99,"stringadd error");
+		}
 
+		token->value = value;
+		token->set_type_of_token = INTEGER;
+		dynamic_string_free(content_string);
+		return token;
 	}
-}
+
+	int process_decimal(Dynamic_string *content, tToken *token)
+	{
+		char *arrayofchars;
+		int value = strtod(content_string->str, &arrayofchars);
+		if (*arrayofchars)
+		{
+			dynamic_string_free(content_string);
+			ErrorPrint(99,"stringadd error");
+		}
+
+		token->value = value;
+		token->set_type_of_token = DOUBLE;
+		dynamic_string_free(content_string);
+		return token;
+	}
+
+
+	
+
 
 

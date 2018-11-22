@@ -8,7 +8,7 @@
 #include "../dynamic_string.h"
 
 void print_strukture(Dynamic_string *s, char *activity) {
-    printf("ACTIVITY: %s \n", activity)
+    printf("ACTIVITY: %s \n", activity);
     printf("char *str: \"%s\"\n", s->str);
     printf("unsigned int length: %d\n", s->length);
     printf("unsigned int alloc_size: %d\n\n", s->alloc_size);
