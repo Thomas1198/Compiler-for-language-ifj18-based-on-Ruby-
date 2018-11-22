@@ -57,16 +57,22 @@ typedef enum {
 	CHAR_OPERATOR_MINUS,
 	CHAR_OPERATOR_DIV,
 	CHAR_OPERATOR_MUL,
+	CHAR_OPERATOR_ARITMETIC,
 	CHAR_ASSIGN,
     CHAR_EOL,
     IDENTIFIER_NAME,
     CHAR_LEFT_BRACKET,
     CHAR_RIGHT_BRACKET,
     LITERAL_NAME,
-    KEY_WORD_FOLLOWED_BY_EOL,
-    KEY_WORD_FOLLOWED_BY_CONDITION,
-    KEY_WORD_NIL,
     KEY_WORD_DEF,
+    KEY_WORD_DO,
+    KEY_WORD_ELSE,
+    KEY_WORD_END,
+    KEY_WORD_IF,
+    KEY_WORD_NOT,
+    KEY_WORD_NIL,
+    KEY_WORD_THEN,
+    KEY_WORD_WHILE,
 	EMPTY,
 	CHAR_SEMICOLON,
 	CHAR_COMMA,
@@ -80,6 +86,7 @@ typedef enum {
     FLOAT,
     STRING,
     BOOLEAN,
+    NIL,
     UNDEFINED,
 }data_type;
 
@@ -89,6 +96,7 @@ typedef struct tToken {
     bool defined;
     data_type data_type_of_token;            /// Data type (int,char...)
     set_type set_type_of_token;                  /// Which set token belongs to (sign, variable...)
+    bool funkce;
 };
 
 
