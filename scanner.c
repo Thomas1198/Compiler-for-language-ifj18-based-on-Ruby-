@@ -29,13 +29,11 @@ struct tToken getToken(FILE *source_file)
 	SCANNER_STATE current_state = START;
 	token.set_type_of_token = EMPTY;
 
-	if (!dynamic_string_init(content_string))
-	{
-		ErrorPrint(99,"Failed dyn string initialization");
-	}
+	dynamic_string_init(content_string);
+
 
 	//Declaration of the scanner char
-	char c = 0;
+	int c = 0;
 
 	while (true)
 	{
@@ -328,7 +326,7 @@ struct tToken getToken(FILE *source_file)
 					ungetc(c, source_file);
 					token.set_type_of_token = CHAR_OPERATOR_DIV;
 					dynamic_string_free(content_string);
-					return;
+					return token;
 				}
 
 				break;
@@ -421,6 +419,7 @@ struct tToken getToken(FILE *source_file)
 
 	struct tToken process_identifier(Dynamic_string *str, struct tToken token)
 	{
+            /*
 		if (!dynamic_string_cmp_const_str(str, "int")) token.set_type_of_token = KEY_WORD_INT;
 		else if (!dynamic_string_cmp_const_str(str, "if")) token.set_type_of_token = KEY_WORD_IF;
 		else if (!dynamic_string_cmp_const_str(str, "for")) token.set_type_of_token = KEY_WORD_FOR;
@@ -434,6 +433,7 @@ struct tToken getToken(FILE *source_file)
 		else if (!dynamic_string_cmp_const_str(str, "elseif")) token.set_type_of_token = KEY_WORD_ELSEIF;
 		else if (!dynamic_string_cmp_const_str(str, "double")) token.set_type_of_token = KEY_WORD_DOUBLE;
 		else if (!dynamic_string_cmp_const_str(str, "end")) token.set_type_of_token = KEY_WORD_END;
+                */
 	}
 
 
