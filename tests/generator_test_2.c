@@ -25,7 +25,6 @@ int main()
     char fun[]= "hello";
 
     generator_start();
-    generate_file_head();
     generate_main_start();
     generate_function_before_par();
     generate_function_par(temp,1);

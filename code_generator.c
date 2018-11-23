@@ -80,15 +80,15 @@ bool generate_function_before_par()
 
 bool generate_function_par(struct tToken param, int index)
 {
-    ADD_CODE("DEFVAR LF@"); ADD_CODE(param.content_string->str); ADD_CODE("/n");
-    ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string->str); ADD_CODE("LF@"); ADD_INTIGER(index);
+    ADD_CODE("DEFVAR LF@"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
+    ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string->str); ADD_CODE("LF@"); ADD_INTIGER(index); ADD_CODE("\n");
 
     return true;
 }
 
 bool generate_function_start(char *name)
 {
-    ADD_COMMENT("\n Start of function"); ADD_CODE(name); ADD_CODE("\n");
+    ADD_COMMENT("Start of function "); ADD_CODE(name); ADD_CODE("\n");
 
     ADD_CODE("LABEL $"); ADD_CODE(name); ADD_CODE("\n");
     ADD_INSTRUCTION("PUSHFRAME");
@@ -98,7 +98,7 @@ bool generate_function_start(char *name)
 
 bool generate_function_end(char *name)
 {
-    ADD_COMMENT("\n End of function"); ADD_CODE(name); ADD_CODE("\n");
+    ADD_COMMENT("\n End of function "); ADD_CODE(name); ADD_CODE("\n");
 
     ADD_CODE("LABEL $"); ADD_CODE(name); ADD_CODE("%return\n");
     ADD_INSTRUCTION("POPFRAME");
