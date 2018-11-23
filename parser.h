@@ -41,7 +41,7 @@ int parse_def_arguments(tDList *token_list);
 
 int check_end_of_line(tDList *token_list);
 
-inline bool is_set_type(struct tToken token, set_type set_type1);
+bool is_set_type(struct tToken token, set_type set_type1);
 
 int parse_if(tDList *token_list);
 

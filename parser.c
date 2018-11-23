@@ -31,7 +31,7 @@ void first_run(tDList *token_list, FILE *source_code) {
     }
 }
 
-inline bool is_set_type(struct tToken token, set_type set_type1) {
+bool is_set_type(struct tToken token, set_type set_type1) {
     return (token.set_type_of_token == set_type1);
 }
 
