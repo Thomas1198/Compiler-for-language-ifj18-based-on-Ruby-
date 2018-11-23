@@ -4,7 +4,7 @@
 #include "error.h"
 
 int main(int argc, char* argv[]) {
-    
+
     FILE *source_code;
 
     if(argc==1){
