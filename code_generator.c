@@ -33,7 +33,7 @@ void write_code()
     printf ("%s", gen_code.str);
 }
 
-bool generate_main_start()
+void generate_main_start()
 {
     ADD_COMMENT("Start of main\n");
 
@@ -42,7 +42,7 @@ bool generate_main_start()
     ADD_INSTRUCTION("PUSHFRAME");
 }
 
-bool generate_main_end()
+void generate_main_end()
 {
     ADD_COMMENT("End of main\n");
 
@@ -50,7 +50,7 @@ bool generate_main_end()
     ADD_INSTRUCTION("CLEARS");
 }
 
-bool generate_function_call(char *name)
+void generate_function_call(char *name)
 {
     ADD_COMMENT("Function call\n");
 
@@ -58,19 +58,19 @@ bool generate_function_call(char *name)
 
 }
 
-bool generate_function_before_par()
+void generate_function_before_par()
 {
     ADD_INSTRUCTION("CREATEFRAME");
 }
 
-bool generate_function_par(struct tToken param, int index)
+void generate_function_par(struct tToken param, int index)
 {
     ADD_CODE("DEFVAR LF@"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
     ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string->str); ADD_CODE("  LF@"); ADD_INTIGER(index); ADD_CODE("\n");
 
 }
 
-bool generate_function_start(char *name)
+void generate_function_start(char *name)
 {
     ADD_COMMENT("Start of function "); ADD_CODE(name); ADD_CODE("\n");
 
@@ -79,7 +79,7 @@ bool generate_function_start(char *name)
 
 }
 
-bool generate_function_end(char *name)
+void generate_function_end(char *name)
 {
     ADD_COMMENT("End of function "); ADD_CODE(name); ADD_CODE("\n");
 
