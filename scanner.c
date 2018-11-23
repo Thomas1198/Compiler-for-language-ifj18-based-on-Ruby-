@@ -14,7 +14,7 @@
 Dynamic_string *content_string;
 //FILE *source_file;
 
-tToken getToken(FILE *source_file)
+struct tToken getToken(FILE *source_file)
 {
 	if (source_file == NULL)
 	{
@@ -22,12 +22,12 @@ tToken getToken(FILE *source_file)
 	}
         
         
-        tToken *token;
-	token->content_string = content_string;
+       struct tToken token;
+	token.content_string = content_string;
 
 	//Setuji current_state na DEFAULT
 	SCANNER_STATE current_state = START;
-	token->set_type_of_token = EMPTY;
+	token.set_type_of_token = EMPTY;
 
 	if (!dynamic_string_init(content_string))
 	{
@@ -95,43 +95,43 @@ tToken getToken(FILE *source_file)
 
 			else if (c == '+')
 			{
-				token->set_type_of_token = CHAR_OPERATOR_PLUS;
+				token.set_type_of_token = CHAR_OPERATOR_PLUS;
 				dynamic_string_free(content_string);
 				return token;
 			}
 			else if (c == '-')
 			{
-				token->set_type_of_token = CHAR_OPERATOR_MINUS;
+				token.set_type_of_token = CHAR_OPERATOR_MINUS;
 				dynamic_string_free(content_string);
 				return token;
 			}
 			else if (c == '*')
 			{
-				token->set_type_of_token = CHAR_OPERATOR_MUL;
+				token.set_type_of_token = CHAR_OPERATOR_MUL;
 				dynamic_string_free(content_string);
 				return token;
 			}
 			else if (c == ',')
 			{
-				token->set_type_of_token = CHAR_COMMA;
+				token.set_type_of_token = CHAR_COMMA;
 				dynamic_string_free(content_string);
 				return token;
 			}
 			else if (c == '(')
 			{
-				token->set_type_of_token = CHAR_LEFT_BRACKET;
+				token.set_type_of_token = CHAR_LEFT_BRACKET;
 				dynamic_string_free(content_string);
 				return token;
 			}
 			else if (c == ')')
 			{
-				token->set_type_of_token = CHAR_RIGHT_BRACKET;
+				token.set_type_of_token = CHAR_RIGHT_BRACKET;
 				dynamic_string_free(content_string);
 				return token;
 			}
 			else if (c == ';')
 			{
-				token->set_type_of_token = CHAR_SEMICOLON;
+				token.set_type_of_token = CHAR_SEMICOLON;
 				dynamic_string_free(content_string);
 				return token;
 			}
@@ -148,7 +148,7 @@ tToken getToken(FILE *source_file)
 
 			else if (c == EOF)
 				{
-					token->set_type_of_token = CHAR_EOF;
+					token.set_type_of_token = CHAR_EOF;
 					dynamic_string_free(content_string);
 					return token;
 				}
@@ -169,18 +169,18 @@ tToken getToken(FILE *source_file)
 				}
 
 				ungetc(c, source_file);
-				token->set_type_of_token = CHAR_EOF;
+				token.set_type_of_token = CHAR_EOF;
 				return token;
 			break;
 
 			case (EXCLAMATION):
 			if (isspace(c) || (c == '\n'))
 			{
-				token->set_type_of_token = CHAR_EXCLAMATION;
+				token.set_type_of_token = CHAR_EXCLAMATION;
 			}
 			else if (c == "=")
 			{
-				token->set_type_of_token = CHAR_NEQ;
+				token.set_type_of_token = CHAR_NEQ;
 			}
 			return token;
 			break;
@@ -326,7 +326,7 @@ tToken getToken(FILE *source_file)
 				else
 				{
 					ungetc(c, source_file);
-					token->set_type_of_token = CHAR_OPERATOR_DIV;
+					token.set_type_of_token = CHAR_OPERATOR_DIV;
 					dynamic_string_free(content_string);
 					return;
 				}
@@ -360,12 +360,12 @@ tToken getToken(FILE *source_file)
 				}
 				else if (c == '"')
 				{
-					if (!dynamic_string_copy(content_string, token->attribute.string))
+					if (!dynamic_string_copy(content_string, token.content_string))
 						{
 							dynamic_string_free(content_string);
 							ErrorPrint(99,"cannot copy string");
 						}
-					token->set_type_of_token = STRING;
+					token.set_type_of_token = STRING;
 					return token;
 					dynamic_string_free(content_string);
 				}
@@ -387,23 +387,23 @@ tToken getToken(FILE *source_file)
 		
 	}
 
-	int process_integer(Dynamic_string *content, tToken *token)
+	struct tToken process_integer(Dynamic_string *content, struct tToken token)
 	{
 		char *arrayofchars;
-		int value = strtol(content_string->content_string, &arrayofchars, 10);
+		int value = strtol(content_string->str, &arrayofchars, 10);
 		if (*arrayofchars)
 		{
 			dynamic_string_free(content_string);
 			ErrorPrint(99,"stringadd error");
 		}
 
-		token->value = value;
-		token->set_type_of_token = INTEGER;
+		token.value = (union value_union) value;
+		token.set_type_of_token = INTEGER;
 		dynamic_string_free(content_string);
 		return token;
 	}
 
-	int process_decimal(Dynamic_string *content, tToken *token)
+	struct tToken process_decimal(Dynamic_string *content, struct tToken token)
 	{
 		char *arrayofchars;
 		int value = strtod(content_string->str, &arrayofchars);
@@ -413,27 +413,27 @@ tToken getToken(FILE *source_file)
 			ErrorPrint(99,"stringadd error");
 		}
 
-		token->value = value;
-		token->set_type_of_token = DOUBLE;
+		token.value = (union value_union) value;
+		token.set_type_of_token = DOUBLE;
 		dynamic_string_free(content_string);
 		return token;
 	}
 
-	int process_identifier(Dynamic_string *str, Token *token)
+	struct tToken process_identifier(Dynamic_string *str, struct tToken token)
 	{
-		if (!dynamic_string_cmp_const_str(str, "int")) token->set_type_of_token = KEY_WORD_INT;
-		else if (!dynamic_string_cmp_const_str(str, "if")) token->set_type_of_token = KEY_WORD_IF;
-		else if (!dynamic_string_cmp_const_str(str, "for")) token->set_type_of_token = KEY_WORD_FOR;
-		else if (!dynamic_string_cmp_const_str(str, "while")) token->set_type_of_token = KEY_WORD_WHILE;
-		else if (!dynamic_string_cmp_const_str(str, "bool")) token->set_type_of_token = KEY_WORD_BOOL;
-		else if (!dynamic_string_cmp_const_str(str, "true")) token->set_type_of_token = KEY_WORD_TRUE;
-		else if (!dynamic_string_cmp_const_str(str, "false")) token->set_type_of_token = KEY_WORD_FALSE;
-		else if (!dynamic_string_cmp_const_str(str, "do")) token->set_type_of_token = KEY_WORD_DO;
-		else if (!dynamic_string_cmp_const_str(str, "exit")) token->set_type_of_token = KEY_WORD_EXIT;
-		else if (!dynamic_string_cmp_const_str(str, "else")) token->set_type_of_token = KEY_WORD_ELSE;
-		else if (!dynamic_string_cmp_const_str(str, "elseif")) token->set_type_of_token = KEY_WORD_ELSEIF;
-		else if (!dynamic_string_cmp_const_str(str, "double")) token->set_type_of_token = KEY_WORD_DOUBLE;
-		else if (!dynamic_string_cmp_const_str(str, "end")) token->set_type_of_token = KEY_WORD_END;
+		if (!dynamic_string_cmp_const_str(str, "int")) token.set_type_of_token = KEY_WORD_INT;
+		else if (!dynamic_string_cmp_const_str(str, "if")) token.set_type_of_token = KEY_WORD_IF;
+		else if (!dynamic_string_cmp_const_str(str, "for")) token.set_type_of_token = KEY_WORD_FOR;
+		else if (!dynamic_string_cmp_const_str(str, "while")) token.set_type_of_token = KEY_WORD_WHILE;
+		else if (!dynamic_string_cmp_const_str(str, "bool")) token.set_type_of_token = KEY_WORD_BOOL;
+		else if (!dynamic_string_cmp_const_str(str, "true")) token.set_type_of_token = KEY_WORD_TRUE;
+		else if (!dynamic_string_cmp_const_str(str, "false")) token.set_type_of_token = KEY_WORD_FALSE;
+		else if (!dynamic_string_cmp_const_str(str, "do")) token.set_type_of_token = KEY_WORD_DO;
+		else if (!dynamic_string_cmp_const_str(str, "exit")) token.set_type_of_token = KEY_WORD_EXIT;
+		else if (!dynamic_string_cmp_const_str(str, "else")) token.set_type_of_token = KEY_WORD_ELSE;
+		else if (!dynamic_string_cmp_const_str(str, "elseif")) token.set_type_of_token = KEY_WORD_ELSEIF;
+		else if (!dynamic_string_cmp_const_str(str, "double")) token.set_type_of_token = KEY_WORD_DOUBLE;
+		else if (!dynamic_string_cmp_const_str(str, "end")) token.set_type_of_token = KEY_WORD_END;
 	}
 
 
