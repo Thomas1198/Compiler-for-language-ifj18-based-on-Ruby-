@@ -6,7 +6,7 @@
 
 #include "code_generator.h"
 
-Dynamic_string gen_code; ///string to generated code
+Dynamic_string *gen_code; ///string to generated code
 
 
 void generate_file_head()
@@ -24,14 +24,16 @@ void generate_build_in_functions()
 
 void generator_start()
 {
-    dynamic_string_init(&gen_code);
+
+    dynamic_string_init(gen_code);
+
     generate_file_head();
     generate_build_in_functions();
 }
 
 void generator_clear()
 {
-    dynamic_string_clear(&gen_code);
+    dynamic_string_clear(gen_code);
 }
 
 void write_code()
