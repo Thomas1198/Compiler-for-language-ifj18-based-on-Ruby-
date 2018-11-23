@@ -381,16 +381,16 @@ struct tToken get_token(FILE *source_file)
             /*
 		if (!dynamic_string_cmp_const_str(str, "int")) token.set_type_of_token = KEY_WORD_INT;
 		else if (!dynamic_string_cmp_const_str(str, "if")) token.set_type_of_token = KEY_WORD_IF;
-		else if (!dynamic_string_cmp_const_str(str, "for")) token.set_type_of_token = KEY_WORD_FOR;
+		//else if (!dynamic_string_cmp_const_str(str, "for")) token.set_type_of_token = KEY_WORD_FOR;
 		else if (!dynamic_string_cmp_const_str(str, "while")) token.set_type_of_token = KEY_WORD_WHILE;
-		else if (!dynamic_string_cmp_const_str(str, "bool")) token.set_type_of_token = KEY_WORD_BOOL;
-		else if (!dynamic_string_cmp_const_str(str, "true")) token.set_type_of_token = KEY_WORD_TRUE;
-		else if (!dynamic_string_cmp_const_str(str, "false")) token.set_type_of_token = KEY_WORD_FALSE;
+		//else if (!dynamic_string_cmp_const_str(str, "bool")) token.set_type_of_token = KEY_WORD_BOOL;
+		//else if (!dynamic_string_cmp_const_str(str, "true")) token.set_type_of_token = KEY_WORD_TRUE;
+		//else if (!dynamic_string_cmp_const_str(str, "false")) token.set_type_of_token = KEY_WORD_FALSE;
 		else if (!dynamic_string_cmp_const_str(str, "do")) token.set_type_of_token = KEY_WORD_DO;
-		else if (!dynamic_string_cmp_const_str(str, "exit")) token.set_type_of_token = KEY_WORD_EXIT;
+		//else if (!dynamic_string_cmp_const_str(str, "exit")) token.set_type_of_token = KEY_WORD_EXIT;
 		else if (!dynamic_string_cmp_const_str(str, "else")) token.set_type_of_token = KEY_WORD_ELSE;
-		else if (!dynamic_string_cmp_const_str(str, "elseif")) token.set_type_of_token = KEY_WORD_ELSEIF;
-		else if (!dynamic_string_cmp_const_str(str, "double")) token.set_type_of_token = KEY_WORD_DOUBLE;
+		//else if (!dynamic_string_cmp_const_str(str, "elseif")) token.set_type_of_token = KEY_WORD_ELSEIF;
+		//else if (!dynamic_string_cmp_const_str(str, "double")) token.set_type_of_token = KEY_WORD_DOUBLE;
 		else if (!dynamic_string_cmp_const_str(str, "end")) token.set_type_of_token = KEY_WORD_END;
                 */
 	}

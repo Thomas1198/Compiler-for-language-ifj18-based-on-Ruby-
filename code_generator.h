@@ -17,13 +17,13 @@
 
 
 #define ADD_INSTRUCTION(instruction) \
-    if (!dynamic_string_add_const_str(&gen_code, (instruction "\n"))) return false
+    dynamic_string_add_const_str(&gen_code, (instruction "\n"))
 
 #define ADD_COMMENT(comment) \
-    if (!dynamic_string_add_const_str(&gen_code, ( "# "comment ))) return false
+    dynamic_string_add_const_str(&gen_code, ( "# "comment ))
 
 #define ADD_CODE(code) \
-    if (!dynamic_string_add_const_str(&gen_code, (code))) return false
+    dynamic_string_add_const_str(&gen_code, (code))
 
 #define ADD_INTIGER(code) \
     do{ \
@@ -49,15 +49,13 @@
 
 /**
  * @brief Generate file header
- * @return True if its OK
  */
-bool generate_file_head();
+void generate_file_head();
 
 /**
  * @brief Inicialization  of generator
- * @return True if its OK
  */
-bool generator_start();
+void generator_start();
 
 /**
  * @brief Clear resources
@@ -71,49 +69,42 @@ void write_code();
 
 /**
  * @brief Generate start of main function
- * @return True if its OK
  */
-bool generate_main_start();
+void generate_main_start();
 
 /**
  * @brief Generate end of main function
- * @return True if its OK
  */
-bool generate_main_end();
+void generate_main_end();
 
 /**
  * @brief Generate function call
  * @param name Name of function
- * @return True if its OK
  */
-bool generate_function_call(char *name);
+void generate_function_call(char *name);
 /**
  * @brief Generate frame to load parameters
- * @return True if its OK
  */
-bool generate_function_before_par();
+void generate_function_before_par();
 
 /**
  * @brief Generate pass parameter
  * @param param token with parametr
  * @param index index
- * @return True if its OK
  */
-bool generate_function_par(tToken param, int index);
+void generate_function_par( struct tToken param, int index);
 
 /**
  * @brief Generate function start
  * @param name Name of function
- * @return True if its OK
  */
-bool generate_function_start(char *name);
+void generate_function_start(char *name);
 
 /**
  * @brief Generate function end
  * @param name Name of function
- * @return True if its OK
  */
-bool generate_function_end(char *name);
+void generate_function_end(char *name);
 
 
 
