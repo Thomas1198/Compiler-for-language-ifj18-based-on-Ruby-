@@ -17,13 +17,13 @@
 
 
 #define ADD_INSTRUCTION(instruction) \
-    dynamic_string_add_const_str(&gen_code, (instruction "\n"))
+    dynamic_string_add_const_str(gen_code, (instruction "\n"))
 
 #define ADD_COMMENT(comment) \
-    dynamic_string_add_const_str(&gen_code, ( "# "comment ))
+    dynamic_string_add_const_str(gen_code, ( "# "comment ))
 
 #define ADD_CODE(code) \
-    dynamic_string_add_const_str(&gen_code, (code))
+    dynamic_string_add_const_str(gen_code, (code))
 
 #define ADD_INTIGER(code) \
     do{ \

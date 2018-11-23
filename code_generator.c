@@ -38,7 +38,7 @@ void generator_clear()
 
 void write_code()
 {
-    printf ("%s", gen_code.str);
+    printf ("%s", gen_code->str);
 }
 
 void generate_main_start()
