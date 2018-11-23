@@ -36,15 +36,16 @@
 /// Build-functions
 
 ///Print/
-/*
+//TODO: Build in functions
+
 #define PRINT \
     "\n # Build-in function" \
     "\n LABEL $print" \
     "\n PUSHFRAME" \
-    "\n WRITE LF@%" \
+    "\n WRITE LF@%1" \
 	"\n POPFRAME" \
 	"\n RETURN" \
-*/
+
 
 
 /**
@@ -53,8 +54,13 @@
 void generate_file_head();
 
 /**
+ * @brief Generate build in functions
+ */
+void generate_build_in_functions();
+/**
  * @brief Inicialization  of generator
  */
+
 void generator_start();
 
 /**

@@ -17,10 +17,16 @@ void generate_file_head()
     ADD_INSTRUCTION("JUMP $$main");
 }
 
+void generate_build-in_functions()
+{
+    ADD_INSTRUCTION(PRINT);
+}
+
 void generator_start()
 {
     dynamic_string_init(&gen_code);
     generate_file_head();
+    generate_build_in_functions();
 }
 
 void generator_clear()
@@ -66,7 +72,7 @@ void generate_function_before_par()
 void generate_function_par(struct tToken param, int index)
 {
     ADD_CODE("DEFVAR LF@"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
-    ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string->str); ADD_CODE("  LF@"); ADD_INTIGER(index); ADD_CODE("\n");
+    ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string->str); ADD_CODE("  LF@%"); ADD_INTIGER(index); ADD_CODE("\n");
 
 }
 
