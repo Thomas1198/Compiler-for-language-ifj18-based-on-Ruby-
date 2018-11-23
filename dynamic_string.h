@@ -11,7 +11,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-
+#include "error.h"
 
 #define DYNAMIC_STRING_LENGTH 8
 
