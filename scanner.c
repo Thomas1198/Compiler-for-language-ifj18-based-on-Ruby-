@@ -14,7 +14,7 @@
 Dynamic_string *content_string;
 //FILE *source_file;
 
-struct tToken getToken(FILE *source_file)
+struct tToken get_token(FILE *source_file)
 {
 	if (source_file == NULL)
 	{
