@@ -50,7 +50,7 @@ void dynamic_string_clear(Dynamic_string *s);
  * @param c char to add
  * @return true if its ok
  */
-bool dynamic_string_add_char(Dynamic_string *s, char c);
+void dynamic_string_add_char(Dynamic_string *s, char c);
 
 /**
  * @brief Add string to the end of string
