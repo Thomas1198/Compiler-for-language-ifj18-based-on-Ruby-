@@ -11,7 +11,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-
+#include "error.h"
 
 #define DYNAMIC_STRING_LENGTH 8
 
@@ -30,7 +30,7 @@ typedef struct
  * @param s Pointer to dynamic string
  * @return true if its ok
  */
-bool  dynamic_string_init(Dynamic_string *s);
+void  dynamic_string_init(Dynamic_string *s);
 
 /**
  * @brief Frees alocated memory
@@ -58,7 +58,7 @@ bool dynamic_string_add_char(Dynamic_string *s, char c);
  * @param const_string String to add
  * @return true if its ok
  */
-bool dynamic_string_add_const_str(Dynamic_string *s, const char *const_string);
+void dynamic_string_add_const_str(Dynamic_string *s, const char *const_string);
 
 /**
  * @brief Compare dynamic string with constante string
@@ -74,6 +74,6 @@ int dynamic_string_cmp_const_str(Dynamic_string *dynamic_string, const char *con
  * @param dest destination to copy
  * @return True if its ok
  */
-bool dynamic_string_copy(Dynamic_string *src, Dynamic_string *dest);
+void dynamic_string_copy(Dynamic_string *src, Dynamic_string *dest);
 
 #endif // _DYNAMIC_STRING_H
