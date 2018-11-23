@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include "error.h"
+
 #include "parser.h"
+#include "error.h"
 
 int main(int argc, char* argv[]) {
 

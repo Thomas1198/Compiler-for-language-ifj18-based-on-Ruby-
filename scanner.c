@@ -58,20 +58,12 @@ struct tToken getToken(FILE *source_file)
 			}
 			else if (c == '_' || isalpha(c))
 			{
-				if (!dynamic_string_add_char(content_string, (char) tolower(c)))
-				{
-					dynamic_string_free(content_string);
-					ErrorPrint(99,"stringadd error");
-				}
+				dynamic_string_add_char(content_string, (char) tolower(c));
 				current_state = KEYWORD;
 			}
 			else if (isdigit(c))
 			{
-				if (!dynamic_string_add_char(content_string, c))
-				{
-					dynamic_string_free(content_string);
-					ErrorPrint(99,"stringadd error");
-				}
+				dynamic_string_add_char(content_string, (char) tolower(c));
 				current_state = NUMBER;
 			}
 			else if (c == '<')
@@ -189,11 +181,8 @@ struct tToken getToken(FILE *source_file)
 			case (NUMBER):
 				if (isdigit(c))
 				{
-					if (!dynamic_string_add_char(content_string, c))
-					{
-						dynamic_string_free(content_string);
-						ErrorPrint(99,"cannot add char");
-					}
+					dynamic_string_add_char(content_string, c);
+					
 
 				}
 				else if (c == '.')
@@ -226,22 +215,14 @@ struct tToken getToken(FILE *source_file)
 			
 				if (isdigit(c))
 				{
-					if (!dynamic_string_add_char(content_string, c))
-					{
-						dynamic_string_free(content_string);
-						ErrorPrint(1,"lex error");
-					}
+					dynamic_string_add_char(content_string, c);
 
 				}
 
 				else if (tolower(c) == 'e')
 				{
 					current_state = NUMBER_EXP;
-					if (!dynamic_string_add_char(content_string, c))
-					{
-						dynamic_string_free(content_string);
-						ErrorPrint(99,"cannot add char");
-					}
+					dynamic_string_add_char(content_string, c);
 				}
 
 				else
@@ -255,20 +236,12 @@ struct tToken getToken(FILE *source_file)
 					if (isdigit(c))
 					{
 						current_state = NUMBER_EXP_DONE;
-						if (!dynamic_string_add_char(content_string, c))
-						{
-							dynamic_string_free(content_string);
-							ErrorPrint(99,"cannot add char");
-						}
+						dynamic_string_add_char(content_string, c);
 					}
 					else if (c == '-' || c == '+')
 					{
 						current_state = NUMBER_EXP_SIGN;
-						if (!dynamic_string_add_char(content_string, c))
-						{
-							dynamic_string_free(content_string);
-							ErrorPrint(99,"cannot add char");
-						}
+						dynamic_string_add_char(content_string, c);
 					}
 					else 
 					{	
@@ -285,11 +258,7 @@ struct tToken getToken(FILE *source_file)
 				if (isdigit(c))
 				{
 					current_state = NUMBER_EXP_DONE_LAST;
-					if (!dynamic_string_add_char(content_string, c))
-						{
-							dynamic_string_free(content_string);
-							ErrorPrint(99,"cannot add char");
-						}
+					dynamic_string_add_char(content_string, c);
 				}
 				else
 				{
@@ -303,11 +272,7 @@ struct tToken getToken(FILE *source_file)
 				case (NUMBER_EXP_DONE_LAST):
 				if (isdigit(c))
 				{
-					if (!dynamic_string_add_char(content_string, c))
-						{
-							dynamic_string_free(content_string);
-							ErrorPrint(99,"cannot add char");
-						}
+					dynamic_string_add_char(content_string, c);
 				}
 				else
 				{
@@ -341,11 +306,12 @@ struct tToken getToken(FILE *source_file)
 
 				case (EQUALS):
 				if (isalpha(c))
-				{
+				{/*
 					if (!dynamic_string_add_char(content_string, (char) tolower(c)))
 					{
 						//FSEEK VOLE
 					}
+                                  */
 				}
 
 				break;
@@ -358,22 +324,15 @@ struct tToken getToken(FILE *source_file)
 				}
 				else if (c == '"')
 				{
-					if (!dynamic_string_copy(content_string, token.content_string))
-						{
-							dynamic_string_free(content_string);
-							ErrorPrint(99,"cannot copy string");
-						}
+					dynamic_string_copy(content_string, token.content_string);
+					
 					token.set_type_of_token = STRING;
+                                        dynamic_string_free(content_string);
 					return token;
-					dynamic_string_free(content_string);
 				}
 				else
 				{
-					if (!dynamic_string_add_char(content_string, c))
-						{
-							dynamic_string_free(content_string);
-							ErrorPrint(99,"cannot add char");
-						}
+					dynamic_string_add_char(content_string, c);
 				}
 				
 				break;
