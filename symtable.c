@@ -5,7 +5,7 @@
  */
 
 #include "symtable.h"
-#include "error.h"
+
 
 /**
  * @brief calculates hash and returning index to table

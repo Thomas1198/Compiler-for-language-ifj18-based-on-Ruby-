@@ -6,11 +6,7 @@
 
 
 #include "scanner.h"
-#include "dynamic_string.h"
-#include <ctype.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include "error.h"
+
 
 
 //end of includes

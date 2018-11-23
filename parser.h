@@ -1,6 +1,9 @@
+
+#ifndef PROJECT_PARSER_H
+#define PROJECT_PARSER_H
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "token.h"
 #include "scanner.h"
 #include "token_list.h"
 #include "error.h"
@@ -53,3 +56,5 @@ int parse_identifier(tDList *token_list);
 int parse_assign_value(tDList *token_list);
 
 int parse_call_function(tDList *token_list);
+
+#endif //PROJECT_PARSER_H
