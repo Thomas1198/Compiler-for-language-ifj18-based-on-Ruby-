@@ -9,27 +9,18 @@
 Dynamic_string gen_code; ///string to generated code
 
 
-bool generate_file_head()
+void generate_file_head()
 {
     ADD_COMMENT("Start of program\n");
     ADD_INSTRUCTION(".IFJcode18");
 
     ADD_INSTRUCTION("JUMP $$main");
-
-    return true;
 }
 
-bool generator_start()
+void generator_start()
 {
-    if(!dynamic_string_init(&gen_code))
-    {
-        return false;
-    }
-    if(!generate_file_head())
-    {
-        return false;
-    }
-    return true;
+    dynamic_string_init(&gen_code);
+    generate_file_head();
 }
 
 void generator_clear()
@@ -49,8 +40,6 @@ bool generate_main_start()
     ADD_INSTRUCTION("LABEL $$main");
     ADD_INSTRUCTION("CREATFRAME");
     ADD_INSTRUCTION("PUSHFRAME");
-
-    return true;
 }
 
 bool generate_main_end()
@@ -59,8 +48,6 @@ bool generate_main_end()
 
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("CLEARS");
-
-    return true;
 }
 
 bool generate_function_call(char *name)
@@ -69,21 +56,18 @@ bool generate_function_call(char *name)
 
     ADD_CODE("CALL $"); ADD_CODE(name); ADD_CODE("\n");
 
-    return true;
 }
 
 bool generate_function_before_par()
 {
     ADD_INSTRUCTION("CREATEFRAME");
-    return true;
 }
 
 bool generate_function_par(struct tToken param, int index)
 {
     ADD_CODE("DEFVAR LF@"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
-    ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string->str); ADD_CODE("LF@"); ADD_INTIGER(index); ADD_CODE("\n");
+    ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string->str); ADD_CODE("  LF@"); ADD_INTIGER(index); ADD_CODE("\n");
 
-    return true;
 }
 
 bool generate_function_start(char *name)
@@ -93,15 +77,13 @@ bool generate_function_start(char *name)
     ADD_CODE("LABEL $"); ADD_CODE(name); ADD_CODE("\n");
     ADD_INSTRUCTION("PUSHFRAME");
 
-    return true;
 }
 
 bool generate_function_end(char *name)
 {
-    ADD_COMMENT("\n End of function "); ADD_CODE(name); ADD_CODE("\n");
+    ADD_COMMENT("End of function "); ADD_CODE(name); ADD_CODE("\n");
 
     ADD_CODE("LABEL $"); ADD_CODE(name); ADD_CODE("%return\n");
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("RETURN");
-    return true;
 }
