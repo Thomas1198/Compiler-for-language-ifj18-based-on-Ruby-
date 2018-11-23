@@ -168,7 +168,7 @@ struct tToken getToken(FILE *source_file)
 			{
 				token.set_type_of_token = CHAR_EXCLAMATION;
 			}
-			else if (c == "=")
+			else if (c == '=')
 			{
 				token.set_type_of_token = CHAR_NEQ;
 			}
@@ -181,7 +181,7 @@ struct tToken getToken(FILE *source_file)
 			case (NUMBER):
 				if (isdigit(c))
 				{
-					dynamic_string_add_char(content_string, c);
+					dynamic_string_add_char(content_string, (char) c);
 					
 
 				}
@@ -215,14 +215,14 @@ struct tToken getToken(FILE *source_file)
 			
 				if (isdigit(c))
 				{
-					dynamic_string_add_char(content_string, c);
+					dynamic_string_add_char(content_string,(char) c);
 
 				}
 
 				else if (tolower(c) == 'e')
 				{
 					current_state = NUMBER_EXP;
-					dynamic_string_add_char(content_string, c);
+					dynamic_string_add_char(content_string, (char) c);
 				}
 
 				else
@@ -236,12 +236,12 @@ struct tToken getToken(FILE *source_file)
 					if (isdigit(c))
 					{
 						current_state = NUMBER_EXP_DONE;
-						dynamic_string_add_char(content_string, c);
+						dynamic_string_add_char(content_string, (char) c);
 					}
 					else if (c == '-' || c == '+')
 					{
 						current_state = NUMBER_EXP_SIGN;
-						dynamic_string_add_char(content_string, c);
+						dynamic_string_add_char(content_string, (char) c);
 					}
 					else 
 					{	
@@ -258,7 +258,7 @@ struct tToken getToken(FILE *source_file)
 				if (isdigit(c))
 				{
 					current_state = NUMBER_EXP_DONE_LAST;
-					dynamic_string_add_char(content_string, c);
+					dynamic_string_add_char(content_string, (char) c);
 				}
 				else
 				{
@@ -272,7 +272,7 @@ struct tToken getToken(FILE *source_file)
 				case (NUMBER_EXP_DONE_LAST):
 				if (isdigit(c))
 				{
-					dynamic_string_add_char(content_string, c);
+					dynamic_string_add_char(content_string, (char) c);
 				}
 				else
 				{
@@ -332,7 +332,7 @@ struct tToken getToken(FILE *source_file)
 				}
 				else
 				{
-					dynamic_string_add_char(content_string, c);
+					dynamic_string_add_char(content_string, (char) c);
 				}
 				
 				break;
