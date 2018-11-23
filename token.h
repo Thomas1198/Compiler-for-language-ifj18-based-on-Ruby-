@@ -69,7 +69,7 @@ union value_union {
     char str[20];
 };
 
-typedef struct tToken {
+struct tToken {
     Dynamic_string *content_string; ///identifier (key)
     union value_union value;
     bool defined;
