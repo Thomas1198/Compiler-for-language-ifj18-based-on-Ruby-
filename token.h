@@ -53,12 +53,12 @@ typedef enum {
 
 } set_type;*/
 typedef enum {
-	CHAR_OPERATOR_PLUS,
-	CHAR_OPERATOR_MINUS,
-	CHAR_OPERATOR_DIV,
-	CHAR_OPERATOR_MUL,
-	CHAR_OPERATOR_ARITMETIC,
-	CHAR_ASSIGN,
+    CHAR_OPERATOR_PLUS,
+    CHAR_OPERATOR_MINUS,
+    CHAR_OPERATOR_DIV,
+    CHAR_OPERATOR_MUL,
+    CHAR_OPERATOR_ARITMETIC,
+    CHAR_ASSIGN,
     CHAR_EOL,
     IDENTIFIER_NAME,
     CHAR_LEFT_BRACKET,
@@ -73,20 +73,20 @@ typedef enum {
     KEY_WORD_NIL,
     KEY_WORD_THEN,
     KEY_WORD_WHILE,
-	KEY_WORD_INT,
-	EMPTY,
-	CHAR_SEMICOLON,
-	CHAR_COMMA,
-	CHAR_EOF,
-	STRING,
-	CHAR_NEQ,
-	INTEGER,
-	DOUBLE,
-	UNDEFINED_SET,
-	CHAR_EXCLAMATION
+    KEY_WORD_INT,
+    EMPTY,
+    CHAR_SEMICOLON,
+    CHAR_COMMA,
+    CHAR_EOF,
+    LITERAL_STRING,
+    CHAR_NEQ,
+    INTEGER,
+    DOUBLE,
+    UNDEFINED_SET,
+    CHAR_EXCLAMATION
 
 
-}set_type;
+} set_type;
 
 typedef enum {
     INT,
@@ -95,7 +95,7 @@ typedef enum {
     BOOLEAN,
     NIL,
     UNDEFINED,
-}data_type;
+} data_type;
 
 union value_union {
     int i;

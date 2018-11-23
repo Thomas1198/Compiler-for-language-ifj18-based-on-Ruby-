@@ -11,14 +11,14 @@
     if ((token).set_type_of_token != (set_type)) {\
         return SYNTAX_ERROR;\
     }\
-}while(false)\
+}while(false)
 
 #define try_next_token_list_p(token_actual, token_list)do{\
-    if ((token_list)->Act = token_list->Act->rptr) == NULL) {\
+    if (((token_list)->Act = token_list->Act->rptr) == NULL) {\
         return SYNTAX_ERROR;\
     }\
     (token_actual)=(token_list)->Act->token;\
-}while(false)\
+}while(false)
 
 int end_req;
 
