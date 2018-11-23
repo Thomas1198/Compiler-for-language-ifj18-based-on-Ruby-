@@ -25,7 +25,7 @@ void generate_build_in_functions()
 void generator_start()
 {
 
-    dynamic_string_init(gen_code);
+    gen_code=dynamic_string_init();
 
     generate_file_head();
     generate_build_in_functions();

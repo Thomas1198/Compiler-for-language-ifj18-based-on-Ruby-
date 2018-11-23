@@ -11,7 +11,8 @@ void dynamic_string_clear(Dynamic_string *s) {
     s->str[s->length] = '\0';
 }
 
-void dynamic_string_init(Dynamic_string *s) {
+Dynamic_string *dynamic_string_init() {
+    Dynamic_string *s;
     s = (Dynamic_string *) malloc(sizeof(Dynamic_string));
     if( s == NULL)
         ErrorPrint(INTERNAL_ERROR, "Internal fault in dynamic_string.c");
@@ -22,6 +23,8 @@ void dynamic_string_init(Dynamic_string *s) {
 
     dynamic_string_clear(s);
     s->alloc_size = DYNAMIC_STRING_LENGTH;
+
+    return s;
 }
 
 void dynamic_string_free(Dynamic_string *s) {

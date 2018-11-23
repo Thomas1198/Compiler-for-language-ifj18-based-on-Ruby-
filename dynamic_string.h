@@ -30,7 +30,7 @@ typedef struct
  * @param s Pointer to dynamic string
  * @return true if its ok
  */
-void  dynamic_string_init(Dynamic_string *s);
+Dynamic_string *dynamic_string_init();
 
 /**
  * @brief Frees alocated memory

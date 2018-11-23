@@ -29,7 +29,7 @@ struct tToken get_token(FILE *source_file)
 	SCANNER_STATE current_state = START;
 	token.set_type_of_token = EMPTY;
 
-	dynamic_string_init(content_string);
+	content_string=dynamic_string_init();
 
 
 	//Declaration of the scanner char
