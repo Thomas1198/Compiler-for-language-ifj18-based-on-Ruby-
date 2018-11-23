@@ -17,7 +17,7 @@ void generate_file_head()
     ADD_INSTRUCTION("JUMP $$main");
 }
 
-void generate_build-in_functions()
+void generate_build_in_functions()
 {
     ADD_INSTRUCTION(PRINT);
 }
