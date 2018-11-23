@@ -4,11 +4,19 @@
  * @brief
  */
 
+
+
+
+#ifndef PROJECT_SYMTABLE_H
+#define PROJECT_SYMTABLE_H
+
 #include <stdlib.h>
 #include <string.h>
-
+#include "error.h"
 #include "dynamic_string.h"
 #include "token.h"
+
+
 
 #define MAX_TABLE_SIZE 27457 //TODO change the number
 
@@ -22,7 +30,7 @@ typedef struct htab_item {
 
 
 // Symbol table
-typedef Titem* Symtable[MAX_TABLE_SIZE];
+typedef Titem *Symtable[MAX_TABLE_SIZE];
 
 
 /**
@@ -65,3 +73,5 @@ void symtable_remove(Symtable *table, Dynamic_string *key);
  * @param table pointer to table
  */
 void symtable_destroy(Symtable *table);
+
+#endif //PROJECT_SYMTABLE_H

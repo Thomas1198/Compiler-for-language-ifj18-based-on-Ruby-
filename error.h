@@ -3,9 +3,14 @@
  * @author Tomas Dorda (xdorda00)
  * @brief Error codes constants and function to print errors.
  */
+#ifndef PROJECT_ERROR_H
+#define PROJECT_ERROR_H
 
 #include <stdio.h>
 #include <stdlib.h>
+
+
+
 
 enum ERROR_CODE {
     SCANNER_ERROR = 1,         // Lexical analysis error
@@ -23,3 +28,6 @@ enum ERROR_CODE {
  * @param msg Message to print.
  */
 void ErrorPrint(enum ERROR_CODE err_code, const char *msg);
+
+
+#endif //PROJECT_ERROR_H

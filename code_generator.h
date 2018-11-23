@@ -15,6 +15,7 @@
 #include <ctype.h>
 #include <stdio.h>
 
+
 #define ADD_INSTRUCTION(instruction) \
     if (!dynamic_string_add_const_str(&gen_code, (instruction "\n"))) return false
 
