@@ -30,7 +30,7 @@ typedef Titem* Symtable[MAX_TABLE_SIZE];
  *
  * @param tab pointer on table
  */
-void symtable_create(Symtable *tab);
+void symtable_create(Symtable *table);
 
 /**
  * @brief Inserts item to table

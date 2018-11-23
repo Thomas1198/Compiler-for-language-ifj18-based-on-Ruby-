@@ -47,7 +47,7 @@ struct tToken *symtable_get(Symtable *table, Dynamic_string *key) {
     unsigned long index = hash(key->str);
 
     for (Titem *tmp = (*table)[index]; tmp != NULL; tmp = tmp->next)
-        if (!dynamic_string_cmp_const_str(tmp->data.content_string, key->str))
+        if (!dynamic_string_cmp_const_str(tmp->data->content_string, key->str))
             return tmp->data;
 
     return NULL;
