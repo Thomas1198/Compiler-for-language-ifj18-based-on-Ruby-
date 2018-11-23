@@ -12,12 +12,16 @@ void dynamic_string_clear(Dynamic_string *s) {
 }
 
 void dynamic_string_init(Dynamic_string *s) {
-    if ((s->str = (char *) malloc(DYNAMIC_STRING_LENGTH))) {
-        dynamic_string_clear(s);
-        s->alloc_size = DYNAMIC_STRING_LENGTH;
-    }
-    else
+    s = (Dynamic_string *) malloc(sizeof(Dynamic_string));
+    if( s == NULL)
         ErrorPrint(INTERNAL_ERROR, "Internal fault in dynamic_string.c");
+
+    s->str = (char *) malloc(DYNAMIC_STRING_LENGTH);
+    if (s->str == NULL)
+        ErrorPrint(INTERNAL_ERROR, "Internal fault in dynamic_string.c");
+
+    dynamic_string_clear(s);
+    s->alloc_size = DYNAMIC_STRING_LENGTH;
 }
 
 void dynamic_string_free(Dynamic_string *s) {
