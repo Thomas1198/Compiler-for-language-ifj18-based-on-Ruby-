@@ -56,7 +56,7 @@ typedef enum {
 typedef enum {
     INT,
     FLOAT,
-    STRING,
+    STRING_DT,
     BOOLEAN,
     NIL,
     UNDEFINED,

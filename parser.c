@@ -296,7 +296,4 @@ int parse_call_function(tDList *token_list) {
 
     return check_end_of_line(&token_list);
 
-
-
-    
 }
