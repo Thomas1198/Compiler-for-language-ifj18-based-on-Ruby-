@@ -271,7 +271,9 @@ int parse_identifier(tDList *token_list) {
 
     if (is_set_type(token_actual, CHAR_ASSIGN)) {
         return parse_assign_value(&token_list);
-    }if(is_set_type(token_actual, IDENTIFIER_NAME)||is_set_type(token_actual, LITERAL_NAME)){
+    }
+    if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
+        is_set_type(token_actual,LITERAL_STRING) {
         return parse_call_function(&token_list);
     }
 
@@ -284,9 +286,10 @@ int parse_assign_value(tDList *token_list) {
 
 }
 
-int parse_call_function(tDList *token_list){
+int parse_call_function(tDList *token_list) {
     int err_code;
-    struct tToken token_actual=token_list->Act->token;
+    struct tToken token_actual = token_list->Act->token;
+    //TODO více paramettů
 
 
     return 0;
