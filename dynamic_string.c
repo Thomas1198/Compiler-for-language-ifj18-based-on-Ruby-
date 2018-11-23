@@ -24,17 +24,16 @@ void dynamic_string_free(Dynamic_string *s) {
     free(s->str);
 }
 
-bool dynamic_string_add_char(Dynamic_string *s, char c) {   //TODO: nastavit na VOID
+void dynamic_string_add_char(Dynamic_string *s, char c) {
     if ((s->length + 1) >= s->alloc_size) {
         unsigned int new_size = s->length + DYNAMIC_STRING_LENGTH;
         if ((s->str = (char *) realloc(s->str, new_size)))
             s->alloc_size = new_size;
         else
-            return false;
+            ErrorPrint(INTERNAL_ERROR, "Internal fault in dynamic_string.c");
     }
     s->str[s->length++] = c;
     s->str[s->length] = '\0';
-    return true;
 }
 
 void dynamic_string_add_const_str(Dynamic_string *s, const char *const_string) {
