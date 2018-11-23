@@ -12,6 +12,7 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
+    return 0;
 }
 
 void first_run(tDList *token_list, FILE *source_code) {
@@ -75,7 +76,7 @@ int parsing(tDList token_list) {
      */
 
     do {
-        token_actual = act->token;
+        token_actual = token_list.Act->token;
 
         switch (token_actual.set_type_of_token) {
             case CHAR_EOL: {
@@ -83,7 +84,7 @@ int parsing(tDList token_list) {
             }
             case KEY_WORD_DEF: {
 
-                if ((err_code = parse_def(&act)) != 0) {
+                if ((err_code = parse_def(&token_list)) != 0) {
                     return err_code;
                 }
 
@@ -92,7 +93,7 @@ int parsing(tDList token_list) {
 
             case KEY_WORD_IF: {
 
-                if ((err_code = parse_if(&act)) != 0) {
+                if ((err_code = parse_if(&token_list)) != 0) {
                     return err_code;
                 }
                 break;
@@ -100,7 +101,7 @@ int parsing(tDList token_list) {
 
             case KEY_WORD_WHILE: {
 
-                if ((err_code = parse_while(&act)) != 0) {
+                if ((err_code = parse_while(&token_list)) != 0) {
                     return err_code;
                 }
                 break;
@@ -108,7 +109,7 @@ int parsing(tDList token_list) {
 
             case KEY_WORD_END: {
 
-                if ((err_code = parse_end(&act)) != 0) {
+                if ((err_code = parse_end(&token_list)) != 0) {
                     return err_code;
                 }
                 break;
@@ -116,7 +117,7 @@ int parsing(tDList token_list) {
 
             case IDENTIFIER_NAME: {
 
-                if ((err_code = parse_identifier(&act)) != 0) {
+                if ((err_code = parse_identifier(&token_list)) != 0) {
                     return err_code;
                 }
 
