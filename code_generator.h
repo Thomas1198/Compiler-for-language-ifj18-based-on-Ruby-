@@ -8,6 +8,7 @@
 #define PROJECT_CODE_GENERATOR_H
 
 #include "dynamic_string.h"
+#include "token.h"
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -18,7 +19,7 @@
     if (!dynamic_string_add_const_str(&gen_code, (instruction "\n"))) return false
 
 #define ADD_COMMENT(comment) \
-    if (!dynamic_string_add_const_str(&gen_code, ( "# "comment "\n"))) return false
+    if (!dynamic_string_add_const_str(&gen_code, ( "# "comment ))) return false
 
 #define ADD_CODE(code) \
     if (!dynamic_string_add_const_str(&gen_code, (code))) return false
@@ -29,6 +30,20 @@
       sprintf(string, "%d", code); \
       ADD_CODE(string); \
     } while (0) \
+
+
+/// Build-functions
+
+///Print/
+/*
+#define PRINT \
+    "\n # Build-in function" \
+    "\n LABEL $print" \
+    "\n PUSHFRAME" \
+    "\n WRITE LF@%" \
+	"\n POPFRAME" \
+	"\n RETURN" \
+*/
 
 
 /**
@@ -65,9 +80,39 @@ bool generate_main_start();
  */
 bool generate_main_end();
 
+/**
+ * @brief Generate function call
+ * @param name Name of function
+ * @return True if its OK
+ */
+bool generate_function_call(char *name);
+/**
+ * @brief Generate frame to load parameters
+ * @return True if its OK
+ */
+bool generate_function_before_par();
 
+/**
+ * @brief Generate pass parameter
+ * @param param token with parametr
+ * @param index index
+ * @return True if its OK
+ */
+bool generate_function_par(tToken param, int index);
 
+/**
+ * @brief Generate function start
+ * @param name Name of function
+ * @return True if its OK
+ */
+bool generate_function_start(char *name);
 
+/**
+ * @brief Generate function end
+ * @param name Name of function
+ * @return True if its OK
+ */
+bool generate_function_end(char *name);
 
 
 
