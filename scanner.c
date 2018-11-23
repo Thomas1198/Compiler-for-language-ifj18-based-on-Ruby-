@@ -14,7 +14,7 @@
 Dynamic_string *content_string;
 //FILE *source_file;
 
-tToken getToken(FILE *source_file)
+struct tToken getToken(FILE *source_file)
 {
 	if (source_file == NULL)
 	{
@@ -22,7 +22,7 @@ tToken getToken(FILE *source_file)
 	}
         
         
-        tToken *token;
+        struct tToken *token;
 	token->content_string = content_string;
 
 	//Setuji current_state na DEFAULT
