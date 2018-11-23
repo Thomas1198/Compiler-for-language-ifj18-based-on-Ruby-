@@ -74,14 +74,14 @@ bool generate_function_call(char *name)
 
 bool generate_function_before_par()
 {
-    ADD_INSTRUCTION("CREATEFRAME")
+    ADD_INSTRUCTION("CREATEFRAME");
     return true;
 }
 
-bool generate_function_par(tToken param, int index)
+bool generate_function_par(struct tToken param, int index)
 {
-    ADD_CODE("DEFVAR LF@"); ADD_CODE(param.content_string); ADD_CODE("/n");
-    ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string); ADD_CODE("LF@"); ADD_INTIGER(index);
+    ADD_CODE("DEFVAR LF@"); ADD_CODE(param.content_string->str); ADD_CODE("/n");
+    ADD_CODE("MOVE LF@"); ADD_CODE(param.content_string->str); ADD_CODE("LF@"); ADD_INTIGER(index);
 
     return true;
 }

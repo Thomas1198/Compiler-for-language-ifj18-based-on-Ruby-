@@ -6,13 +6,23 @@
  */
 
 #include "../code_generator.h"
-#include "../token.h"
+
+void init_token(struct tToken *token, Dynamic_string *string) {
+    token->set_type_of_token = UNDEFINED_SET;
+    token->data_type_of_token = UNDEFINED;
+    token->defined = false;
+    token->value.i = 0;
+    token->content_string = string;
+}
 
 int main()
 {
-    tToken temp;
-    temp.content_string="Hello world";
-    char fun="hello";
+    struct tToken temp;
+    Dynamic_string dyn_str;
+    dynamic_string_init(&dyn_str);
+    init_token(&temp, &dyn_str);
+    dynamic_string_add_const_str(temp.content_string, "Hello world");
+    char fun[]= "hello";
 
     generator_start();
     generate_file_head();
@@ -28,6 +38,7 @@ int main()
     generate_main_end();
     write_code();
 
+    dynamic_string_free(temp.content_string);
     generator_clear();
     return 0;
-};
+}
