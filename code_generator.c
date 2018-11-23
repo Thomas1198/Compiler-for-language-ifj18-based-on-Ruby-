@@ -7,6 +7,7 @@
 #include "code_generator.h"
 
 Dynamic_string gen_code; ///string to generated code
+Dynamic_string gen_code; ///string to generated code
 
 
 void generate_file_head()
