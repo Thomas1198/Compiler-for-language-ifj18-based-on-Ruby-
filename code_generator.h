@@ -25,7 +25,7 @@
 #define ADD_CODE(code) \
     dynamic_string_add_const_str(gen_code, (code))
 
-#define ADD_INTIGER(code) \
+#define ADD_INTEGER(code) \
     do{ \
       char string[20]; \
       sprintf(string, "%d", code); \
