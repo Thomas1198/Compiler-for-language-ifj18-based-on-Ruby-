@@ -320,7 +320,7 @@ struct tToken get_token(FILE *source_file)
                                 
                                 case (ENDCHUNKCOMMENTARY):
                                 {
-                                    
+                                    current_state = START;
                                 }
                                 break;
 
