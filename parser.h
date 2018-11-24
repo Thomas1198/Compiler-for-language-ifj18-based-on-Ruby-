@@ -8,6 +8,7 @@
 #include "token_list.h"
 #include "error.h"
 #include "symtable.h"
+#include "code_generator.h"
 
 
 #define check_set_type(token, set_type)do{\

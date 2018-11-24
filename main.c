@@ -23,5 +23,7 @@ int main(int argc, char* argv[]) {
 
     fclose(source_code);
 
+    write_code();
+
     return 0;
 }

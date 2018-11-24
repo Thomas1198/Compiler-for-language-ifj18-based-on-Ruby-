@@ -10,13 +10,14 @@ int run_parser(FILE *source_code) {
 
     first_run(&token_list, source_code);
 
-
+    generator_start();
 
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         exit(error_code);
     }
-
+    //TODO předělat na tvrdo vložený konec
+generate_main_end();
 
     DLDisposeList(&token_list);
     return 0;
@@ -116,6 +117,9 @@ int parsing(tDList token_list) {
                 if ((err_code = parse_end(&token_list)) != 0) {
                     return err_code;
                 }
+                //TODO natvrdo přidaný začatek mainu předělat
+                generate_main_start();
+
                 break;
             }
 
@@ -153,6 +157,9 @@ int parse_end(tDList *token_list) {
         return SYNTAX_ERROR;
     }
 
+    //TODO pokud je funkce
+    generate_function_end();
+
     return check_end_of_line(&(*token_list));
 }
 
@@ -166,6 +173,8 @@ int parse_def(tDList *token_list) {
 
     check_set_type(token_actual, IDENTIFIER_NAME);
 
+    generate_function_start(token_actual);
+
     try_next_token_list_p(token_actual, token_list);
 
     check_set_type(token_actual, CHAR_LEFT_BRACKET);
@@ -173,6 +182,9 @@ int parse_def(tDList *token_list) {
     if ((err_code = parse_def_arguments(&(*token_list))) != 0) {
         return err_code;
     }
+
+    //TODO pro parametry
+    //generate_function_before_par();
 
     return check_end_of_line(&*(token_list));
 }
@@ -305,7 +317,15 @@ int parse_call_function(tDList *token_list) {
     //TODO
     //TODO
 
-
+    //TODO více paramertů
+    if(is_set_type(token_list->Act->rptr->token,CHAR_EOL)){
+        generate_function_call(token_actual);
+    } else {
+        generate_function_before_par();
+        generate_function_par(token_actual, 0);
+        token_actual=token_list->Act->rptr->token;
+        generate_function_call(token_actual);
+    }
     return check_end_of_line(&(*token_list));
 
 }
