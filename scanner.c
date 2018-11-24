@@ -129,7 +129,7 @@ struct tToken get_token(FILE *source_file) {
                 }
 
                 ungetc(c, source_file);
-                token.set_type_of_token = CHAR_EOF;
+                token.set_type_of_token = CHAR_EOL;
                 return token;
 
             case (EXCLAMATION):
@@ -267,7 +267,7 @@ struct tToken get_token(FILE *source_file) {
                 } else if (c == '"') {
                     dynamic_string_copy(content_string, token.content_string);
 
-                    token.set_type_of_token = KEY_WORD_STRING;
+                    token.set_type_of_token = LITERAL_STRING;
                     dynamic_string_free(content_string);
                     return token;
                 } else {
@@ -372,7 +372,7 @@ struct tToken process_identifier(Dynamic_string *str, struct tToken token) {
     else if (!dynamic_string_cmp_const_str(str, "nil")) token.set_type_of_token = KEY_WORD_NIL;
     else if (!dynamic_string_cmp_const_str(str, "then")) token.set_type_of_token = KEY_WORD_THEN;
     else if (!dynamic_string_cmp_const_str(str, "end")) token.set_type_of_token = KEY_WORD_END;
-    else token.set_type_of_token = KEY_WORD_IDENTIFIER;
+    else token.set_type_of_token = IDENTIFIER_NAME;
 
     return token;
 }

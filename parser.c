@@ -42,13 +42,11 @@ bool is_set_type(struct tToken token, set_type set_type1) {
 
 int parsing(tDList token_list) {
     struct tToken token_actual;
-    tDLElemPtr act;
     int err_code;
     if (token_list.First == NULL) {
         //TODO zkontrovlovat chybovou hlášku
         return 0;
     }
-    act = token_list.First;
     DLFirst(&token_list);
 
     /*
@@ -137,7 +135,7 @@ int parsing(tDList token_list) {
             }
         }
 
-    } while ((act = act->rptr) != NULL);
+    } while ((token_list.Act = token_list.Act->rptr) != NULL);
 
     if (end_req != 0) {
         return SYNTAX_ERROR;
@@ -159,6 +157,8 @@ int parse_end(tDList *token_list) {
 int parse_def(tDList *token_list) {
     int err_code;
     struct tToken token_actual;
+
+    end_req++;
 
     try_next_token_list_p(token_actual, token_list);
 
@@ -219,16 +219,18 @@ int check_end_of_line(tDList *token_list) {
             return SYNTAX_ERROR;
         }
     } else if (is_set_type(token_actual, CHAR_EOL)) {
-        end_req++;
         return 0;
     } else {
         return SYNTAX_ERROR;
     }
+
 }
 
 int parse_if(tDList *token_list) {
     int err_code;
     struct tToken token_actual;
+
+    end_req++;
 
     try_next_token_list_p(token_actual, token_list);
 
@@ -247,6 +249,8 @@ int parse_if(tDList *token_list) {
 int parse_while(tDList *token_list) {
     int err_code;
     struct tToken token_actual;
+
+    end_req++;
 
     try_next_token_list_p(token_actual, token_list);
 
@@ -298,6 +302,7 @@ int parse_call_function(tDList *token_list) {
     //TODO
     //TODO
     //TODO
+
 
     return check_end_of_line(&(*token_list));
 

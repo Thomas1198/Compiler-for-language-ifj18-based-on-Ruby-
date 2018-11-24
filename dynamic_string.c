@@ -28,7 +28,10 @@ Dynamic_string *dynamic_string_init() {
 }
 
 void dynamic_string_free(Dynamic_string *s) {
-    free(s->str);
+    if (s != NULL) {
+        free(s->str);
+    }
+
 }
 
 void dynamic_string_add_char(Dynamic_string *s, char c) {
