@@ -96,11 +96,10 @@ void generate_function_start(struct tToken function)
 
 }
 
-void generate_function_end(char *name)
+void generate_function_end()
 {
     ADD_COMMENT("End of function "); ADD_CODE(name); ADD_CODE("\n");
 
-    ADD_CODE("LABEL $"); ADD_CODE(name); ADD_CODE("%return\n");
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("RETURN");
 }

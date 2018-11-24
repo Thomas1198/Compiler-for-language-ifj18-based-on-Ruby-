@@ -153,9 +153,8 @@ void generate_function_start(struct tToken function);
 
 /**
  * @brief Generate function end
- * @param name Name of function
  */
-void generate_function_end(char *name);
+void generate_function_end();
 
 
 
