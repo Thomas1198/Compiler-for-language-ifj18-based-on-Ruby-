@@ -4,6 +4,8 @@ int run_parser(FILE *source_code) {
     tDList token_list;
     int error_code;
 
+    DLInitList(&token_list);
+
     symtable_create(&hTable);
 
     first_run(&token_list, source_code);
@@ -12,6 +14,8 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
+
+    DLDisposeList(&token_list);
     return 0;
 }
 
