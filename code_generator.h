@@ -75,7 +75,7 @@
     "\n LABEL $length" \
     "\n PUSHFRAME" \
     "\n DEFVAR LF@%return" \
-    "\n STRLEN LF@%return LF@%1" \
+    "\n STRLEN LF@%return LF@%0" \
 	"\n POPFRAME" \
 	"\n RETURN"
 
@@ -132,7 +132,7 @@ void generate_main_end();
  * @brief Generate function call
  * @param name Name of function
  */
-void generate_function_call(char *name);
+void generate_function_call(struct tToken function);
 /**
  * @brief Generate frame to load parameters
  */

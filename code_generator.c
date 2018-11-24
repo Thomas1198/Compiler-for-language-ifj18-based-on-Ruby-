@@ -67,11 +67,11 @@ void generate_main_end()
     ADD_INSTRUCTION("CLEARS");
 }
 
-void generate_function_call(char *name)
+void generate_function_call(struct tToken function)
 {
     ADD_COMMENT("Function call\n");
 
-    ADD_CODE("CALL $"); ADD_CODE(name); ADD_CODE("\n");
+    ADD_CODE("CALL $"); ADD_CODE(function.content_string); ADD_CODE("\n");
 
 }
 
