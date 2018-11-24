@@ -29,7 +29,6 @@ void generate_build_in_functions()
     ADD_INSTRUCTION(SUBSTR);
     ADD_INSTRUCTION(ASC);
     ADD_INSTRUCTION(CHR);
-
 }
 
 void generator_start()
