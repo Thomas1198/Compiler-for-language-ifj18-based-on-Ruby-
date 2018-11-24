@@ -15,12 +15,6 @@
 #include <stdlib.h>
 #include "error.h"
 
-struct tToken get_token(FILE *source_code);
-
-void initFile(FILE *f);
-
-void set_content_string(Dynamic_string *string);
-
 typedef enum {
     START,
     COMMENTARY,
@@ -44,7 +38,19 @@ typedef enum {
     EQUALS,
     EXCLAMATION,
     STARTCHUNKCOMMENTARY,
-    ENDCHUNKCOMMENTARY        
+    ENDCHUNKCOMMENTARY
 } SCANNER_STATE;
+
+
+struct tToken get_token(FILE *source_file);
+
+struct tToken process_commentary(Dynamic_string *str, struct tToken token, FILE *f, SCANNER_STATE *state);
+
+struct tToken process_integer(Dynamic_string *content, struct tToken token);
+
+struct tToken process_decimal(Dynamic_string *content, struct tToken token);
+
+struct tToken process_identifier(Dynamic_string *str, struct tToken token);
+
 
 #endif //PROJECT_SCANNER_H
