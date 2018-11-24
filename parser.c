@@ -31,7 +31,6 @@ void first_run(tDList *token_list, FILE *source_code) {
 
             }
         }
-
     }
 }
 
