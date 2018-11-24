@@ -110,7 +110,6 @@ struct tToken get_token(FILE *source_file) {
                 ungetc(c, source_file);
                 token.set_type_of_token = CHAR_EOF;
                 return token;
-                break;
 
             case (EXCLAMATION):
                 if (isspace(c) || (c == '\n')) {
@@ -119,8 +118,6 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = CHAR_NEQ;
                 }
                 return token;
-                break;
-
 
             case (NUMBER):
                 if (isdigit(c)) {
@@ -264,11 +261,11 @@ struct tToken get_token(FILE *source_file) {
 
 }
 
-struct tToken process_commentary(Dynamic_string *str, struct tToken token, FILE f, SCANNER_STATE *state) {
-    if (!dynamic_string_cmp_const_str(str, "=begin")) state = STARTCHUNKCOMMENTARY;
-    else if (!dynamic_string_cmp_const_str(str, "=end")) state = ENDCHUNKCOMMENTARY;
+struct tToken process_commentary(Dynamic_string *str, struct tToken token, FILE *f, SCANNER_STATE *state) {
+    if (!dynamic_string_cmp_const_str(str, "=begin")) *state = STARTCHUNKCOMMENTARY;
+    else if (!dynamic_string_cmp_const_str(str, "=end")) *state = ENDCHUNKCOMMENTARY;
     else {
-        if (state != STARTCHUNKCOMMENTARY) {
+        if (*state != STARTCHUNKCOMMENTARY) {
             fseek(f, strlen(str) - 1, SEEK_CUR);
             token.set_type_of_token = EQUALS;
             dynamic_string_free(content_string);
@@ -279,29 +276,29 @@ struct tToken process_commentary(Dynamic_string *str, struct tToken token, FILE 
 
 struct tToken process_integer(Dynamic_string *content, struct tToken token) {
     char *arrayofchars;
-    int value = strtol(content_string->str, &arrayofchars, 10);
+    int value = strtol(content->str, &arrayofchars, 10);
     if (*arrayofchars) {
-        dynamic_string_free(content_string);
+        dynamic_string_free(content);
         ErrorPrint(99, "stringadd error");
     }
 
     token.value = (union value_union) value;
     token.set_type_of_token = INTEGER;
-    dynamic_string_free(content_string);
+    dynamic_string_free(content);
     return token;
 }
 
 struct tToken process_decimal(Dynamic_string *content, struct tToken token) {
     char *arrayofchars;
-    int value = strtod(content_string->str, &arrayofchars);
+    double value = strtod(content->str, &arrayofchars);
     if (*arrayofchars) {
-        dynamic_string_free(content_string);
+        dynamic_string_free(content);
         ErrorPrint(99, "stringadd error");
     }
 
-    token.value = (union value_union) value;
+    token.value.d = value;
     token.set_type_of_token = DOUBLE;
-    dynamic_string_free(content_string);
+    dynamic_string_free(content);
     return token;
 }
 
