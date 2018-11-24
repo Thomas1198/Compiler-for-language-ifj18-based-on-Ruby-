@@ -29,8 +29,7 @@ struct tToken get_token(FILE *source_file)
 	SCANNER_STATE current_state = START;
 	token.set_type_of_token = EMPTY;
 
-	content_string=dynamic_string_init();
-
+        content_string=dynamic_string_init();
 
 	//Declaration of the scanner char
 	int c = 0;
@@ -54,7 +53,7 @@ struct tToken get_token(FILE *source_file)
 			}
 			else if (c == '#')
 			{
-				current_state = CHUNK_COMMENTARY;
+				current_state = COMMENTARY;
 			}
 			else if (c == '_' || isalpha(c))
 			{
@@ -150,7 +149,6 @@ struct tToken get_token(FILE *source_file)
 			}
 			break;
 			
-			//__________________
 
 			case (EOL):
 				if (isspace(c))
@@ -196,7 +194,7 @@ struct tToken get_token(FILE *source_file)
 				else
 				{
 					ungetc(c, source_file);
-					//process_integer
+					process_integer(content_string, token);
 				}
 
 				break;
@@ -228,7 +226,7 @@ struct tToken get_token(FILE *source_file)
 				else
 				{
 					ungetc(c, source_file);
-					//process_decimal
+					process_decimal(content_string, token);
 				}
 				break;
 
@@ -277,7 +275,7 @@ struct tToken get_token(FILE *source_file)
 				else
 				{
 					ungetc(c, source_file);
-					//process_decimal;
+					process_decimal(content_string, token);
 				}
 				break;
 
@@ -303,16 +301,38 @@ struct tToken get_token(FILE *source_file)
 					ungetc(c, source_file);
 				}
 				break;
+                                
+                                case (STARTCHUNKCOMMENTARY):
+                                {
+                                    if (c == '=')
+                                    {
+                                        if (isalpha(c))
+                                        {
+                                            dynamic_string_add_char(content_string, (char) tolower(c));
+                                        }
+                                    else if (isspace(c))
+                                        {
+                                            process_commentary(content_string, token, source_file);
+                                        }
+                                    }
+                                }
+                                break;
+                                
+                                case (ENDCHUNKCOMMENTARY):
+                                {
+                                    
+                                }
+                                break;
 
 				case (EQUALS):
 				if (isalpha(c))
-				{/*
-					if (!dynamic_string_add_char(content_string, (char) tolower(c)))
-					{
-						//FSEEK VOLE
-					}
-                                  */
+				{
+					dynamic_string_add_char(content_string, (char) tolower(c));
 				}
+                                else if (isspace(c))
+                                {
+                                    process_commentary(content_string, token, source_file);
+                                }
 
 				break;
 
@@ -343,6 +363,22 @@ struct tToken get_token(FILE *source_file)
 			}
 		
 	}
+
+        struct tToken process_commentary(Dynamic_string *str, struct tToken token, FILE f, SCANNER_STATE *state)
+        {
+            if (!dynamic_string_cmp_const_str(str, "=begin")) state = STARTCHUNKCOMMENTARY;
+            else if (!dynamic_string_cmp_const_str(str, "=end")) state = ENDCHUNKCOMMENTARY;
+            else 
+            {
+                if (state != STARTCHUNKCOMMENTARY)
+                {
+                    fseek(f, strlen(str)-1,SEEK_CUR); 
+                    token.set_type_of_token = EQUALS;
+                    dynamic_string_free(content_string);
+                    return token;
+                }
+            }
+        }
 
 	struct tToken process_integer(Dynamic_string *content, struct tToken token)
 	{
@@ -378,21 +414,17 @@ struct tToken get_token(FILE *source_file)
 
 	struct tToken process_identifier(Dynamic_string *str, struct tToken token)
 	{
-            /*
-		if (!dynamic_string_cmp_const_str(str, "int")) token.set_type_of_token = KEY_WORD_INT;
+                if (!dynamic_string_cmp_const_str(str, "def")) token.set_type_of_token = KEY_WORD_DEF;
 		else if (!dynamic_string_cmp_const_str(str, "if")) token.set_type_of_token = KEY_WORD_IF;
-		//else if (!dynamic_string_cmp_const_str(str, "for")) token.set_type_of_token = KEY_WORD_FOR;
 		else if (!dynamic_string_cmp_const_str(str, "while")) token.set_type_of_token = KEY_WORD_WHILE;
-		//else if (!dynamic_string_cmp_const_str(str, "bool")) token.set_type_of_token = KEY_WORD_BOOL;
-		//else if (!dynamic_string_cmp_const_str(str, "true")) token.set_type_of_token = KEY_WORD_TRUE;
-		//else if (!dynamic_string_cmp_const_str(str, "false")) token.set_type_of_token = KEY_WORD_FALSE;
 		else if (!dynamic_string_cmp_const_str(str, "do")) token.set_type_of_token = KEY_WORD_DO;
-		//else if (!dynamic_string_cmp_const_str(str, "exit")) token.set_type_of_token = KEY_WORD_EXIT;
 		else if (!dynamic_string_cmp_const_str(str, "else")) token.set_type_of_token = KEY_WORD_ELSE;
-		//else if (!dynamic_string_cmp_const_str(str, "elseif")) token.set_type_of_token = KEY_WORD_ELSEIF;
-		//else if (!dynamic_string_cmp_const_str(str, "double")) token.set_type_of_token = KEY_WORD_DOUBLE;
+                else if (!dynamic_string_cmp_const_str(str, "not")) token.set_type_of_token = KEY_WORD_NOT;
+                else if (!dynamic_string_cmp_const_str(str, "nil")) token.set_type_of_token = KEY_WORD_NIL;
+                else if (!dynamic_string_cmp_const_str(str, "then")) token.set_type_of_token = KEY_WORD_THEN;
 		else if (!dynamic_string_cmp_const_str(str, "end")) token.set_type_of_token = KEY_WORD_END;
-                */
+                else token.set_type_of_token = KEY_WORD_IDENTIFIER;
+                
 	}
 
 
