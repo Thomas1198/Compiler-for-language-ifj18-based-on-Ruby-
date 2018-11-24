@@ -25,7 +25,7 @@ struct tToken get_token(FILE *source_file) {
 
     //Setuji current_state na DEFAULT
     SCANNER_STATE current_state = START;
-    token.set_type_of_token = EMPTY;
+    token.set_type_of_token = UNDEFINED_SET;
 
     content_string = dynamic_string_init();
 
@@ -83,15 +83,22 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = CHAR_RIGHT_BRACKET;
                     dynamic_string_free(content_string);
                     return token;
-                } else if (c == ';') {
+                }
+                /*else if (c == ';') {
                     token.set_type_of_token = CHAR_SEMICOLON;
                     dynamic_string_free(content_string);
                     return token;
-                } else if (c == '"') {
+                }
+                 */
+                else if (c == '"') {
                     current_state = STRING_START;
                 } else if (c == '!') {
                     current_state = EXCLAMATION;
-                } else if (c == EOF) {
+                }
+                else if (c == ';') {
+                    current_state = SEMICOLON;
+                }
+                else if (c == EOF) {
                     token.set_type_of_token = CHAR_EOF;
                     dynamic_string_free(content_string);
                     return token;
@@ -101,6 +108,20 @@ struct tToken get_token(FILE *source_file) {
                 }
                 break;
 
+            case (KEYWORD):
+            {
+                if (isalnum(c) || c == '_')
+                {
+                    dynamic_string_add_char(content_string, (char) tolower(c));
+                }
+                else
+                {
+                    ungetc(c, source_file);
+                    return process_identifier(content_string, token);
+                }
+
+            }
+                break;
 
             case (EOL):
                 if (isspace(c)) {
@@ -219,7 +240,7 @@ struct tToken get_token(FILE *source_file) {
                     if (isalpha(c)) {
                         dynamic_string_add_char(content_string, (char) tolower(c));
                     } else if (isspace(c)) {
-                        process_commentary(content_string, token, source_file);
+                        return process_commentary(content_string, token, source_file, &current_state);
                     }
                 }
             }
@@ -234,7 +255,7 @@ struct tToken get_token(FILE *source_file) {
                 if (isalpha(c)) {
                     dynamic_string_add_char(content_string, (char) tolower(c));
                 } else if (isspace(c)) {
-                    process_commentary(content_string, token, source_file);
+                    return process_commentary(content_string, token, source_file, &current_state);
                 }
 
                 break;
@@ -246,7 +267,7 @@ struct tToken get_token(FILE *source_file) {
                 } else if (c == '"') {
                     dynamic_string_copy(content_string, token.content_string);
 
-                    token.set_type_of_token = STRING;
+                    token.set_type_of_token = KEY_WORD_STRING;
                     dynamic_string_free(content_string);
                     return token;
                 } else {
@@ -256,6 +277,45 @@ struct tToken get_token(FILE *source_file) {
                 break;
 
 
+            case LESS_THAN:
+            {
+                if (c == '=')
+                {
+                    token.set_type_of_token = CHAR_LEQ;
+                }
+                else
+                {
+                    ungetc(c, source_file);
+                    token.set_type_of_token = CHAR_LT;
+                }
+
+            }  break;
+            case GREATER_THAN:
+            {
+                if (c == '=')
+                {
+                    token.set_type_of_token = CHAR_GEQ;
+                }
+                else
+                {
+                    ungetc(c, source_file);
+                    token.set_type_of_token = CHAR_GT;
+                }
+
+            }
+            break;
+
+            case SEMICOLON:
+            {
+                if((isspace(c) || (c=='\n')))
+                {
+                    token.set_type_of_token = CHAR_SEMICOLON;
+                    dynamic_string_free(content_string);
+                    return token;
+                }
+
+            }
+            break;
         }
     }
 
@@ -266,7 +326,7 @@ struct tToken process_commentary(Dynamic_string *str, struct tToken token, FILE 
     else if (!dynamic_string_cmp_const_str(str, "=end")) *state = ENDCHUNKCOMMENTARY;
     else {
         if (*state != STARTCHUNKCOMMENTARY) {
-            fseek(f, strlen(str) - 1, SEEK_CUR);
+            fseek(f, strlen((char*)str) - 1, SEEK_CUR);
             token.set_type_of_token = EQUALS;
             dynamic_string_free(content_string);
             return token;
@@ -282,8 +342,8 @@ struct tToken process_integer(Dynamic_string *content, struct tToken token) {
         ErrorPrint(99, "stringadd error");
     }
 
-    token.value = (union value_union) value;
-    token.set_type_of_token = INTEGER;
+    token.value.i =  value;
+    token.set_type_of_token = CHAR_INTEGER;
     dynamic_string_free(content);
     return token;
 }

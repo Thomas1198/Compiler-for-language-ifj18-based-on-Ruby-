@@ -14,7 +14,7 @@ void dynamic_string_clear(Dynamic_string *s) {
 Dynamic_string *dynamic_string_init() {
     Dynamic_string *s;
     s = (Dynamic_string *) malloc(sizeof(Dynamic_string));
-    if( s == NULL)
+    if (s == NULL)
         ErrorPrint(INTERNAL_ERROR, "Internal fault in dynamic_string.c");
 
     s->str = (char *) malloc(DYNAMIC_STRING_LENGTH);

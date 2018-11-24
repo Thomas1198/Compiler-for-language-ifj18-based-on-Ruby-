@@ -10,8 +10,6 @@
 #include <stdlib.h>
 
 
-
-
 enum ERROR_CODE {
     SCANNER_ERROR = 1,         // Lexical analysis error
     SYNTAX_ERROR = 2,          // Syntax analysis error
