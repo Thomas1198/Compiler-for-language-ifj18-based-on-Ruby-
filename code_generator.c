@@ -87,11 +87,11 @@ void generate_function_par(struct tToken param, int index)
 
 }
 
-void generate_function_start(char *name)
+void generate_function_start(struct tToken function)
 {
-    ADD_COMMENT("Start of function "); ADD_CODE(name); ADD_CODE("\n");
+    ADD_COMMENT("Start of function "); ADD_CODE(function.content_string); ADD_CODE("\n");
 
-    ADD_CODE("LABEL $"); ADD_CODE(name); ADD_CODE("\n");
+    ADD_CODE("LABEL $"); ADD_CODE(function.content_string); ADD_CODE("\n");
     ADD_INSTRUCTION("PUSHFRAME");
 
 }
