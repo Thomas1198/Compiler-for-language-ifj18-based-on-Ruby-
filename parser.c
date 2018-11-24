@@ -9,6 +9,9 @@ int run_parser(FILE *source_code) {
     symtable_create(&hTable);
 
     first_run(&token_list, source_code);
+
+
+
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         exit(error_code);
