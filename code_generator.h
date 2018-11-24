@@ -85,11 +85,11 @@
 
 #define ASC \
     "\n #ASC" \
-    "\n LABEL $asc" \ // TODO do it ! DO NOT PROCRASTINATE !
+    "\n LABEL $asc"  // TODO do it ! DO NOT PROCRASTINATE !
 
 #define CHR \
     "\n #CHR" \
-    "\n LABEL $chr" \ // TODO do it ! DO NOT PROCRASTINATE !
+    "\n LABEL $chr"  // TODO do it ! DO NOT PROCRASTINATE !
 
 
 
