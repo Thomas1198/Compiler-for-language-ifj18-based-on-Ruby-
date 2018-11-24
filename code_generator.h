@@ -149,7 +149,7 @@ void generate_function_par( struct tToken param, int index);
  * @brief Generate function start
  * @param name Name of function
  */
-void generate_function_start(char *name);
+void generate_function_start(struct tToken function);
 
 /**
  * @brief Generate function end
