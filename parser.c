@@ -224,6 +224,7 @@ int check_end_of_line(tDList *token_list) {
     } else {
         return SYNTAX_ERROR;
     }
+
 }
 
 int parse_if(tDList *token_list) {
