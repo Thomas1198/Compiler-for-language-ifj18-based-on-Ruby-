@@ -267,7 +267,7 @@ struct tToken get_token(FILE *source_file) {
                 } else if (c == '"') {
                     dynamic_string_copy(content_string, token.content_string);
 
-                    token.set_type_of_token = KEY_WORD_STRING;
+                    token.set_type_of_token = LITERAL_STRING;
                     dynamic_string_free(content_string);
                     return token;
                 } else {
