@@ -374,6 +374,7 @@ struct tToken process_identifier(Dynamic_string *str, struct tToken token) {
     else if (!dynamic_string_cmp_const_str(str, "end")) token.set_type_of_token = KEY_WORD_END;
     else token.set_type_of_token = KEY_WORD_IDENTIFIER;
 
+    return token;
 }
 
 

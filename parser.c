@@ -18,7 +18,7 @@ int run_parser(FILE *source_code) {
 void first_run(tDList *token_list, FILE *source_code) {
     struct tToken token_actual;
 
-    while ((token_actual = get_token(source_code)).set_type_of_token != CHAR_EOF) {
+    while (((token_actual = get_token(source_code))).set_type_of_token != CHAR_EOF) {
         DLInsertLast(&(*token_list), token_actual);
 
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
