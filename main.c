@@ -25,5 +25,7 @@ int main(int argc, char* argv[]) {
 
     write_code();
 
+    generator_clear();
+
     return 0;
 }
