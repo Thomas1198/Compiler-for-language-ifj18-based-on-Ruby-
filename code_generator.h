@@ -25,12 +25,12 @@
 #define ADD_CODE(code) \
     dynamic_string_add_const_str(gen_code, (code))
 
-#define ADD_INTIGER(code) \
+#define ADD_INTEGER(code) \
     do{ \
       char string[20]; \
       sprintf(string, "%d", code); \
       ADD_CODE(string); \
-    } while (0) \
+    } while (0)
 
 
 /// Build-functions
@@ -44,7 +44,7 @@
     "\n PUSHFRAME" \
     "\n WRITE LF@%1" \
 	"\n POPFRAME" \
-	"\n RETURN" \
+	"\n RETURN"
 
 #define INPUTS \
     "\n #INPUTS" \
@@ -52,7 +52,7 @@
     "\n PUSHFRAME" \
     "\n READ LF@input string" \
 	"\n POPFRAME" \
-	"\n RETURN" \
+	"\n RETURN"
 
 #define INPUTI \
     "\n #INPUTS" \
@@ -60,7 +60,7 @@
     "\n PUSHFRAME" \
     "\n READ LF@input int" \
 	"\n POPFRAME" \
-	"\n RETURN" \
+	"\n RETURN"
 
 #define INPUTF \
     "\n #INPUTS" \
@@ -68,7 +68,7 @@
     "\n PUSHFRAME" \
     "\n READ LF@input float" \
 	"\n POPFRAME" \
-	"\n RETURN" \
+	"\n RETURN"
 
 #define LENGTH \
     "\n #LENGTH" \
@@ -77,11 +77,11 @@
     "\n DEFVAR LF@%return" \
     "\n STRLEN LF@%return LF@%1" \
 	"\n POPFRAME" \
-	"\n RETURN" \
+	"\n RETURN"
 
 #define SUBSTR \
     "\n #SUBSTR" \
-    "\n LABEL $substr" // TODO do it ! DO NOT PROCRASTINATE !
+    "\n LABEL $substr"  // TODO do it ! DO NOT PROCRASTINATE !
 
 #define ASC \
     "\n #ASC" \
