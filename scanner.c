@@ -129,7 +129,7 @@ struct tToken get_token(FILE *source_file) {
                 }
 
                 ungetc(c, source_file);
-                token.set_type_of_token = CHAR_EOF;
+                token.set_type_of_token = CHAR_EOL;
                 return token;
 
             case (EXCLAMATION):
