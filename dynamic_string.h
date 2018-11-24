@@ -18,8 +18,7 @@
 /**
  * @struct Dynamic string
  */
-typedef struct
-{
+typedef struct {
     char *str;  //  string
     unsigned int length;    // length of string
     unsigned int alloc_size;    //  number of chars allocated for string

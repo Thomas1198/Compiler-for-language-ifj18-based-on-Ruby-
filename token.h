@@ -49,7 +49,7 @@ typedef enum {
     DOUBLE,
     UNDEFINED_SET,
     CHAR_EXCLAMATION,
-    KEY_WORD_IDENTIFIER        
+    KEY_WORD_IDENTIFIER
 
 
 } set_type;

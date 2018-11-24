@@ -15,8 +15,8 @@
 static unsigned long hash(const char *str) {
     unsigned int h = 0;
     const unsigned char *p;
-    for(p = (const unsigned char*) str; *p != '\0'; p++)
-        h = 65599*h + *p;
+    for (p = (const unsigned char *) str; *p != '\0'; p++)
+        h = 65599 * h + *p;
 
     return h % MAX_TABLE_SIZE;
 }
@@ -27,13 +27,13 @@ void symtable_create(Symtable *table) {
             (*table)[i] = NULL;
 }
 
-void symtable_insert(Symtable *table, struct tToken *token ) {
+void symtable_insert(Symtable *table, struct tToken *token) {
     if (table == NULL || token == NULL || token->content_string == NULL)
-        ErrorPrint(INTERNAL_ERROR,"Prazdny ukazatel tabulky, tokenu nebo klice v symtable.c");
+        ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky, tokenu nebo klice v symtable.c");
 
     struct htab_item *new_item = (struct htab_item *) malloc(sizeof(struct htab_item));
     if (new_item == NULL)
-        ErrorPrint(INTERNAL_ERROR,"Neuspesna alokace nove polozky tabulky v symtable.c");
+        ErrorPrint(INTERNAL_ERROR, "Neuspesna alokace nove polozky tabulky v symtable.c");
 
     unsigned long index = hash(token->content_string->str);
     new_item->next = *table[index];  //TODO jak?
@@ -53,13 +53,13 @@ struct tToken *symtable_get(Symtable *table, Dynamic_string *key) {
     return NULL;
 }
 
-void symtable_remove(Symtable *table, Dynamic_string *key){
+void symtable_remove(Symtable *table, Dynamic_string *key) {
     if (table == NULL || key == NULL)
         ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky nebo klice v symtable.c");
 
     unsigned long index = hash(key->str);
     Titem *previous = (*table)[index];
-    for (Titem *tmp = (*table)[index]; tmp != NULL; tmp = tmp->next){
+    for (Titem *tmp = (*table)[index]; tmp != NULL; tmp = tmp->next) {
         if (!dynamic_string_cmp_const_str(tmp->data->content_string, key->str)) {
             previous->next = tmp->next;
             free(tmp);
@@ -69,7 +69,7 @@ void symtable_remove(Symtable *table, Dynamic_string *key){
     }
 }
 
-void symtable_destroy(Symtable *table){
+void symtable_destroy(Symtable *table) {
     if (table == NULL)
         ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky v symtable.c");
 

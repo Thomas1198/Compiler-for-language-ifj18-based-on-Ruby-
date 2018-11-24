@@ -17,7 +17,6 @@
 #include "token.h"
 
 
-
 #define MAX_TABLE_SIZE 27457 //TODO change the number
 
 /**
