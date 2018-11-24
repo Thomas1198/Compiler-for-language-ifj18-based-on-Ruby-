@@ -36,15 +36,60 @@
 /// Build-functions
 
 ///Print/
-//TODO: Build in functions
 
 #define PRINT \
     "\n # Build-in function" \
+    "\n # PRINT" \
     "\n LABEL $print" \
     "\n PUSHFRAME" \
     "\n WRITE LF@%1" \
 	"\n POPFRAME" \
 	"\n RETURN" \
+
+#define INPUTS \
+    "\n #INPUTS" \
+    "\n LABEL $inputs" \
+    "\n PUSHFRAME" \
+    "\n READ LF@input string" \
+	"\n POPFRAME" \
+	"\n RETURN" \
+
+#define INPUTI \
+    "\n #INPUTS" \
+    "\n LABEL $inputi" \
+    "\n PUSHFRAME" \
+    "\n READ LF@input int" \
+	"\n POPFRAME" \
+	"\n RETURN" \
+
+#define INPUTF \
+    "\n #INPUTS" \
+    "\n LABEL $inputf" \
+    "\n PUSHFRAME" \
+    "\n READ LF@input float" \
+	"\n POPFRAME" \
+	"\n RETURN" \
+
+#define LENGTH \
+    "\n #LENGTH" \
+    "\n LABEL $length" \
+    "\n PUSHFRAME" \
+    "\n DEFVAR LF@%return" \
+    "\n STRLEN LF@%return LF@%1" \
+	"\n POPFRAME" \
+	"\n RETURN" \
+
+#define SUBSTR \
+    "\n #SUBSTR" \
+    "\n LABEL $substr" // TODO do it ! DO NOT PROCRASTINATE !
+
+#define ASC \
+    "\n #ASC" \
+    "\n LABEL $asc" \ // TODO do it ! DO NOT PROCRASTINATE !
+
+#define CHR \
+    "\n #CHR" \
+    "\n LABEL $chr" \ // TODO do it ! DO NOT PROCRASTINATE !
 
 
 

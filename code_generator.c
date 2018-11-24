@@ -20,6 +20,16 @@ void generate_file_head()
 void generate_build_in_functions()
 {
     ADD_INSTRUCTION(PRINT);
+
+    ADD_INSTRUCTION(INPUTS);
+    ADD_INSTRUCTION(INPUTI);
+    ADD_INSTRUCTION(INPUTF);
+
+    ADD_INSTRUCTION(LENGTH);
+    ADD_INSTRUCTION(SUBSTR);
+    ADD_INSTRUCTION(ASC);
+    ADD_INSTRUCTION(CHR);
+
 }
 
 void generator_start()
