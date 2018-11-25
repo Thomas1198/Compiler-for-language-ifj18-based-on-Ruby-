@@ -319,6 +319,7 @@ int parse_call_function(tDList *token_list) {
 
     //TODO více paramertů
     if(is_set_type(token_list->Act->rptr->token,CHAR_EOL)){
+        token_actual=token_list->Act->lptr->token;
         generate_function_call(token_actual);
     } else {
         generate_function_before_par();
