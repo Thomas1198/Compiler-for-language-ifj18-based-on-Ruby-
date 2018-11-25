@@ -299,7 +299,9 @@ int parse_identifier(tDList *token_list) {
         is_set_type(token_actual, LITERAL_STRING)) {
         return parse_call_function(&(*token_list));
     } else{
+
         generate_function_call(token_list->Act->lptr->token);
+        return 0;
     }
 
     //TODO bez parametru funkce
