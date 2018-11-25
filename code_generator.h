@@ -42,7 +42,7 @@
     "\n # PRINT" \
     "\n LABEL $print" \
     "\n PUSHFRAME" \
-    "\n WRITE LF@%1" \
+    "\n WRITE LF@%0" \
 	"\n POPFRAME" \
 	"\n RETURN"
 
@@ -89,8 +89,9 @@
 
 #define CHR \
     "\n #CHR" \
-    "\n LABEL $chr"  // TODO do it ! DO NOT PROCRASTINATE !
-
+    "\n LABEL $chr" \
+    "\n PUSHFRAME" \
+    "\n DEFVAR LF@%return" \
 
 
 /**
