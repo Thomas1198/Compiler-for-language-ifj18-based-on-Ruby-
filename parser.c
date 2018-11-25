@@ -318,15 +318,12 @@ int parse_call_function(tDList *token_list) {
     //TODO
 
     //TODO více paramertů
-    if(is_set_type(token_list->Act->rptr->token,CHAR_EOL)){
-        token_actual=token_list->Act->lptr->token;
-        generate_function_call(token_actual);
-    } else {
+  
         generate_function_before_par();
         generate_function_par(token_actual, 0);
         token_actual=token_list->Act->rptr->token;
         generate_function_call(token_actual);
-    }
+
     return check_end_of_line(&(*token_list));
 
 }
