@@ -298,7 +298,11 @@ int parse_identifier(tDList *token_list) {
     if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
         is_set_type(token_actual, LITERAL_STRING)) {
         return parse_call_function(&(*token_list));
+    } else{
+        //generate_function_call(token_list->Act->token);
     }
+
+    //TODO bez parametru funkce
 
 }
 
@@ -318,12 +322,11 @@ int parse_call_function(tDList *token_list) {
     //TODO
 
     //TODO více paramertů
-  
+
         generate_function_before_par();
         generate_function_par(token_actual, 0);
-        token_actual=token_list->Act->rptr->token;
+        token_actual=token_list->Act->lptr->token;
         generate_function_call(token_actual);
-
     return check_end_of_line(&(*token_list));
 
 }
