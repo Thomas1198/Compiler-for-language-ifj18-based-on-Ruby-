@@ -14,6 +14,12 @@
 Dynamic_string *content_string;
 //FILE *source_file;
 
+int process_commentary(Dynamic_string *str, struct tToken token, FILE *f, SCANNER_STATE *ptr) {
+    if (!dynamic_string_cmp_const_str(str, "=begin")) return 1;
+    else if (!dynamic_string_cmp_const_str(str, "=end")) return 2;
+    else { return 3;}
+    }
+
 struct tToken get_token(FILE *source_file) {
     if (source_file == NULL) {
         ErrorPrint(99, "failed mount");
@@ -237,14 +243,36 @@ struct tToken get_token(FILE *source_file) {
 
             case (STARTCHUNKCOMMENTARY): {
                 if (c == '=') {
-                    if (isalpha(c)) {
-                        dynamic_string_add_char(content_string, (char) tolower(c));
-                    } else if (isspace(c)) {
-                        return process_commentary(content_string, token, source_file, &current_state);
-                    }
+                    current_state = STARTCHUNKCOMMENTARYCONTINUE;
                 }
             }
                 break;
+
+            case (STARTCHUNKCOMMENTARYCONTINUE):
+                if (isalpha(c)) {
+                    dynamic_string_add_char(content_string, (char) tolower(c)); }
+                    else if (isspace(c)) {
+                    int result = process_commentary(content_string, token, source_file, &current_state);
+                    if (result == 1)
+                    {
+                        current_state = STARTCHUNKCOMMENTARY;
+                    }
+                    else if (result == 2)
+                    {
+                        current_state = ENDCHUNKCOMMENTARY;
+                    }
+                    else
+                    {
+                        fseek(source_file, strlen((char*) content_string) - 1, SEEK_CUR);
+                        token.set_type_of_token = EQUALS;
+                        dynamic_string_free(content_string);
+                        return token;
+
+                    }
+                }
+                break;
+
+
 
             case (ENDCHUNKCOMMENTARY): {
                 current_state = START;
@@ -255,7 +283,25 @@ struct tToken get_token(FILE *source_file) {
                 if (isalpha(c)) {
                     dynamic_string_add_char(content_string, (char) tolower(c));
                 } else if (isspace(c)) {
-                    return process_commentary(content_string, token, source_file, &current_state);
+                    int result = process_commentary(content_string, token, source_file, &current_state);
+                    if (result == 1)
+                    {
+                        current_state = STARTCHUNKCOMMENTARY;
+                        dynamic_string_free(content_string);
+                    }
+                    else if (result == 2)
+                    {
+                        current_state = ENDCHUNKCOMMENTARY;
+                        dynamic_string_free(content_string);
+                    }
+                    else
+                    {
+                        fseek(source_file, strlen((char*) content_string) - 1, SEEK_CUR);
+                        token.set_type_of_token = EQUALS;
+                        dynamic_string_free(content_string);
+                        return token;
+
+                    }
                 }
 
                 break;
@@ -321,18 +367,7 @@ struct tToken get_token(FILE *source_file) {
 
 }
 
-struct tToken process_commentary(Dynamic_string *str, struct tToken token, FILE *f, SCANNER_STATE *state) {
-    if (!dynamic_string_cmp_const_str(str, "=begin")) *state = STARTCHUNKCOMMENTARY;
-    else if (!dynamic_string_cmp_const_str(str, "=end")) *state = ENDCHUNKCOMMENTARY;
-    else {
-        if (*state != STARTCHUNKCOMMENTARY) {
-            fseek(f, strlen((char*)str) - 1, SEEK_CUR);
-            token.set_type_of_token = EQUALS;
-            dynamic_string_free(content_string);
-            return token;
-        }
-    }
-}
+
 
 struct tToken process_integer(Dynamic_string *content, struct tToken token) {
     char *arrayofchars;
@@ -372,8 +407,10 @@ struct tToken process_identifier(Dynamic_string *str, struct tToken token) {
     else if (!dynamic_string_cmp_const_str(str, "nil")) token.set_type_of_token = KEY_WORD_NIL;
     else if (!dynamic_string_cmp_const_str(str, "then")) token.set_type_of_token = KEY_WORD_THEN;
     else if (!dynamic_string_cmp_const_str(str, "end")) token.set_type_of_token = KEY_WORD_END;
-    else token.set_type_of_token = IDENTIFIER_NAME;
-
+    else {
+        token.set_type_of_token = IDENTIFIER_NAME;
+        dynamic_string_copy(str, token.content_string);
+    }
     return token;
 }
 

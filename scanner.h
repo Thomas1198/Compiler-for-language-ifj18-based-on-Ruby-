@@ -35,13 +35,12 @@ typedef enum {
     EQUALS,
     EXCLAMATION,
     STARTCHUNKCOMMENTARY,
-    ENDCHUNKCOMMENTARY
+    ENDCHUNKCOMMENTARY,
+    STARTCHUNKCOMMENTARYCONTINUE,
 } SCANNER_STATE;
 
 
 struct tToken get_token(FILE *source_file);
-
-struct tToken process_commentary(Dynamic_string *str, struct tToken token, FILE *f, SCANNER_STATE *state);
 
 struct tToken process_integer(Dynamic_string *content, struct tToken token);
 
