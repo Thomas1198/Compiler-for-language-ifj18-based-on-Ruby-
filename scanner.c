@@ -11,7 +11,7 @@
 
 //end of includes
 
-Dynamic_string *content_string;
+
 //FILE *source_file;
 
 int process_commentary(Dynamic_string *str, struct tToken token, FILE *f, SCANNER_STATE *ptr) {
@@ -25,7 +25,7 @@ struct tToken get_token(FILE *source_file) {
         ErrorPrint(99, "failed mount");
     }
 
-
+    Dynamic_string *content_string;
     struct tToken token;
     init_token(&token);
 
@@ -168,8 +168,11 @@ struct tToken get_token(FILE *source_file) {
 
                 if (isdigit(c)) {
                     current_state = NUMBER_DOUBLE;
-                } else dynamic_string_free(content_string);
-
+                    dynamic_string_add_char(content_string, (char) c);
+                } else {
+                    dynamic_string_free(content_string);
+                    ErrorPrint(1, "lex error");
+                }
                 break;
 
             case (NUMBER_DOUBLE):
@@ -200,12 +203,21 @@ struct tToken get_token(FILE *source_file) {
                 break;
 
             case (NUMBER_EXP_DONE):
+                if (isdigit(c))
+                {
+                    dynamic_string_add_char(content_string, c);
+                }
+                else
+                {
+                    ungetc(c, source_file);
+                    return process_decimal(content_string, token);
+                }
 
                 break;
 
             case (NUMBER_EXP_SIGN):
                 if (isdigit(c)) {
-                    current_state = NUMBER_EXP_DONE_LAST;
+                    current_state = NUMBER_EXP_DONE;
                     dynamic_string_add_char(content_string, (char) c);
                 } else {
                     dynamic_string_free(content_string);
@@ -215,14 +227,6 @@ struct tToken get_token(FILE *source_file) {
                 break;
 
 
-            case (NUMBER_EXP_DONE_LAST):
-                if (isdigit(c)) {
-                    dynamic_string_add_char(content_string, (char) c);
-                } else {
-                    ungetc(c, source_file);
-                    process_decimal(content_string, token);
-                }
-                break;
 
             case (BACKSLASH):
                 if (c == '/') {
@@ -376,7 +380,7 @@ struct tToken process_integer(Dynamic_string *content, struct tToken token) {
     int value = strtol(content->str, &arrayofchars, 10);
     if (*arrayofchars) {
         dynamic_string_free(content);
-        ErrorPrint(99, "stringadd error");
+        ErrorPrint(99, "internal error");
     }
 
     token.value.i =  value;
@@ -390,7 +394,7 @@ struct tToken process_decimal(Dynamic_string *content, struct tToken token) {
     double value = strtod(content->str, &arrayofchars);
     if (*arrayofchars) {
         dynamic_string_free(content);
-        ErrorPrint(99, "stringadd error");
+        ErrorPrint(99, "internal error");
     }
 
     token.value.d = value;

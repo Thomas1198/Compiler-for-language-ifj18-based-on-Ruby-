@@ -25,7 +25,6 @@ typedef enum {
     NUMBER_DEC,
     NUMBER_EXP,
     NUMBER_EXP_DONE,
-    NUMBER_EXP_DONE_LAST,
     NUMBER_EXP_SIGN,
     STRING_START,
     LESS_THAN,
