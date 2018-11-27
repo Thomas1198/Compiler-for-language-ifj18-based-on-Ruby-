@@ -16,7 +16,7 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
-    DLDisposeList(&token_list);
+    //DLDisposeList(&token_list);
     return 0;
 }
 
@@ -308,39 +308,34 @@ int parse_assign_value(tDList *token_list) {
 }
 
 int parse_call_function(tDList *token_list) {
+
     struct tToken token_actual;
     bool comma = false;
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
 
-        if (comma) {
+        if (comma && !(is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
+                       is_set_type(token_actual, LITERAL_STRING))) {
             return SYNTAX_ERROR;
         }
-
-        comma = false;
 
         if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
             is_set_type(token_actual, LITERAL_STRING)) {
-            try_next_token_list_p(token_actual, token_list);
 
-            if (is_set_type(token_actual, CHAR_COMMA)) {
-                comma = true;
-                continue;
-            } else if (is_set_type(token_actual, CHAR_EOL) || is_set_type(token_actual, CHAR_SEMICOLON)) {
-                token_list->Act = token_list->Act->lptr;
-                break;
-            } else {
-                continue;
-            }
-        } else if (is_set_type(token_actual, CHAR_EOL)) {
-            break;
-        } else {
+            comma = false;
+            continue;
+        }else if (is_set_type(token_actual, CHAR_COMMA)) {
+            comma = true;
+            continue;
+        }else if(is_set_type(token_actual,CHAR_EOL)){
+            token_list->Act=token_list->Act->lptr;
+            return check_end_of_line(&(*token_list));
+        } else{
             return SYNTAX_ERROR;
         }
-
     }
 
-    return check_end_of_line(&(*token_list));
+
 
 }
