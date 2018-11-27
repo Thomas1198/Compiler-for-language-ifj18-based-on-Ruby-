@@ -10,14 +10,11 @@ int run_parser(FILE *source_code) {
 
     first_run(&token_list, source_code);
 
-    generator_start();
 
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         exit(error_code);
     }
-    //TODO předělat na tvrdo vložený konec
-generate_main_end();
 
     DLDisposeList(&token_list);
     return 0;
@@ -29,10 +26,11 @@ void first_run(tDList *token_list, FILE *source_code) {
     while (((token_actual = get_token(source_code))).set_type_of_token != CHAR_EOF) {
         DLInsertLast(&(*token_list), token_actual);
 
+        //TODO zastínění proměné
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
-            //TODO vložení do tabulky
-            if (symtable_get(&hTable, token_actual.content_string) == NULL) {
 
+            if (symtable_get(&hTable, token_actual.content_string) == NULL) {
+                symtable_insert(&hTable,&token_list->Last->token);
             }
         }
     }
@@ -117,8 +115,6 @@ int parsing(tDList token_list) {
                 if ((err_code = parse_end(&token_list)) != 0) {
                     return err_code;
                 }
-                //TODO natvrdo přidaný začatek mainu předělat
-                generate_main_start();
 
                 break;
             }
@@ -131,11 +127,7 @@ int parsing(tDList token_list) {
 
                 break;
             }
-            case LITERAL_NAME: {
 
-
-                break;
-            }
             default: {
                 return SYNTAX_ERROR;
             }
@@ -157,8 +149,6 @@ int parse_end(tDList *token_list) {
         return SYNTAX_ERROR;
     }
 
-    //TODO pokud je funkce
-    generate_function_end();
 
     return check_end_of_line(&(*token_list));
 }
@@ -173,7 +163,6 @@ int parse_def(tDList *token_list) {
 
     check_set_type(token_actual, IDENTIFIER_NAME);
 
-    generate_function_start(token_actual);
 
     try_next_token_list_p(token_actual, token_list);
 
@@ -183,8 +172,6 @@ int parse_def(tDList *token_list) {
         return err_code;
     }
 
-    //TODO pro parametry
-    //generate_function_before_par();
 
     return check_end_of_line(&*(token_list));
 }
@@ -297,14 +284,18 @@ int parse_identifier(tDList *token_list) {
     }
     if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
         is_set_type(token_actual, LITERAL_STRING)) {
-        return parse_call_function(&(*token_list));
-    } else{
 
-        generate_function_call(token_list->Act->lptr->token);
-        return 0;
+        if (token_list->Act->lptr->token.funkce){
+            return parse_call_function(&(*token_list));
+        }
+
+        return SYNTAX_ERROR;
+
+    } else if (is_set_type(token_actual, EOL) && token_list->Act->lptr->token.funkce) {
+        return check_end_of_line(&(*token_list));
     }
 
-    //TODO bez parametru funkce
+    return SYNTAX_ERROR;
 
 }
 
@@ -318,17 +309,8 @@ int parse_assign_value(tDList *token_list) {
 int parse_call_function(tDList *token_list) {
     int err_code;
     struct tToken token_actual = token_list->Act->token;
-    //TODO více paramettů!!!!!
-    //TODO
-    //TODO
-    //TODO
 
-    //TODO více paramertů
 
-        generate_function_before_par();
-        generate_function_par(token_actual, 0);
-        token_actual=token_list->Act->lptr->token;
-        generate_function_call(token_actual);
     return check_end_of_line(&(*token_list));
 
 }

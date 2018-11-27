@@ -23,9 +23,7 @@ int main(int argc, char* argv[]) {
 
     fclose(source_code);
 
-    write_code();
 
-    generator_clear();
 
     return 0;
 }
