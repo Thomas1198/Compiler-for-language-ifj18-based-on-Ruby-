@@ -16,7 +16,7 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
-    DLDisposeList(&token_list);
+   // DLDisposeList(&token_list);
     return 0;
 }
 
