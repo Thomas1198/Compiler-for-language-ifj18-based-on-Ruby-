@@ -30,7 +30,7 @@ void first_run(tDList *token_list, FILE *source_code) {
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
 
             if (symtable_get(&hTable, token_actual.content_string) == NULL) {
-                symtable_insert(&hTable,&token_list->Last->token);
+               // symtable_insert(&hTable, &token_list->Last->token);
             }
         }
     }
@@ -168,7 +168,7 @@ int parse_def(tDList *token_list) {
 
     check_set_type(token_actual, CHAR_LEFT_BRACKET);
 
-    if ((err_code = parse_def_arguments(&(*token_list))) != 0) {
+    if ((err_code = parse_def_arguments_with_bracket(&(*token_list))) != 0) {
         return err_code;
     }
 
@@ -176,7 +176,7 @@ int parse_def(tDList *token_list) {
     return check_end_of_line(&*(token_list));
 }
 
-int parse_def_arguments(tDList *token_list) {
+int parse_def_arguments_with_bracket(tDList *token_list) {
     struct tToken token_actual;
     bool comma = false;
 
@@ -285,7 +285,8 @@ int parse_identifier(tDList *token_list) {
     if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
         is_set_type(token_actual, LITERAL_STRING)) {
 
-        if (token_list->Act->lptr->token.funkce){
+        if (token_list->Act->lptr->token.funkce) {
+            token_list->Act=token_list->Act->lptr;
             return parse_call_function(&(*token_list));
         }
 
@@ -307,9 +308,35 @@ int parse_assign_value(tDList *token_list) {
 }
 
 int parse_call_function(tDList *token_list) {
-    int err_code;
-    struct tToken token_actual = token_list->Act->token;
+    struct tToken token_actual;
+    bool comma = false;
 
+    while (true) {
+        try_next_token_list_p(token_actual, token_list);
+
+        if (comma) {
+            return SYNTAX_ERROR;
+        }
+
+        comma = false;
+
+        if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
+            is_set_type(token_actual, LITERAL_STRING)) {
+            try_next_token_list_p(token_actual, token_list);
+
+            if (is_set_type(token_actual, CHAR_COMMA)) {
+                comma = true;
+                continue;
+            } else {
+                continue;
+            }
+        } else if (is_set_type(token_actual, CHAR_EOL)) {
+            break;
+        } else {
+            return SYNTAX_ERROR;
+        }
+
+    }
 
     return check_end_of_line(&(*token_list));
 

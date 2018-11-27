@@ -38,7 +38,7 @@ int parsing(tDList token_list);
 
 int parse_def(tDList *token_list);
 
-int parse_def_arguments(tDList *token_list);
+int parse_def_arguments_with_bracket(tDList *token_list);
 
 int check_end_of_line(tDList *token_list);
 
