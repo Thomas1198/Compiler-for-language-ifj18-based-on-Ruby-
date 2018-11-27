@@ -27,14 +27,16 @@ struct tToken get_token(FILE *source_file) {
 
 
     struct tToken token;
-    token.content_string = content_string;
+    init_token(&token);
+
 
     //Setuji current_state na DEFAULT
     SCANNER_STATE current_state = START;
+
     token.set_type_of_token = UNDEFINED_SET;
 
     content_string = dynamic_string_init();
-
+    token.content_string = content_string;
     //Declaration of the scanner char
     int c = 0;
 
