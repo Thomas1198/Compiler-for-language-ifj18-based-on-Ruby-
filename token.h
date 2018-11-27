@@ -69,7 +69,6 @@ union value_union {
     int i;
     float f;
     double d;
-    char str[20];
 };
 
 struct tToken {
@@ -81,5 +80,7 @@ struct tToken {
     bool funkce;
 };
 
+//TODO: dopsat komentar
+void init_token(struct tToken *token, Dynamic_string *string);
 
 #endif //PROJECT_TOKEN_H
