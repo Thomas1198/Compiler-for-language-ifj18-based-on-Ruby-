@@ -17,7 +17,7 @@
 #include "token.h"
 
 
-#define MAX_TABLE_SIZE 27457 //TODO change the number
+#define MAX_TABLE_SIZE 20 //TODO change the number
 
 /**
  * @struct Symbol table item representation
