@@ -81,6 +81,6 @@ struct tToken {
 };
 
 //TODO: dopsat komentar
-void init_token(struct tToken *token, Dynamic_string *string);
+void init_token(struct tToken *token);
 
 #endif //PROJECT_TOKEN_H
