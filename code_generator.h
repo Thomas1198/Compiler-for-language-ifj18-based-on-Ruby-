@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
-#include <stdio.h>
+#include <string.h>
 
 
 #define ADD_INSTRUCTION(instruction) \
@@ -141,7 +141,7 @@
     "\n #ORD" \
     "\n LABEL $ord" \
     "\n PUSHFRAME" \
-	"\n DEFVAR LF@%retval" \
+	"\n DEFVAR LF@%retva   l" \
 	"\n MOVE LF@%retval int@0" \
 	"\n DEFVAR LF@cond_length" \
 	"\n LT LF@cond_length LF@%1 int@1" \
@@ -229,7 +229,7 @@ void generate_function_before_par();
  * @param param token with parametr
  * @param index index
  */
-void generate_function_par( struct tToken param, int index);
+void generate_function_par_def( struct tToken param, int index);
 
 /**
  * @brief Generate function start
@@ -240,7 +240,22 @@ void generate_function_start(struct tToken function);
 /**
  * @brief Generate function end
  */
-void generate_function_end();
+void generate_function_end(struct tToken function);
+
+void generate_defaul_value(struct tToken var);
+
+void generate_function_return_val(struct tToken var);
+
+void generate_function_return_val_assign(struct tToken var);
+
+void generete_value(struct tToken var);
+
+void generate_function_pass_par(struct tToken par, int index);
+
+void generate_var_decl(struct tToken var);
+
+void generate_var_pass_value(struct tToken var);
+
 
 
 
