@@ -27,7 +27,7 @@ void generate_build_in_functions()
 
     ADD_INSTRUCTION(LENGTH);
     ADD_INSTRUCTION(SUBSTR);
-    ADD_INSTRUCTION(ASC);
+    ADD_INSTRUCTION(ORD);
     ADD_INSTRUCTION(CHR);
 }
 
@@ -82,8 +82,8 @@ void generate_function_before_par()
 
 void generate_function_par(struct tToken param, int index)
 {
-    ADD_CODE("DEFVAR LF@"); ADD_CODE("%"); ADD_INTEGER(index); ADD_CODE("\n");
-    ADD_CODE("MOVE LF@");  ADD_CODE("%"); ADD_INTEGER(index); ADD_CODE("  LF@%"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
+    ADD_CODE("DEFVAR TF@"); ADD_CODE("%"); ADD_INTEGER(index); ADD_CODE("\n");
+    ADD_CODE("MOVE TF@");  ADD_CODE("%"); ADD_INTEGER(index); ADD_CODE("  TF@%"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
 }
 
 void generate_function_start(struct tToken function)

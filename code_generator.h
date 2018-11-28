@@ -35,8 +35,7 @@
 
 /// Build-functions
 
-///Print/
-
+///Print
 #define PRINT \
     "\n # Build-in function" \
     "\n # PRINT" \
@@ -46,6 +45,7 @@
 	"\n POPFRAME" \
 	"\n RETURN"
 
+/// Input
 #define INPUTS \
     "\n #INPUTS" \
     "\n LABEL $inputs" \
@@ -55,7 +55,7 @@
 	"\n RETURN"
 
 #define INPUTI \
-    "\n #INPUTS" \
+    "\n #INPUTI" \
     "\n LABEL $inputi" \
     "\n PUSHFRAME" \
     "\n READ LF@input int" \
@@ -63,13 +63,14 @@
 	"\n RETURN"
 
 #define INPUTF \
-    "\n #INPUTS" \
+    "\n #INPUTF" \
     "\n LABEL $inputf" \
     "\n PUSHFRAME" \
     "\n READ LF@input float" \
 	"\n POPFRAME" \
 	"\n RETURN"
 
+///Length
 #define LENGTH \
     "\n #LENGTH" \
     "\n LABEL $length" \
@@ -79,19 +80,103 @@
 	"\n POPFRAME" \
 	"\n RETURN"
 
+// TODO: POCHOPIT!!!!
+/// Substring
 #define SUBSTR \
     "\n #SUBSTR" \
-    "\n LABEL $substr"  // TODO do it ! DO NOT PROCRASTINATE !
+    "\n LABEL $substr" \
+    "\n PUSHFRAME" \
+	"\n DEFVAR LF@%retval" \
+	"\n MOVE LF@%retval string@" \
+	"\n DEFVAR LF@length_str" \
+	"\n CREATEFRAME" \
+	"\n DEFVAR TF@%0" \
+	"\n MOVE TF@%0 LF@%0" \
+	"\n CALL $length" \
+	"\n MOVE LF@length_str TF@%retval" \
+	"\n DEFVAR LF@ret_cond"	\
+	"\n LT LF@ret_cond LF@length_str int@0" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n EQ LF@ret_cond LF@length_str int@0" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n LT LF@ret_cond LF@%1 int@0" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n EQ LF@ret_cond LF@%1 int@0" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n GT LF@ret_cond LF@%1 LF@length_str"	\
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n EQ LF@ret_cond LF@%2 int@0"	\
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n DEFVAR LF@max_n" \
+	"\n MOVE LF@max_n LF@length_str" \
+	"\n SUB LF@max_n LF@max_n LF@%1" \
+	"\n ADD LF@max_n LF@max_n int@1" \
+	"\n DEFVAR LF@edit_n_cond" \
+	"\n LT LF@edit_n_cond LF@%2 int@0" \
+	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
+	"\n GT LF@edit_n_cond LF@%2 LF@max_n" \
+	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
+	"\n JUMP $substr$process" \
+	"\n LABEL $substr$edit_n" \
+	"\n MOVE LF@%2 LF@max_n" \
+	"\n LABEL $substr$process" \
+	"\n DEFVAR LF@index" \
+	"\n MOVE LF@index LF@%1"	\
+	"\n SUB LF@index LF@index int@1" \
+	"\n DEFVAR LF@char"	\
+	"\n DEFVAR LF@process_loop_cond" \
+	"\n LABEL $substr$process_loop"	\
+	"\n GETCHAR LF@char LF@%0 LF@index" \
+	"\n CONCAT LF@%retval LF@%retval LF@char" \
+	"\n ADD LF@index LF@index int@1" \
+	"\n SUB LF@%2 LF@%2 int@1" \
+	"\n GT LF@process_loop_cond LF@%2 int@0" \
+	"\n JUMPIFEQ $substr$process_loop LF@process_loop_cond bool@true" \
+	"\n LABEL $substr$return" \
+	"\n POPFRAME" \
+	"\n RETURN"
 
-#define ASC \
-    "\n #ASC" \
-    "\n LABEL $asc"  // TODO do it ! DO NOT PROCRASTINATE !
+///Ord
+#define ORD \
+    "\n #ORD" \
+    "\n LABEL $ord" \
+    "\n PUSHFRAME" \
+	"\n DEFVAR LF@%retval" \
+	"\n MOVE LF@%retval int@0" \
+	"\n DEFVAR LF@cond_length" \
+	"\n LT LF@cond_length LF@%1 int@1" \
+	"\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
+	"\n DEFVAR LF@length_str" \
+	"\n CREATEFRAME" \
+	"\n DEFVAR TF@%0" \
+	"\n MOVE TF@%0 LF@%0" \
+	"\n CALL $length" \
+	"\n MOVE LF@length_str TF@%retval" \
+	"\n GT LF@cond_length LF@%1 LF@length_str" \
+	"\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
+	"\n SUB LF@%1 LF@%1 int@1" \
+	"\n STRI2INT LF@%retval LF@%0 LF@%1" \
+	"\n LABEL $ord$return" \
+	"\n POPFRAME" \
+	"\n RETURN"
 
+/// Chr
 #define CHR \
     "\n #CHR" \
     "\n LABEL $chr" \
     "\n PUSHFRAME" \
+	"\n DEFVAR LF@%retval" \
+	"\n MOVE LF@%retval string@" \
     "\n DEFVAR LF@%return" \
+	"\n LT LF@cond_range LF@%0 int@0" \
+	"\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
+	"\n GT LF@cond_range LF@%0 int@255" \
+	"\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
+	"\n INT2CHAR LF@%retval LF@%0" \
+	"\n LABEL $chr$return" \
+	"\n POPFRAME" \
+	"\n RETURN" \
+    "\n"
 
 
 /**
