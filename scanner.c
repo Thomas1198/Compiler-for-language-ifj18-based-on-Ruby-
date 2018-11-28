@@ -390,9 +390,9 @@ struct tToken process_integer(Dynamic_string *content, struct tToken token) {
 }
 
 struct tToken process_decimal(Dynamic_string *content, struct tToken token) {
-    char *arrayofchars;
+    char *arrayofchars = NULL;
     double value = strtod(content->str, &arrayofchars);
-    if (*arrayofchars) {
+    if (arrayofchars) {
         dynamic_string_free(content);
         ErrorPrint(99, "internal error");
     }
