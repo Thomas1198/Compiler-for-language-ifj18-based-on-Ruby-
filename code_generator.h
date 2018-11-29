@@ -256,6 +256,7 @@ void generate_var_decl(struct tToken var);
 
 void generate_var_pass_value(struct tToken var);
 
+void generate_push(struct tToken var);
 
 
 

@@ -170,6 +170,8 @@ void generete_value(struct tToken var)
         case NIL:
             ADD_CODE("nil@nil");
             return;
+        case UNDEFINED:
+            return;
     }
 }
 
@@ -200,6 +202,11 @@ void generate_var_def_value(struct tToken var)
 
 void generate_var_pass_value(struct tToken var)
 {
-    ADD_CODE("MOVE LF@%"); ADD_INTEGER(var.content_string->str); ADD_CODE(" "); //TODO prevest na int?
+    ADD_CODE("MOVE LF@%"); ADD_CODE(var.content_string->str); ADD_CODE(" ");
     generete_value(var); ADD_CODE("\n");
+}
+
+void generate_push(struct tToken var)
+{
+    ADD_CODE("PUSHS "); generete_value(var); ADD_CODE("\n");
 }
