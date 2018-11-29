@@ -248,7 +248,7 @@ void generate_function_return_val(struct tToken var);
 
 void generate_function_return_val_assign(struct tToken var);
 
-void generete_value(struct tToken var);
+void generate_value(struct tToken var);
 
 void generate_function_pass_par(struct tToken par, int index);
 

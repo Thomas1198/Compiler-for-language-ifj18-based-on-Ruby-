@@ -147,10 +147,10 @@ void generate_function_return_val_assign(struct tToken var)
     ADD_CODE("MOVE LF@"); ADD_CODE(var.content_string->str); ADD_CODE(" TF@%retval\n");
 }
 
-void generete_value(struct tToken var)
+void generate_value(struct tToken var)
 {
     char string[20];
-    switch (var.data_type_of_token) //TODO NEBYLY POKRYTY VSECHNY MOZNE SITUACE
+    switch (var.data_type_of_token)
     {
         case INT:
             sprintf(string, "%d", var.value.i);
@@ -172,6 +172,8 @@ void generete_value(struct tToken var)
             return;
         case UNDEFINED:
             return;
+        default:
+            ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_value] datatype of token nepatri ani do jednoho statu");
     }
 }
 
@@ -180,7 +182,7 @@ void generate_function_pass_par(struct tToken par, int index)
     ADD_CODE("DEFVAR TF%"); ADD_INTEGER(index); ADD_CODE("\n");
 
     ADD_CODE("MOVE TF@%"); ADD_INTEGER(index); ADD_CODE(" ");
-    generete_value(par); ADD_CODE("\n");
+    generate_value(par); ADD_CODE("\n");
 }
 
 void generate_function_ret(struct tToken function)
@@ -203,10 +205,11 @@ void generate_var_def_value(struct tToken var)
 void generate_var_pass_value(struct tToken var)
 {
     ADD_CODE("MOVE LF@%"); ADD_CODE(var.content_string->str); ADD_CODE(" ");
-    generete_value(var); ADD_CODE("\n");
+    generate_value(var); ADD_CODE("\n");
 }
 
 void generate_push(struct tToken var)
 {
-    ADD_CODE("PUSHS "); generete_value(var); ADD_CODE("\n");
+    ADD_CODE("PUSHS ");
+    generate_value(var); ADD_CODE("\n");
 }
