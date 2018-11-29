@@ -87,7 +87,7 @@ void generate_function_before_par()
     ADD_INSTRUCTION("CREATEFRAME");
 }
 
-void generate_function_par_degf(struct tToken param, int index)
+void generate_function_par_def(struct tToken param, int index)
 {
     ADD_CODE("DEFVAR LF@"); ADD_CODE("%"); ADD_INTEGER(index); ADD_CODE("\n");
     ADD_CODE("MOVE LF@");  ADD_CODE("%"); ADD_INTEGER(index); ADD_CODE("  LF@%"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
@@ -131,7 +131,9 @@ void generate_defaul_value(struct tToken var)
             ADD_CODE("nil@nil");
             return;
         case UNDEFINED:
-            return;
+            ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_default_value] datatype of token nepatri ani do jednoho statu");
+        default:
+            ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_default_value] datatype of token nepatri ani do jednoho statu");
     }
 }
 
@@ -171,7 +173,7 @@ void generate_value(struct tToken var)
             ADD_CODE("nil@nil");
             return;
         case UNDEFINED:
-            return;
+            ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_value] datatype of token nepatri ani do jednoho statu");
         default:
             ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_value] datatype of token nepatri ani do jednoho statu");
     }
@@ -212,4 +214,142 @@ void generate_push(struct tToken var)
 {
     ADD_CODE("PUSHS ");
     generate_value(var); ADD_CODE("\n");
+}
+
+void generate_label(struct tToken function, int label_index, int label_deep)
+{
+    ADD_CODE("LABEL $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
+    ADD_CODE("%"); ADD_INTEGER(label_index); ADD_CODE("\n");
+
+}
+
+
+void generate_if_head()
+{
+    ADD_INSTRUCTION("\n# If Then");
+}
+
+bool generate_if_start(struct tToken function, int label_index, int label_deep)
+{
+    ADD_CODE("JUMPIFEQ $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
+    ADD_CODE("%"); ADD_INTEGER(label_index); ADD_CODE(" GF@%exp_result bool@false\n");
+}
+
+
+bool generate_if_else_part(struct tToken function, int label_index, int label_deep)
+{
+    ADD_CODE("JUMP $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
+    ADD_CODE("%"); ADD_INTEGER(label_index + 1); ADD_CODE("\n");
+
+    ADD_INSTRUCTION("# Else");
+
+    generate_label(function, label_index, label_deep));
+
+}
+
+
+bool generate_if_end(struct tToken function, int label_index, int label_deep)
+{
+    ADD_INSTRUCTION("# End If");
+    generate_label(function, label_index, label_deep));
+}
+
+
+bool generate_while_head(struct tToken function, int label_index, int label_deep)
+{
+    ADD_INSTRUCTION("\n# Do While");
+
+    generate_label(function, label_index, label_deep));
+}
+
+
+bool generate_while_start(struct tToken function, int label_index, int label_deep)
+{
+    ADD_CODE("JUMPIFEQ $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
+    ADD_CODE("%"); ADD_INTEGER(label_index); ADD_CODE(" GF@%exp_result bool@false"); ADD_CODE("\n");
+}
+
+
+bool generate_while_end(struct tToken function, int label_index, int label_deep)
+{
+    ADD_CODE("JUMP $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
+    ADD_CODE("%"); ADD_INTEGER(label_index - 1); ADD_CODE("\n");
+
+    ADD_INSTRUCTION("# Loop");
+
+    generate_label(function.content_string->str, label_index, label_deep));
+}
+
+bool generate_pre_operation(struct tToken var1, struct tToken var2)
+{
+    ADD_CODE("MOVE LF@"); ADD_CODE(var1.content_string->str); ADD_CODE(" ");
+    generate_defaul_value(var1); ADD_CODE("\n");
+    ADD_CODE("MOVE GF@tmp_op1 "); ADD_CODE("LF@"); ADD_CODE(var1.content_string->str);
+
+    ADD_CODE("MOVE LF@"); ADD_CODE(var2.content_string->str); ADD_CODE(" ");
+    generate_defaul_value(var1); ADD_CODE("\n");
+    ADD_CODE("MOVE GF@tmp_op2 "); ADD_CODE("LF@"); ADD_CODE(var2.content_string->str);
+}
+//TODO zkontrolovat zda jsou stejny typy, popripade prevest
+bool generate_add(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("ADD GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+
+bool generate_sub(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("SUB GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+
+bool generate_mul(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("MUL GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+
+bool generate_div(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("DIV GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+bool generate_idiv(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("IDIV GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+
+
+bool generate_eq(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("EQ GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+bool generate_gt(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("GT GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+bool generate_lt(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("LT GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+
+
+bool generate_and(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("AND GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+bool generate_or(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("OR GF@exp_result GF@tmp_op1 GF@tmp_op2")
+}
+bool generate_not(struct tToken var1, struct tToken var2)
+{
+    generate_pre_operation(var1, var2);
+    ADD_INSTRUCTION("NOT GF@exp_result GF@tmp_op1 GF@tmp_op2")
 }

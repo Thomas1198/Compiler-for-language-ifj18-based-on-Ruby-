@@ -258,6 +258,48 @@ void generate_var_pass_value(struct tToken var);
 
 void generate_push(struct tToken var);
 
+void generate_label(struct tToken function, int label_index, int label_deep);
+
+void generate_if_head();
+
+bool generate_if_start(struct tToken function, int label_index, int label_deep);
+
+bool generate_if_else_part(struct tToken function, int label_index, int label_deep);
+
+bool generate_if_end(struct tToken function, int label_index, int label_deep);
+
+bool generate_while_head(struct tToken function, int label_index, int label_deep);
+
+bool generate_while_start(struct tToken function, int label_index, int label_deep);
+
+bool generate_while_end(struct tToken function, int label_index, int label_deep);
+
+bool generate_pre_operation(struct tToken var1, struct tToken var2);
+
+bool generate_add(struct tToken var1, struct tToken var2);
+
+bool generate_sub(struct tToken var1, struct tToken var2);
+
+bool generate_mul(struct tToken var1, struct tToken var2);
+
+bool generate_div(struct tToken var1, struct tToken var2);
+
+bool generate_idiv(struct tToken var1, struct tToken var2);
+
+bool generate_eq(struct tToken var1, struct tToken var2);
+
+bool generate_gt(struct tToken var1, struct tToken var2);
+
+bool generate_lt(struct tToken var1, struct tToken var2);
+
+bool generate_and(struct tToken var1, struct tToken var2);
+
+bool generate_or(struct tToken var1, struct tToken var2);
+
+bool generate_not(struct tToken var1, struct tToken var2);
+
+
+
 
 
 #endif //PROJECT_CODE_GENERATOR_H
