@@ -83,7 +83,9 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = CHAR_COMMA;
                     dynamic_string_free(content_string);
                     return token;
-                } else if (c == '(') {
+                }
+
+                else if (c == '(') {
                     token.set_type_of_token = CHAR_LEFT_BRACKET;
                     dynamic_string_free(content_string);
                     return token;
@@ -269,7 +271,7 @@ struct tToken get_token(FILE *source_file) {
                     }
                     else
                     {
-                        fseek(source_file, strlen((char*) content_string) - 1, SEEK_CUR);
+                        fseek(source_file, -strlen((char*) content_string), SEEK_CUR);
                         token.set_type_of_token = EQUALS;
                         dynamic_string_free(content_string);
                         return token;
@@ -302,7 +304,7 @@ struct tToken get_token(FILE *source_file) {
                     }
                     else
                     {
-                        fseek(source_file, strlen((char*) content_string) - 1, SEEK_CUR);
+                        fseek(source_file, -strlen((char*) content_string) +2 , SEEK_CUR);
                         token.set_type_of_token = EQUALS;
                         dynamic_string_free(content_string);
                         return token;
@@ -378,7 +380,7 @@ struct tToken get_token(FILE *source_file) {
 struct tToken process_integer(Dynamic_string *content, struct tToken token) {
     char *arrayofchars;
     int value = strtol(content->str, &arrayofchars, 10);
-    if (*arrayofchars) {
+    if (arrayofchars) {
         dynamic_string_free(content);
         ErrorPrint(99, "internal error");
     }
