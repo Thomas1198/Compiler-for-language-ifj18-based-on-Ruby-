@@ -252,7 +252,7 @@ int parse_condition(tDList *token_list) {
 
     if (!(is_set_type(token_actual, CHAR_NEQ) || is_set_type(token_actual, CHAR_LEQ) ||
           is_set_type(token_actual, CHAR_GEQ) || is_set_type(token_actual, CHAR_LT) ||
-          is_set_type(token_actual, CHAR_GT)|| is_set_type(token_actual,KEY_WORD_NOT))) {
+          is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))) {
         return SYNTAX_ERROR;
     }
 
@@ -298,8 +298,35 @@ int parse_identifier(tDList *token_list) {
 }
 
 int parse_assign_value(tDList *token_list) {
+    int err_code,br_count=0;
+    struct tToken token_actual;
 
-    //TODO dodělat až pojede HW
+    while (true) {
+        try_next_token_list_p(token_actual, token_list);
+
+        if(is_set_type(token_actual,CHAR_LEFT_BRACKET)){
+            br_count++;
+            continue;
+        }
+
+        if(is_set_type(token_actual,CHAR_RIGHT_BRACKET)){
+            br_count--;
+            if (br_count<0){
+                return SYNTAX_ERROR;
+            }
+        }
+
+
+
+
+
+        if(is_set_type(token_actual,CHAR_EOL)){
+            break;
+        }
+    }
+    if(br_count!=0){
+        return SYNTAX_ERROR;
+    }
     return 0;
 
 }
