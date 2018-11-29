@@ -17,7 +17,7 @@
 
 
 #define ADD_INSTRUCTION(instruction) \
-    dynamic_string_add_const_str(gen_code, (instruction "\n"))
+    //dynamic_string_add_const_str(gen_code, (instruction "\n"))
 
 #define ADD_COMMENT(comment) \
     dynamic_string_add_const_str(gen_code, ( "# "comment ))
