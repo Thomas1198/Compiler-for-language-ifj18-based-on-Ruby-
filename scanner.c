@@ -15,8 +15,8 @@
 //FILE *source_file;
 
 int process_commentary(Dynamic_string *str, struct tToken token, FILE *f, SCANNER_STATE *ptr) {
-    if (!dynamic_string_cmp_const_str(str, "=begin")) return 1;
-    else if (!dynamic_string_cmp_const_str(str, "=end")) return 2;
+    if (!dynamic_string_cmp_const_str(str, "begin")) return 1;
+    else if (!dynamic_string_cmp_const_str(str, "end")) return 2;
     else { return 3;}
     }
 
@@ -380,7 +380,7 @@ struct tToken get_token(FILE *source_file) {
 struct tToken process_integer(Dynamic_string *content, struct tToken token) {
     char *arrayofchars;
     int value = strtol(content->str, &arrayofchars, 10);
-    if (arrayofchars) {
+    if (*arrayofchars) {
         dynamic_string_free(content);
         ErrorPrint(99, "internal error");
     }
@@ -392,9 +392,9 @@ struct tToken process_integer(Dynamic_string *content, struct tToken token) {
 }
 
 struct tToken process_decimal(Dynamic_string *content, struct tToken token) {
-    char *arrayofchars = NULL;
+    char *arrayofchars;
     double value = strtod(content->str, &arrayofchars);
-    if (arrayofchars) {
+    if (*arrayofchars) {
         dynamic_string_free(content);
         ErrorPrint(99, "internal error");
     }
