@@ -16,12 +16,13 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
-    //DLDisposeList(&token_list);
+    DLDisposeList(&token_list);
     return 0;
 }
 
 void first_run(tDList *token_list, FILE *source_code) {
     struct tToken token_actual;
+
 
     while (((token_actual = get_token(source_code))).set_type_of_token != CHAR_EOF) {
         DLInsertLast(&(*token_list), token_actual);
@@ -50,33 +51,6 @@ int parsing(tDList token_list) {
     }
     DLFirst(&token_list);
 
-    /*
-
-     CHAR_OPERATOR_PLUS,
-	CHAR_OPERATOR_MINUS,
-	CHAR_OPERATOR_DIV,
-	CHAR_OPERATOR_MUL,
-	CHAR_ASSIGN,
-    CHAR_EOL,
-    IDENTIFIER_NAME,
-    CHAR_LEFT_BRACKET,
-    CHAR_RIGHT_BRACKET,
-    LITERAL_NAME,
-    KEY_WORD_DEF,
-    KEY_WORD_DO,
-    KEY_WORD_ELSE,
-    KEY_WORD_END,
-    KEY_WORD_IF,
-    KEY_WORD_NOT,
-    KEY_WORD_NIL,
-    KEY_WORD_THEN,
-    KEY_WORD_WHILE,
-	EMPTY,
-	CHAR_SEMICOLON,
-	CHAR_COMMA,
-	CHAR_EOF,
-
-     */
 
     do {
         token_actual = token_list.Act->token;
@@ -229,7 +203,6 @@ int parse_if(tDList *token_list) {
 
     end_req++;
 
-    try_next_token_list_p(token_actual, token_list);
 
     if ((err_code = parse_condition(token_list)) != 0) {
         return err_code;
@@ -249,7 +222,6 @@ int parse_while(tDList *token_list) {
 
     end_req++;
 
-    try_next_token_list_p(token_actual, token_list);
 
     if ((err_code = parse_condition(token_list)) != 0) {
         return err_code;
@@ -265,7 +237,32 @@ int parse_while(tDList *token_list) {
 }
 
 int parse_condition(tDList *token_list) {
-    //TODO dopsat tělo funkce
+
+    int err_code;
+    struct tToken token_actual;
+
+    try_next_token_list_p(token_actual, token_list);
+
+    if (!(is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
+          is_set_type(token_actual, LITERAL_STRING))) {
+        return SYNTAX_ERROR;
+    }
+
+    try_next_token_list_p(token_actual, token_list);
+
+    if (!(is_set_type(token_actual, CHAR_NEQ) || is_set_type(token_actual, CHAR_LEQ) ||
+          is_set_type(token_actual, CHAR_GEQ) || is_set_type(token_actual, CHAR_LT) ||
+          is_set_type(token_actual, CHAR_GT)|| is_set_type(token_actual,KEY_WORD_NOT))) {
+        return SYNTAX_ERROR;
+    }
+
+    try_next_token_list_p(token_actual, token_list);
+
+    if (!(is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
+          is_set_type(token_actual, LITERAL_STRING))) {
+        return SYNTAX_ERROR;
+    }
+
     return 0;
 }
 
@@ -325,17 +322,16 @@ int parse_call_function(tDList *token_list) {
 
             comma = false;
             continue;
-        }else if (is_set_type(token_actual, CHAR_COMMA)) {
+        } else if (is_set_type(token_actual, CHAR_COMMA)) {
             comma = true;
             continue;
-        }else if(is_set_type(token_actual,CHAR_EOL)){
-            token_list->Act=token_list->Act->lptr;
+        } else if (is_set_type(token_actual, CHAR_EOL)) {
+            token_list->Act = token_list->Act->lptr;
             return check_end_of_line(&(*token_list));
-        } else{
+        } else {
             return SYNTAX_ERROR;
         }
     }
-
 
 
 }
