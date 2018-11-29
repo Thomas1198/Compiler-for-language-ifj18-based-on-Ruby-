@@ -106,7 +106,7 @@ void generate_function_end(struct tToken function)
 {
     ADD_COMMENT("End of function "); ADD_CODE(function.content_string->str); ADD_CODE("\n");
 
-    ADD_CODE("LABEL $"); ADD_CODE(function.content_string->str); ADD_CODE("%return\n")
+    ADD_CODE("LABEL $"); ADD_CODE(function.content_string->str); ADD_CODE("%return\n");
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("RETURN");
 }
@@ -150,21 +150,21 @@ void generate_function_return_val_assign(struct tToken var)
 void generete_value(struct tToken var)
 {
     char string[20];
-    switch (var.data_type_of_token)
+    switch (var.data_type_of_token) //TODO NEBYLY POKRYTY VSECHNY MOZNE SITUACE
     {
         case INT:
-            sprintf(string, %d, var.value.i);
+            sprintf(string, "%d", var.value.i);
             ADD_CODE("int@"); ADD_CODE(string); ADD_CODE("\n");
             return;
         case FLOAT:
-            sprintf(string, %g, var.value.d);
+            sprintf(string, "%g", var.value.d);
             ADD_CODE("float@"); ADD_CODE(string); ADD_CODE("\n");
             return;
         case STRING_DT:
             ADD_CODE("string@"); ADD_CODE(var.content_string->str); ADD_CODE("\n");
             return;
         case BOOLEAN:
-            sprintf(string, %g, var.value.boolean);
+            sprintf(string, "%g", var.value.boolean);   //TODO REMOVE
             ADD_CODE("bool@"); ADD_CODE(string); ADD_CODE("\n");
             return;
         case NIL:
@@ -184,12 +184,12 @@ void generate_function_pass_par(struct tToken par, int index)
 void generate_function_ret(struct tToken function)
 {
     ADD_INSTRUCTION("MOVE LF@%retval GF@%result");
-    ADD_CODE("JUMP $"); ADD_CODE(function.content_string->str); ADD_CODE("%return\n")
+    ADD_CODE("JUMP $"); ADD_CODE(function.content_string->str); ADD_CODE("%return\n");
 }
 
 void generate_var_decl(struct tToken var)
 {
-    ADD_CODE("DEFVAR LF@"); ADD_CODE(var.content_string->str); ADD_CODE("\n";)
+    ADD_CODE("DEFVAR LF@"); ADD_CODE(var.content_string->str); ADD_CODE("\n");
 }
 
 void generate_var_def_value(struct tToken var)
@@ -200,6 +200,6 @@ void generate_var_def_value(struct tToken var)
 
 void generate_var_pass_value(struct tToken var)
 {
-    ADD_CODE("MOVE LF@%"); ADD_INTEGER(var.content_string->str); ADD_CODE(" ");
+    ADD_CODE("MOVE LF@%"); ADD_INTEGER(var.content_string->str); ADD_CODE(" "); //TODO prevest na int?
     generete_value(var); ADD_CODE("\n");
 }
