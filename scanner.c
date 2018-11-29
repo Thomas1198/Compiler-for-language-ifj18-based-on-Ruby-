@@ -84,6 +84,9 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_free(content_string);
                     return token;
                 }
+                else if (c == ':') {
+                    current_state=MIGHTBEASSIGN;
+                }
 
                 else if (c == '(') {
                     token.set_type_of_token = CHAR_LEFT_BRACKET;
@@ -290,7 +293,7 @@ struct tToken get_token(FILE *source_file) {
             case (EQUALS):
                 if (c == '=')
                 {
-                    current_state = MIGHTBEASSIGN;
+                    current_state = MIGHTBEDOUBLE_EQ;
 
                 }
                 else if (isalpha(c)) {
@@ -319,10 +322,10 @@ struct tToken get_token(FILE *source_file) {
 
                 break;
 
-            case (MIGHTBEASSIGN):
+            case (MIGHTBEDOUBLE_EQ):
                     if(isspace(c) || isalnum(c))
                     {
-                        token.set_type_of_token = CHAR_ASSIGN;
+                        token.set_type_of_token = CHAR_DOUBLEEQ;
                         ungetc(c, source_file);
                         dynamic_string_free(content_string);
                         return token;
@@ -332,6 +335,19 @@ struct tToken get_token(FILE *source_file) {
                         ErrorPrint(1, "lex error");
                     }
                     break;
+
+            case (MIGHTBEASSIGN):
+                if(c == '=')
+                {
+                    token.set_type_of_token = CHAR_ASSIGN;
+                    dynamic_string_free(content_string);
+                    return token;
+                }
+                else {
+                    dynamic_string_free(content_string);
+                    ErrorPrint(1, "lex error");
+                }
+                break;
 
             case (STRING_START):
                 if (c < 32) {
