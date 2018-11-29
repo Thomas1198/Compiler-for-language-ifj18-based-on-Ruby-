@@ -124,9 +124,9 @@ void generate_defaul_value(struct tToken var)
         case STRING_DT:
             ADD_CODE("string@");
             return;
-        case BOOLEAN:
+        /*case BOOLEAN:
             ADD_CODE("bool@false");
-            return;
+            return;*/
         case NIL:
             ADD_CODE("nil@nil");
             return;
@@ -163,10 +163,10 @@ void generete_value(struct tToken var)
         case STRING_DT:
             ADD_CODE("string@"); ADD_CODE(var.content_string->str); ADD_CODE("\n");
             return;
-        case BOOLEAN:
+        /*case BOOLEAN:
             sprintf(string, "%g", var.value.boolean);   //TODO REMOVE
             ADD_CODE("bool@"); ADD_CODE(string); ADD_CODE("\n");
-            return;
+            return;*/
         case NIL:
             ADD_CODE("nil@nil");
             return;
