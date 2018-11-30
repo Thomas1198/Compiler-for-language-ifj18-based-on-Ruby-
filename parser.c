@@ -16,6 +16,7 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
+
     DLDisposeList(&token_list);
     return 0;
 }
@@ -250,7 +251,7 @@ int parse_condition(tDList *token_list) {
 
     try_next_token_list_p(token_actual, token_list);
 
-    if (!(is_set_type(token_actual, CHAR_NEQ) || is_set_type(token_actual, CHAR_LEQ) ||
+    if (!(is_set_type(token_actual, CHAR_DOUBLEEQ) || is_set_type(token_actual, CHAR_LEQ) ||
           is_set_type(token_actual, CHAR_GEQ) || is_set_type(token_actual, CHAR_LT) ||
           is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))) {
         return SYNTAX_ERROR;
@@ -272,7 +273,7 @@ int parse_identifier(tDList *token_list) {
 
     try_next_token_list_p(token_actual, token_list);
 
-    if (is_set_type(token_actual, CHAR_ASSIGN)) {
+    if (is_set_type(token_actual, CHAR_EQUALS)) {
         return parse_assign_value(&(*token_list));
     }
     if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
@@ -288,7 +289,8 @@ int parse_identifier(tDList *token_list) {
         return SYNTAX_ERROR;
 
         //TODO nahradit || &&
-    } else if (is_set_type(token_actual, CHAR_EOL) || token_list->Act->lptr->token.funkce) {
+    } else if (is_set_type(token_actual, CHAR_EOL) ||
+               token_list->Act->lptr->token.funkce) {
         token_list->Act = token_list->Act->lptr;
         return check_end_of_line(&(*token_list));
     }
@@ -298,36 +300,65 @@ int parse_identifier(tDList *token_list) {
 }
 
 int parse_assign_value(tDList *token_list) {
-    int err_code,br_count=0;
+    int err_code, br_count = 0;
     struct tToken token_actual;
+    bool exp_value = false, exp_ar = false;
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
 
-        if(is_set_type(token_actual,CHAR_LEFT_BRACKET)){
+        if (is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
             br_count++;
-            continue;
-        }
 
-        if(is_set_type(token_actual,CHAR_RIGHT_BRACKET)){
-            br_count--;
-            if (br_count<0){
+            if (exp_ar) {
                 return SYNTAX_ERROR;
             }
-        }
+
+            exp_value = true;
+            exp_ar = false;
+        } else if (is_set_type(token_actual, CHAR_RIGHT_BRACKET)) {
+            br_count--;
+
+            if (exp_value) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = false;
+            exp_ar = true;
+            if (br_count < 0) {
+                return SYNTAX_ERROR;
+            }
+        } else if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
+                   is_set_type(token_actual, LITERAL_STRING)) {
+
+            if (exp_ar) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = false;
+            exp_ar = true;
 
 
+        } else if (aritmetic_char) {
 
+            if (exp_ar) {
+                return SYNTAX_ERROR;
+            }
 
-
-        if(is_set_type(token_actual,CHAR_EOL)){
+            exp_value = true;
+            exp_ar = false;
+        } else if (is_set_type(token_actual, CHAR_EOL) || is_set_type(token_actual, SEMICOLON)) {
             break;
+        } else {
+            return SYNTAX_ERROR;
         }
     }
-    if(br_count!=0){
+    if (br_count != 0) {
         return SYNTAX_ERROR;
     }
-    return 0;
+    token_list->Act = token_list->Act->lptr;
+
+    return check_end_of_line(token_list);
 
 }
 

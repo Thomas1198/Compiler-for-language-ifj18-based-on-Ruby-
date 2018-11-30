@@ -24,6 +24,10 @@
     (token_actual)=(token_list)->Act->token;\
 }while(false)
 
+#define aritmetic_char  (is_set_type(token_actual,CHAR_OPERATOR_PLUS)||is_set_type(token_actual,CHAR_OPERATOR_PLUS)||\
+                        is_set_type(token_actual,CHAR_OPERATOR_PLUS)||is_set_type(token_actual,CHAR_OPERATOR_PLUS))
+
+
 int end_req;
 
 int if_count;
