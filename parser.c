@@ -31,9 +31,12 @@ void first_run(tDList *token_list, FILE *source_code) {
         //TODO zastínění proměné
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
 
-            if (symtable_get(&hTable, token_actual.content_string) == NULL) {
+            if(symtable_get(&hTable,token_actual.content_string)==NULL){
                 symtable_insert(&hTable, &token_list->Last->token);
             }
+
+
+
         }
     }
 }
@@ -47,7 +50,6 @@ int parsing(tDList token_list) {
     struct tToken token_actual;
     int err_code;
     if (token_list.First == NULL) {
-        //TODO zkontrovlovat chybovou hlášku
         return 0;
     }
     DLFirst(&token_list);
