@@ -57,19 +57,18 @@ void first_run(tDList *token_list, FILE *source_code) {
                     function_par = true;
                 }
 
-                if (is_set_type(token_list->Last->lptr->token, KEY_WORD_IF) ||
-                    is_set_type(token_list->Last->lptr->token, KEY_WORD_WHILE)) {
-                    end_count++;
-                }
+            if (is_set_type(token_list->Last->lptr->token, KEY_WORD_IF) ||
+                is_set_type(token_list->Last->lptr->token, KEY_WORD_WHILE)) {
+                end_count++;
             }
+        }
         }
 
         if (is_set_type(token_actual, CHAR_EQUALS)) {
-            *tmp = NULL;
-            if (token_list->Last->lptr != NULL) {
+            if(token_list->Last->lptr != NULL){
                 *tmp = token_list->Last->lptr->token;
-            }
 
+            }
 
             if ((tmp = symtable_get(&hTable, tmp->content_string)) == NULL) {
                 symtable_insert(&hTable, tmp);
