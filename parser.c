@@ -470,7 +470,7 @@ int parse_call_function(tDList *token_list,int count) {
             token_list->Act = token_list->Act->lptr;
 
             if(par_count!=count){
-                return PROG_SEM_ERROR;
+                return FUNCTION_ERROE;
             }
 
             return check_end_of_line(&(*token_list));

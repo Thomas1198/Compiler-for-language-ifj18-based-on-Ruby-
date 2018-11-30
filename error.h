@@ -15,6 +15,7 @@ enum ERROR_CODE {
     SYNTAX_ERROR = 2,          // Syntax analysis error
     PROG_SEM_ERROR = 3,        // Semantic error in program (undefined function/variable,...)
     TYPE_SEM_ERROR = 4,        // Semantic error of type compatibility in arithmetic, string, relational,... expressions
+    FUNCTION_ERROE = 5,
     OTHER_SEM_ERROR = 6,       // Other semantic errors
     ZERO_DIVISION_ERROR = 9,   // Runtime error zero division
     INTERNAL_ERROR = 99        // Internal errors (opening files, allocating memory,...)
