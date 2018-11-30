@@ -243,7 +243,7 @@ bool generate_if_else_part(struct tToken function, int label_index, int label_de
 
     ADD_INSTRUCTION("# Else");
 
-    generate_label(function, label_index, label_deep));
+    generate_label(function, label_index, label_deep);
 
 }
 
@@ -251,7 +251,7 @@ bool generate_if_else_part(struct tToken function, int label_index, int label_de
 bool generate_if_end(struct tToken function, int label_index, int label_deep)
 {
     ADD_INSTRUCTION("# End If");
-    generate_label(function, label_index, label_deep));
+    generate_label(function, label_index, label_deep);
 }
 
 
@@ -259,7 +259,7 @@ bool generate_while_head(struct tToken function, int label_index, int label_deep
 {
     ADD_INSTRUCTION("\n# Do While");
 
-    generate_label(function, label_index, label_deep));
+    generate_label(function, label_index, label_deep);
 }
 
 
@@ -277,7 +277,7 @@ bool generate_while_end(struct tToken function, int label_index, int label_deep)
 
     ADD_INSTRUCTION("# Loop");
 
-    generate_label(function.content_string->str, label_index, label_deep));
+    //generate_label(function.content_string->str, label_index, label_deep);
 }
 
 bool generate_pre_operation(struct tToken var1, struct tToken var2)
