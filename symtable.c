@@ -13,14 +13,12 @@
  * @return table index.
  */
 static unsigned long hash(const char *str) {
-    /*
     unsigned int h = 0;
     const unsigned char *p;
     for (p = (const unsigned char *) str; *p != '\0'; p++)
         h = 65599 * h + *p;
 
-    return h % MAX_TABLE_SIZE;*/
-    return 0;
+    return h % MAX_TABLE_SIZE;
 }
 
 void symtable_create(Symtable *table) {
@@ -40,11 +38,11 @@ void symtable_insert(Symtable *table, struct tToken *token) {
     new_item->data = token;
 
     unsigned long index = hash(token->content_string->str);
-    if (*table[index] == NULL)
+    if ((*table)[index] == NULL)
         new_item->next = NULL;
     else
-        new_item->next = *table[index];
-    *table[index] = new_item;
+        new_item->next = (*table)[index];
+    (*table)[index] = new_item;
 }
 
 struct tToken *symtable_get(Symtable *table, Dynamic_string *key) {
