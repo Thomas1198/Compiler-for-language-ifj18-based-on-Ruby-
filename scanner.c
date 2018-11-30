@@ -65,7 +65,7 @@ struct tToken get_token(FILE *source_file) {
                 } else if (c == '#') {
                     current_state = COMMENTARY;
                 } else if (c == '_' || isalpha(c)) {
-                     if (new_line)
+                    // if (new_line)
                     dynamic_string_add_char(content_string, (char) tolower(c));
                     current_state = KEYWORD;
                 } else if (isdigit(c)) {
@@ -134,7 +134,7 @@ struct tToken get_token(FILE *source_file) {
 
             case (KEYWORD): {
                 if (isalnum(c) || c == '_') {
-                    dynamic_string_add_char(content_string, (char) tolower(c));
+                    current_state = KEYWORDLONGER;
                 } else {
                     ungetc(c, source_file);
                     return process_identifier(content_string, token);
@@ -142,6 +142,17 @@ struct tToken get_token(FILE *source_file) {
 
             }
                 break;
+
+            case (KEYWORDLONGER):
+                if (isalnum(c) || c == '_') {
+                    dynamic_string_add_char(content_string, (char) tolower(c));
+                } else {
+                    ungetc(c, source_file);
+                    return process_identifier(content_string, token);
+                }
+
+                break;
+
 
             case (EOL):
                 if (isspace(c)) {
@@ -290,6 +301,7 @@ struct tToken get_token(FILE *source_file) {
                     current_state = MIGHTBEDOUBLE_EQ;
                 }
                 else {
+                    ungetc(c,source_file);
                     token.set_type_of_token = CHAR_EQUALS;
                     dynamic_string_free(content_string);
                     return token;
