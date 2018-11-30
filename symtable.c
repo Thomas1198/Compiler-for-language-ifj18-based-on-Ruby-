@@ -13,12 +13,14 @@
  * @return table index.
  */
 static unsigned long hash(const char *str) {
+    /*
     unsigned int h = 0;
     const unsigned char *p;
     for (p = (const unsigned char *) str; *p != '\0'; p++)
         h = 65599 * h + *p;
 
-    return h % MAX_TABLE_SIZE;
+    return h % MAX_TABLE_SIZE;*/
+    return 0;
 }
 
 void symtable_create(Symtable *table) {
