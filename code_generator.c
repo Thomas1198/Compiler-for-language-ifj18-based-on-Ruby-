@@ -5,7 +5,6 @@
  */
 
 #include "code_generator.h"
-#include "dynamic_string.h"
 
 Dynamic_string *gen_code; ///string to generated code
 

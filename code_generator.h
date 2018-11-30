@@ -11,7 +11,6 @@
 #include "token.h"
 
 #include <stdio.h>
-#include <stdvoid.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -96,26 +95,26 @@
 	"\n MOVE LF@length_str TF@%retval" \
 	"\n DEFVAR LF@ret_cond"	\
 	"\n LT LF@ret_cond LF@length_str int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
 	"\n EQ LF@ret_cond LF@length_str int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
 	"\n LT LF@ret_cond LF@%1 int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
 	"\n EQ LF@ret_cond LF@%1 int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
 	"\n GT LF@ret_cond LF@%1 LF@length_str"	\
-	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
 	"\n EQ LF@ret_cond LF@%2 int@0"	\
-	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
 	"\n DEFVAR LF@max_n" \
 	"\n MOVE LF@max_n LF@length_str" \
 	"\n SUB LF@max_n LF@max_n LF@%1" \
 	"\n ADD LF@max_n LF@max_n int@1" \
 	"\n DEFVAR LF@edit_n_cond" \
 	"\n LT LF@edit_n_cond LF@%2 int@0" \
-	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond void@true" \
+	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
 	"\n GT LF@edit_n_cond LF@%2 LF@max_n" \
-	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond void@true" \
+	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
 	"\n JUMP $substr$process" \
 	"\n LABEL $substr$edit_n" \
 	"\n MOVE LF@%2 LF@max_n" \
@@ -131,7 +130,7 @@
 	"\n ADD LF@index LF@index int@1" \
 	"\n SUB LF@%2 LF@%2 int@1" \
 	"\n GT LF@process_loop_cond LF@%2 int@0" \
-	"\n JUMPIFEQ $substr$process_loop LF@process_loop_cond void@true" \
+	"\n JUMPIFEQ $substr$process_loop LF@process_loop_cond bool@true" \
 	"\n LABEL $substr$return" \
 	"\n POPFRAME" \
 	"\n RETURN"
@@ -145,7 +144,7 @@
 	"\n MOVE LF@%retval int@0" \
 	"\n DEFVAR LF@cond_length" \
 	"\n LT LF@cond_length LF@%1 int@1" \
-	"\n JUMPIFEQ $ord$return LF@cond_length void@true" \
+	"\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
 	"\n DEFVAR LF@length_str" \
 	"\n CREATEFRAME" \
 	"\n DEFVAR TF@%0" \
@@ -153,7 +152,7 @@
 	"\n CALL $length" \
 	"\n MOVE LF@length_str TF@%retval" \
 	"\n GT LF@cond_length LF@%1 LF@length_str" \
-	"\n JUMPIFEQ $ord$return LF@cond_length void@true" \
+	"\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
 	"\n SUB LF@%1 LF@%1 int@1" \
 	"\n STRI2INT LF@%retval LF@%0 LF@%1" \
 	"\n LABEL $ord$return" \
@@ -169,9 +168,9 @@
 	"\n MOVE LF@%retval string@" \
     "\n DEFVAR LF@%return" \
 	"\n LT LF@cond_range LF@%0 int@0" \
-	"\n JUMPIFEQ $chr$return LF@cond_range void@true" \
+	"\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
 	"\n GT LF@cond_range LF@%0 int@255" \
-	"\n JUMPIFEQ $chr$return LF@cond_range void@true" \
+	"\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
 	"\n INT2CHAR LF@%retval LF@%0" \
 	"\n LABEL $chr$return" \
 	"\n POPFRAME" \
