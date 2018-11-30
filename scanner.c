@@ -17,12 +17,12 @@
 int process_commentary(Dynamic_string *str, struct tToken token, FILE *f, SCANNER_STATE *ptr) {
     if (!dynamic_string_cmp_const_str(str, "begin")) return 1;
     else if (!dynamic_string_cmp_const_str(str, "end")) return 2;
-    else { return 3;}
-    }
+    else { return 3; }
+}
 
 struct tToken get_token(FILE *source_file) {
     if (source_file == NULL) {
-        ErrorPrint(99, "failed mount");
+        ErrorPrint(INTERNAL_ERROR, "[scanner.c][get_token] failed mount");
     }
 
     Dynamic_string *content_string;
@@ -83,12 +83,9 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = CHAR_COMMA;
                     dynamic_string_free(content_string);
                     return token;
-                }
-                else if (c == ':') {
-                    current_state=MIGHTBEASSIGN;
-                }
-
-                else if (c == '(') {
+                } else if (c == ':') {
+                    current_state = MIGHTBEASSIGN;
+                } else if (c == '(') {
                     token.set_type_of_token = CHAR_LEFT_BRACKET;
                     dynamic_string_free(content_string);
                     return token;
@@ -97,38 +94,32 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_free(content_string);
                     return token;
                 }
-                /*else if (c == ';') {
-                    token.set_type_of_token = CHAR_SEMICOLON;
-                    dynamic_string_free(content_string);
-                    return token;
-                }
-                 */
+                    /*else if (c == ';') {
+                        token.set_type_of_token = CHAR_SEMICOLON;
+                        dynamic_string_free(content_string);
+                        return token;
+                    }
+                     */
                 else if (c == '"') {
                     current_state = STRING_START;
                 } else if (c == '!') {
                     current_state = EXCLAMATION;
-                }
-                else if (c == ';') {
+                } else if (c == ';') {
                     current_state = SEMICOLON;
-                }
-                else if (c == EOF) {
+                } else if (c == EOF) {
                     token.set_type_of_token = CHAR_EOF;
                     dynamic_string_free(content_string);
                     return token;
                 } else {
                     dynamic_string_free(content_string);
-                    ErrorPrint(99, "cannot read content of source_file");
+                    ErrorPrint(INTERNAL_ERROR, "[scanner.c][get_token]cannot read content of source_file");
                 }
                 break;
 
-            case (KEYWORD):
-            {
-                if (isalnum(c) || c == '_')
-                {
+            case (KEYWORD): {
+                if (isalnum(c) || c == '_') {
                     dynamic_string_add_char(content_string, (char) tolower(c));
-                }
-                else
-                {
+                } else {
                     ungetc(c, source_file);
                     return process_identifier(content_string, token);
                 }
@@ -176,7 +167,7 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_add_char(content_string, (char) c);
                 } else {
                     dynamic_string_free(content_string);
-                    ErrorPrint(1, "lex error");
+                    ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][NUMBER_DEC]");
                 }
                 break;
 
@@ -203,17 +194,14 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_add_char(content_string, (char) c);
                 } else {
                     dynamic_string_free(content_string);
-                    ErrorPrint(1, "lex error");
+                    ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][NUMBER_EXP]");
                 }
                 break;
 
             case (NUMBER_EXP_DONE):
-                if (isdigit(c))
-                {
+                if (isdigit(c)) {
                     dynamic_string_add_char(content_string, c);
-                }
-                else
-                {
+                } else {
                     ungetc(c, source_file);
                     return process_decimal(content_string, token);
                 }
@@ -226,11 +214,10 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_add_char(content_string, (char) c);
                 } else {
                     dynamic_string_free(content_string);
-                    ErrorPrint(1, "lex error");
+                    ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][NUMBER_EXP_SIGN]");
                 }
 
                 break;
-
 
 
             case (BACKSLASH):
@@ -261,20 +248,15 @@ struct tToken get_token(FILE *source_file) {
 
             case (STARTCHUNKCOMMENTARYCONTINUE):
                 if (isalpha(c)) {
-                    dynamic_string_add_char(content_string, (char) tolower(c)); }
-                    else if (isspace(c)) {
+                    dynamic_string_add_char(content_string, (char) tolower(c));
+                } else if (isspace(c)) {
                     int result = process_commentary(content_string, token, source_file, &current_state);
-                    if (result == 1)
-                    {
+                    if (result == 1) {
                         current_state = STARTCHUNKCOMMENTARY;
-                    }
-                    else if (result == 2)
-                    {
+                    } else if (result == 2) {
                         current_state = ENDCHUNKCOMMENTARY;
-                    }
-                    else
-                    {
-                        fseek(source_file, -strlen((char*) content_string), SEEK_CUR);
+                    } else {
+                        fseek(source_file, -strlen((char *) content_string), SEEK_CUR);
                         token.set_type_of_token = CHAR_EQUALS;
                         dynamic_string_free(content_string);
                         return token;
@@ -284,35 +266,27 @@ struct tToken get_token(FILE *source_file) {
                 break;
 
 
-
             case (ENDCHUNKCOMMENTARY): {
                 current_state = START;
             }
                 break;
 
             case (EQUALS):
-                if (c == '=')
-                {
+                if (c == '=') {
                     current_state = MIGHTBEDOUBLE_EQ;
 
-                }
-                else if (isalpha(c)) {
+                } else if (isalpha(c)) {
                     dynamic_string_add_char(content_string, (char) tolower(c));
                 } else if (isspace(c)) {
                     int result = process_commentary(content_string, token, source_file, &current_state);
-                    if (result == 1)
-                    {
+                    if (result == 1) {
                         current_state = STARTCHUNKCOMMENTARY;
                         dynamic_string_free(content_string);
-                    }
-                    else if (result == 2)
-                    {
+                    } else if (result == 2) {
                         current_state = ENDCHUNKCOMMENTARY;
                         dynamic_string_free(content_string);
-                    }
-                    else
-                    {
-                        fseek(source_file, -strlen((char*) content_string) +2 , SEEK_CUR);
+                    } else {
+                        fseek(source_file, -strlen((char *) content_string) + 2, SEEK_CUR);
                         token.set_type_of_token = CHAR_EQUALS;
                         dynamic_string_free(content_string);
                         return token;
@@ -323,36 +297,32 @@ struct tToken get_token(FILE *source_file) {
                 break;
 
             case (MIGHTBEDOUBLE_EQ):
-                    if(isspace(c) || isalnum(c))
-                    {
-                        token.set_type_of_token = CHAR_DOUBLEEQ;
-                        ungetc(c, source_file);
-                        dynamic_string_free(content_string);
-                        return token;
-                    }
-                    else {
-                        dynamic_string_free(content_string);
-                        ErrorPrint(1, "lex error");
-                    }
-                    break;
+                if (isspace(c) || isalnum(c)) {
+                    token.set_type_of_token = CHAR_DOUBLEEQ;
+                    ungetc(c, source_file);
+                    dynamic_string_free(content_string);
+                    return token;
+                } else {
+                    dynamic_string_free(content_string);
+                    ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][MIGHTBEDOUBLE_EQ]");
+                }
+                break;
 
             case (MIGHTBEASSIGN):
-                if(c == '=')
-                {
+                if (c == '=') {
                     token.set_type_of_token = CHAR_ASSIGN;
                     dynamic_string_free(content_string);
                     return token;
-                }
-                else {
+                } else {
                     dynamic_string_free(content_string);
-                    ErrorPrint(1, "lex error");
+                    ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][MIGHTBEASSIGN]");
                 }
                 break;
 
             case (STRING_START):
                 if (c < 32) {
                     dynamic_string_free(content_string);
-                    ErrorPrint(1, "lex error");
+                    ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][STRING_START]");
                 } else if (c == '"') {
                     dynamic_string_copy(content_string, token.content_string);
 
@@ -362,58 +332,46 @@ struct tToken get_token(FILE *source_file) {
                 } else {
                     dynamic_string_add_char(content_string, (char) c);
                 }
-
                 break;
 
 
-            case LESS_THAN:
-            {
-                if (c == '=')
-                {
+            case LESS_THAN: {
+                if (c == '=') {
                     token.set_type_of_token = CHAR_LEQ;
                     return token;
-                }
-                else
-                {
+                } else {
                     ungetc(c, source_file);
                     token.set_type_of_token = CHAR_LT;
                     return token;
                 }
 
-            }  break;
-            case GREATER_THAN:
-            {
-                if (c == '=')
-                {
+            }
+
+            case GREATER_THAN: {
+                if (c == '=') {
                     token.set_type_of_token = CHAR_GEQ;
                     return token;
-                }
-                else
-                {
+                } else {
                     ungetc(c, source_file);
                     token.set_type_of_token = CHAR_GT;
                     return token;
                 }
 
             }
-            break;
 
-            case SEMICOLON:
-            {
-                if((isspace(c) || (c=='\n')))
-                {
+            case SEMICOLON: {
+                if ((isspace(c) || (c == '\n'))) {
                     token.set_type_of_token = CHAR_SEMICOLON;
                     dynamic_string_free(content_string);
                     return token;
                 }
 
             }
-            break;
+                break;
         }
     }
 
 }
-
 
 
 struct tToken process_integer(Dynamic_string *content, struct tToken token) {
@@ -421,10 +379,10 @@ struct tToken process_integer(Dynamic_string *content, struct tToken token) {
     int value = strtol(content->str, &arrayofchars, 10);
     if (*arrayofchars) {
         dynamic_string_free(content);
-        ErrorPrint(99, "internal error");
+        ErrorPrint(INTERNAL_ERROR, "[scanner.c][process_integer]");
     }
 
-    token.value.i =  value;
+    token.value.i = value;
     token.set_type_of_token = CHAR_INTEGER;
     dynamic_string_free(content);
     return token;
@@ -435,7 +393,7 @@ struct tToken process_decimal(Dynamic_string *content, struct tToken token) {
     double value = strtod(content->str, &arrayofchars);
     if (*arrayofchars) {
         dynamic_string_free(content);
-        ErrorPrint(99, "internal error");
+        ErrorPrint(INTERNAL_ERROR, "[scanner.c][process_decimal]");
     }
 
     token.value.d = value;
