@@ -33,7 +33,7 @@ struct tToken get_token(FILE *source_file) {
     //Setuji current_state na DEFAULT
     SCANNER_STATE current_state = START;
 
-    token.set_type_of_token = UNDEFINED_SET;
+    init_token(&token);
 
     content_string = dynamic_string_init();
     token.content_string = content_string;
@@ -112,7 +112,7 @@ struct tToken get_token(FILE *source_file) {
                     return token;
                 } else {
                     dynamic_string_free(content_string);
-                    ErrorPrint(INTERNAL_ERROR, "[scanner.c][get_token]cannot read content of source_file");
+                    ErrorPrint(INTERNAL_ERROR, "[scanner.c][get_token]cannot read content of source_file"); //TODO: nemel by to byt error scanneru?
                 }
                 break;
 
@@ -148,7 +148,6 @@ struct tToken get_token(FILE *source_file) {
                 if (isdigit(c)) {
                     dynamic_string_add_char(content_string, (char) c);
 
-
                 } else if (c == '.') {
                     current_state = NUMBER_DEC;
                 } else if (tolower(c) == 'e') {
@@ -162,7 +161,7 @@ struct tToken get_token(FILE *source_file) {
 
             case (NUMBER_DEC):
 
-                if (isdigit(c)) {
+                if (isdigit(c)) {       //TODO: neni legit i 10. bez pokracovani?
                     current_state = NUMBER_DOUBLE;
                     dynamic_string_add_char(content_string, (char) c);
                 } else {
@@ -222,7 +221,7 @@ struct tToken get_token(FILE *source_file) {
 
             case (BACKSLASH):
                 if (c == '/') {
-                    current_state = BACKSLASH;
+                    current_state = BACKSLASH;  //TODO: k cemu to je? muze se z toho vytvorit /////////// ?
                 } else {
                     ungetc(c, source_file);
                     token.set_type_of_token = CHAR_OPERATOR_DIV;

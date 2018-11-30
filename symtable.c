@@ -35,6 +35,8 @@ void symtable_insert(Symtable *table, struct tToken *token) {
     if (new_item == NULL)
         ErrorPrint(INTERNAL_ERROR, "Neuspesna alokace nove polozky tabulky v symtable.c");
 
+    new_item->data = token;
+
     unsigned long index = hash(token->content_string->str);
     if (*table[index] == NULL)
         new_item->next = NULL;
