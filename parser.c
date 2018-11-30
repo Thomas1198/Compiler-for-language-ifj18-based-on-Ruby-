@@ -22,8 +22,9 @@ int run_parser(FILE *source_code) {
 }
 
 void first_run(tDList *token_list, FILE *source_code) {
-    struct tToken token_actual, *tmp, *tmp_func;
-    bool function = false;
+    struct tToken token_actual, *tmp = NULL, *tmp_func = NULL;
+    bool function_par = false, function_var = false;
+    int end_count = 0;
 
     while (((token_actual = get_token(source_code))).set_type_of_token != CHAR_EOF) {
         DLInsertLast(&(*token_list), token_actual);
@@ -32,25 +33,33 @@ void first_run(tDList *token_list, FILE *source_code) {
         //TODO zastínění proměné
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
 
-            if (function) {
+            if (function_par) {
                 tmp_func->par_count++;
-                dynamic_string_add_const_str(token_actual.content_string,"_par_");
-                dynamic_string_add_const_str(token_actual.content_string,tmp_func->content_string->str);
-                token_actual.defined=true;
+                dynamic_string_add_const_str(token_actual.content_string, "_par_");
+                dynamic_string_add_const_str(token_actual.content_string, tmp_func->content_string->str);
+                token_actual.defined = true;
+            }
+            if (function_var) {
+                dynamic_string_add_const_str(token_actual.content_string, "_var_");
+                dynamic_string_add_const_str(token_actual.content_string, tmp_func->content_string->str);
             }
 
             if ((tmp = symtable_get(&hTable, token_actual.content_string)) == NULL) {
                 symtable_insert(&hTable, &token_list->Last->token);
                 tmp = symtable_get(&hTable, token_actual.content_string);
             }
-            if (is_set_type(token_list->Last->lptr->token, KEY_WORD_DEF)) {
-                tmp->funkce = true;
-                tmp->defined = true;
-                tmp->par_count = 0;
-                tmp_func = tmp;
-                function = true;
-            } else {
-                //todo
+            if (token_list->Last->lptr != NULL) {
+                if (is_set_type(token_list->Last->lptr->token, KEY_WORD_DEF)) {
+                    tmp->funkce = true;
+                    tmp->defined = true;
+                    tmp->par_count = 0;
+                    tmp_func = tmp;
+                    function_par = true;
+                }
+            }
+            if (is_set_type(token_list->Last->lptr->token, KEY_WORD_IF) ||
+                is_set_type(token_list->Last->lptr->token, KEY_WORD_WHILE)) {
+                end_count++;
             }
 
         }
@@ -71,9 +80,19 @@ void first_run(tDList *token_list, FILE *source_code) {
             }
 
         }
+        if (is_set_type(token_actual, KEY_WORD_END)) {
+            end_count--;
+            if (end_count == 0) {
+                function_var = false;
+            }
+        }
 
         if (is_set_type(token_actual, CHAR_EOL)) {
-            function = false;
+            if (function_par) {
+                function_var = true;
+            }
+            function_par = false;
+
         }
 
     }
@@ -280,7 +299,6 @@ int parse_while(tDList *token_list) {
 
 int parse_condition(tDList *token_list) {
 
-    int err_code;
     struct tToken token_actual;
 
     try_next_token_list_p(token_actual, token_list);
@@ -309,7 +327,7 @@ int parse_condition(tDList *token_list) {
 }
 
 int parse_identifier(tDList *token_list) {
-    int err_code;
+
     struct tToken token_actual;
 
     try_next_token_list_p(token_actual, token_list);
@@ -341,7 +359,7 @@ int parse_identifier(tDList *token_list) {
 }
 
 int parse_assign_value(tDList *token_list) {
-    int err_code, br_count = 0;
+    int br_count = 0;
     struct tToken token_actual;
     bool exp_value = false, exp_ar = false;
 
