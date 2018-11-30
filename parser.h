@@ -24,8 +24,8 @@
     (token_actual)=(token_list)->Act->token;\
 }while(false)
 
-#define aritmetic_char  (is_set_type(token_actual,CHAR_OPERATOR_PLUS)||is_set_type(token_actual,CHAR_OPERATOR_PLUS)||\
-                        is_set_type(token_actual,CHAR_OPERATOR_PLUS)||is_set_type(token_actual,CHAR_OPERATOR_PLUS))
+#define aritmetic_char  (is_set_type(token_actual,CHAR_OPERATOR_PLUS)||is_set_type(token_actual,CHAR_OPERATOR_DIV)||\
+                        is_set_type(token_actual,CHAR_OPERATOR_MUL)||is_set_type(token_actual,CHAR_OPERATOR_MINUS))
 
 #define reational_char (is_set_type(token_actual, CHAR_DOUBLEEQ) || is_set_type(token_actual, CHAR_LEQ) ||\
                         is_set_type(token_actual, CHAR_GEQ) || is_set_type(token_actual, CHAR_LT) ||\

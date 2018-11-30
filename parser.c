@@ -262,41 +262,17 @@ int check_end_of_line(tDList *token_list) {
 }
 
 int parse_if(tDList *token_list) {
-    int err_code;
-    struct tToken token_actual;
 
     end_req++;
 
-
-    if ((err_code = parse_condition(token_list)) != 0) {
-        return err_code;
-    }
-
-    try_next_token_list_p(token_actual, token_list);
-
-    if (!is_set_type(token_actual, KEY_WORD_THEN)) {
-        return SYNTAX_ERROR;
-    }
-    return check_end_of_line(&(*token_list));
+    return parse_condition(token_list);
 }
 
 int parse_while(tDList *token_list) {
-    int err_code;
-    struct tToken token_actual;
 
     end_req++;
 
-
-    if ((err_code = parse_condition(token_list)) != 0) {
-        return err_code;
-    }
-
-    try_next_token_list_p(token_actual, token_list);
-
-    if (!is_set_type(token_actual, KEY_WORD_DO)) {
-        return SYNTAX_ERROR;
-    }
-    return check_end_of_line(&(*token_list));
+    return parse_condition(token_list);
 
 }
 
@@ -304,7 +280,6 @@ int parse_condition(tDList *token_list) {
     int errcode;
     struct tToken token_actual;
 
-    try_next_token_list_p(token_actual, token_list);
 
     /*
     if (!(is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
@@ -326,15 +301,13 @@ int parse_condition(tDList *token_list) {
     }
 */
 
-    if((errcode=parse_condition_expr(token_list))!=0){
+    if ((errcode = parse_condition_expr(token_list)) != 0) {
         return errcode;
     }
 
-    if((errcode=parse_condition_expr(token_list))!=0){
+    if ((errcode = parse_condition_expr(token_list)) != 0) {
         return errcode;
     }
-
-    token_list->Act = token_list->Act->lptr;
 
     return check_end_of_line(token_list);
 }
@@ -509,7 +482,7 @@ int parse_condition_expr(tDList *token_list) {
 
         } else if (aritmetic_char) {
 
-            if (exp_ar) {
+            if (!exp_ar) {
                 return SYNTAX_ERROR;
             }
 
@@ -528,5 +501,5 @@ int parse_condition_expr(tDList *token_list) {
         return SYNTAX_ERROR;
     }
 
-
+    return 0;
 }
