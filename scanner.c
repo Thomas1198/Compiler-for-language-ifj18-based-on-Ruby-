@@ -10,7 +10,7 @@
 
 
 //end of includes
-bool new_line = true;
+bool new_line = false;
 int start_token = -1;
 
 //FILE *source_file;
@@ -26,10 +26,7 @@ struct tToken get_token(FILE *source_file) {
         ErrorPrint(INTERNAL_ERROR, "[scanner.c][get_token] failed mount");
     }
 
-    if (start_token < 1)
-    {
-        start_token++;
-    }
+
 
     Dynamic_string *content_string;
     struct tToken token;
@@ -47,6 +44,11 @@ struct tToken get_token(FILE *source_file) {
     int c = 0;
 
     while (true) {
+
+        if (start_token < 2)
+        {
+            start_token++;
+        }
 
         c = getc(source_file);
 
