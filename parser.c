@@ -49,6 +49,7 @@ void first_run(tDList *token_list, FILE *source_code) {
             }
             if (token_list->Last->lptr != NULL) {
                 if (is_set_type(token_list->Last->lptr->token, KEY_WORD_DEF)) {
+                    end_count++;
                     tmp->funkce = true;
                     tmp->defined = true;
                     tmp->par_count = 0;
