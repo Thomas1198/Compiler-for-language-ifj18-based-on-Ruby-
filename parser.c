@@ -15,7 +15,6 @@ int run_parser(FILE *source_code) {
     }
 
 
-
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         exit(error_code);
@@ -327,30 +326,54 @@ int parse_condition(tDList *token_list, int set) {
 
 int parse_identifier(tDList *token_list) {
 
-    struct tToken token_actual;
+    struct tToken token_actual, *tmp;
 
     try_next_token_list_p(token_actual, token_list);
 
+    //přiřazení
     if (is_set_type(token_actual, CHAR_EQUALS)) {
         return parse_assign_value(&(*token_list));
     }
+    //funkce s parametry
     if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
         is_set_type(token_actual, LITERAL_STRING)) {
 
+        tmp = symtable_get(&hTable, token_list->Act->lptr->token.content_string);
 
-        if (token_list->Act->lptr->token.funkce) {
-            token_list->Act = token_list->Act->lptr;
-            return parse_call_function(&(*token_list));
+
+        if (!tmp) {
+            return SYNTAX_ERROR;
         }
 
-        return SYNTAX_ERROR;
+        if (tmp->funkce) {
+
+
+            token_list->Act = token_list->Act->lptr;
+            return parse_call_function(&(*token_list),tmp->par_count);
+
+        } else{
+            return PROG_SEM_ERROR;
+        }
+
 
 
         //funkce bez parametru
-    } else if (is_set_type(token_actual, CHAR_EOL) &&
-               token_list->Act->lptr->token.funkce) {
-        token_list->Act = token_list->Act->lptr;
-        return check_end_of_line(&(*token_list));
+    } else if (is_set_type(token_actual, CHAR_EOL)) {
+
+        tmp = symtable_get(&hTable, token_list->Act->lptr->token.content_string);
+
+        if (!tmp) {
+            return SYNTAX_ERROR;
+        }
+
+        if (tmp->funkce) {
+            token_list->Act = token_list->Act->lptr;
+            return check_end_of_line(&(*token_list));
+        } else {
+            return PROG_SEM_ERROR;
+        }
+
+
     }
 
     return SYNTAX_ERROR;
@@ -420,10 +443,11 @@ int parse_assign_value(tDList *token_list) {
 
 }
 
-int parse_call_function(tDList *token_list) {
+int parse_call_function(tDList *token_list,int count) {
 
     struct tToken token_actual;
     bool comma = false;
+    int par_count=0;
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
@@ -436,6 +460,7 @@ int parse_call_function(tDList *token_list) {
         if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
             is_set_type(token_actual, LITERAL_STRING)) {
 
+            par_count++;
             comma = false;
             continue;
         } else if (is_set_type(token_actual, CHAR_COMMA)) {
@@ -443,6 +468,11 @@ int parse_call_function(tDList *token_list) {
             continue;
         } else if (is_set_type(token_actual, CHAR_EOL)) {
             token_list->Act = token_list->Act->lptr;
+
+            if(par_count!=count){
+                return PROG_SEM_ERROR;
+            }
+
             return check_end_of_line(&(*token_list));
         } else {
             return SYNTAX_ERROR;

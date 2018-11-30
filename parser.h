@@ -64,7 +64,7 @@ int parse_identifier(tDList *token_list);
 
 int parse_assign_value(tDList *token_list);
 
-int parse_call_function(tDList *token_list);
+int parse_call_function(tDList *token_list,int count);
 
 int parse_condition_expr(tDList *token_list,int set);
 
