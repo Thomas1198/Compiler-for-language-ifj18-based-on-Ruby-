@@ -63,7 +63,7 @@ struct tToken get_token(FILE *source_file) {
                 } else if (c == '#') {
                     current_state = COMMENTARY;
                 } else if (c == '_' || isalpha(c)) {
-                    dynamic_string_add_char(content_string, (char) tolower(c));
+                    //dynamic_string_add_char(content_string, (char) tolower(c));
                     current_state = KEYWORD;
                 } else if (isdigit(c)) {
                     dynamic_string_add_char(content_string, (char) tolower(c));
@@ -261,8 +261,11 @@ struct tToken get_token(FILE *source_file) {
                     int result = process_commentary(content_string, token, source_file, &current_state);
                     if (result == 1) {
                         current_state = STARTCHUNKCOMMENTARY;
+                       //dynamic_string_free(content_string);
+                        dynamic_string_clear(content_string);
                     } else if (result == 2) {
                         current_state = ENDCHUNKCOMMENTARY;
+                        dynamic_string_clear(content_string);
                     } else {
                         fseek(source_file, -strlen((char *) content_string), SEEK_CUR);
                         token.set_type_of_token = CHAR_EQUALS;
@@ -303,12 +306,21 @@ struct tToken get_token(FILE *source_file) {
                     if (result == 1)
                     {
                         current_state = STARTCHUNKCOMMENTARY;
-                        dynamic_string_free(content_string);
+                        //dynamic_string_free(content_string);
+                        dynamic_string_clear(content_string);
                     }
                     else if (result == 2)
                     {
                         current_state = ENDCHUNKCOMMENTARY;
-                        dynamic_string_free(content_string);
+                        //dynamic_string_free(content_string);
+                        dynamic_string_clear(content_string);
+                    }
+                    else
+                        {
+                            fseek(source_file, -strlen((char *) content_string), SEEK_CUR);
+                            token.set_type_of_token = CHAR_EQUALS;
+                            dynamic_string_free(content_string);
+                            return token;
                     }
                 }
                 break;
