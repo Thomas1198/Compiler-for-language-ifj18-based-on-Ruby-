@@ -14,6 +14,8 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
+
+
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         exit(error_code);
@@ -25,7 +27,7 @@ int run_parser(FILE *source_code) {
 }
 
 int first_run(tDList *token_list, FILE *source_code) {
-    struct tToken token_actual, *tmp = NULL, *tmp_func = NULL, *tmp_set = NULL;
+    struct tToken token_actual, *tmp = NULL, *tmp_func = NULL;
     bool function_par = false, function_var = false;
     int end_count = 0;
 
@@ -39,6 +41,11 @@ int first_run(tDList *token_list, FILE *source_code) {
                 tmp_func->par_count++;
                 dynamic_string_add_const_str(token_actual.content_string, "_par_");
                 dynamic_string_add_const_str(token_actual.content_string, tmp_func->content_string->str);
+
+                if (symtable_get(&hTable, token_actual.content_string) != NULL) {
+                    return PROG_SEM_ERROR;
+                }
+
                 token_actual.defined = true;
             }
             if (function_var) {
@@ -52,7 +59,7 @@ int first_run(tDList *token_list, FILE *source_code) {
             }
             if (token_list->Last->lptr != NULL) {
                 if (is_set_type(token_list->Last->lptr->token, KEY_WORD_DEF)) {
-                    if(tmp->defined){
+                    if (tmp->defined) {
                         return PROG_SEM_ERROR;
                     }
 
@@ -331,16 +338,16 @@ int parse_identifier(tDList *token_list) {
         is_set_type(token_actual, LITERAL_STRING)) {
 
 
-        //TODO odebrat true
-        if (token_list->Act->lptr->token.funkce || true) {
+        if (token_list->Act->lptr->token.funkce) {
             token_list->Act = token_list->Act->lptr;
             return parse_call_function(&(*token_list));
         }
 
         return SYNTAX_ERROR;
 
-        //TODO nahradit || &&
-    } else if (is_set_type(token_actual, CHAR_EOL) ||
+
+        //funkce bez parametru
+    } else if (is_set_type(token_actual, CHAR_EOL) &&
                token_list->Act->lptr->token.funkce) {
         token_list->Act = token_list->Act->lptr;
         return check_end_of_line(&(*token_list));
