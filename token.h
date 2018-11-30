@@ -80,6 +80,7 @@ struct tToken {
     data_type data_type_of_token;            /// Data type (int,char...)
     set_type set_type_of_token;                  /// Which set token belongs to (sign, variable...)
     bool funkce;
+    int par_count;
 };
 
 //TODO: dopsat komentar

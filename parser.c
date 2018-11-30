@@ -22,23 +22,62 @@ int run_parser(FILE *source_code) {
 }
 
 void first_run(tDList *token_list, FILE *source_code) {
-    struct tToken token_actual;
-
+    struct tToken token_actual, *tmp, *tmp_func;
+    bool function = false;
 
     while (((token_actual = get_token(source_code))).set_type_of_token != CHAR_EOF) {
         DLInsertLast(&(*token_list), token_actual);
 
+
         //TODO zastínění proměné
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
 
-            if(symtable_get(&hTable,token_actual.content_string)==NULL){
-                symtable_insert(&hTable, &token_list->Last->token);
+            if (function) {
+                tmp_func->par_count++;
+                dynamic_string_add_const_str(token_actual.content_string,"_par_");
+                dynamic_string_add_const_str(token_actual.content_string,tmp_func->content_string->str);
+                token_actual.defined=true;
             }
 
-
+            if ((tmp = symtable_get(&hTable, token_actual.content_string)) == NULL) {
+                symtable_insert(&hTable, &token_list->Last->token);
+                tmp = symtable_get(&hTable, token_actual.content_string);
+            }
+            if (is_set_type(token_list->Last->lptr->token, KEY_WORD_DEF)) {
+                tmp->funkce = true;
+                tmp->defined = true;
+                tmp->par_count = 0;
+                tmp_func = tmp;
+                function = true;
+            } else {
+                //todo
+            }
 
         }
+
+        if (is_set_type(token_actual, CHAR_EQUALS)) {
+            *tmp = token_list->Last->lptr->token;
+
+            if ((tmp = symtable_get(&hTable, tmp->content_string)) == NULL) {
+                symtable_insert(&hTable, tmp);
+
+                if (is_set_type(*tmp, IDENTIFIER_NAME)) {
+                    tmp->defined = true;
+                }
+            } else {
+                if (is_set_type(*tmp, IDENTIFIER_NAME)) {
+                    tmp->defined = true;
+                }
+            }
+
+        }
+
+        if (is_set_type(token_actual, CHAR_EOL)) {
+            function = false;
+        }
+
     }
+
 }
 
 bool is_set_type(struct tToken token, set_type set_type1) {
