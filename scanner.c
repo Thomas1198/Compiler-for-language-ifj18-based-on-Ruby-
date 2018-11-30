@@ -63,7 +63,8 @@ struct tToken get_token(FILE *source_file) {
                 } else if (c == '#') {
                     current_state = COMMENTARY;
                 } else if (c == '_' || isalpha(c)) {
-                    //dynamic_string_add_char(content_string, (char) tolower(c));
+                     if (new_line)
+                    dynamic_string_add_char(content_string, (char) tolower(c));
                     current_state = KEYWORD;
                 } else if (isdigit(c)) {
                     dynamic_string_add_char(content_string, (char) tolower(c));
