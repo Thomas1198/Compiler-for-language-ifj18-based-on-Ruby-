@@ -11,7 +11,7 @@
 #include "token.h"
 
 #include <stdio.h>
-#include <stdbool.h>
+#include <stdvoid.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -96,26 +96,26 @@
 	"\n MOVE LF@length_str TF@%retval" \
 	"\n DEFVAR LF@ret_cond"	\
 	"\n LT LF@ret_cond LF@length_str int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
 	"\n EQ LF@ret_cond LF@length_str int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
 	"\n LT LF@ret_cond LF@%1 int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
 	"\n EQ LF@ret_cond LF@%1 int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
 	"\n GT LF@ret_cond LF@%1 LF@length_str"	\
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
 	"\n EQ LF@ret_cond LF@%2 int@0"	\
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+	"\n JUMPIFEQ $substr$return LF@ret_cond void@true" \
 	"\n DEFVAR LF@max_n" \
 	"\n MOVE LF@max_n LF@length_str" \
 	"\n SUB LF@max_n LF@max_n LF@%1" \
 	"\n ADD LF@max_n LF@max_n int@1" \
 	"\n DEFVAR LF@edit_n_cond" \
 	"\n LT LF@edit_n_cond LF@%2 int@0" \
-	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
+	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond void@true" \
 	"\n GT LF@edit_n_cond LF@%2 LF@max_n" \
-	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
+	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond void@true" \
 	"\n JUMP $substr$process" \
 	"\n LABEL $substr$edit_n" \
 	"\n MOVE LF@%2 LF@max_n" \
@@ -131,7 +131,7 @@
 	"\n ADD LF@index LF@index int@1" \
 	"\n SUB LF@%2 LF@%2 int@1" \
 	"\n GT LF@process_loop_cond LF@%2 int@0" \
-	"\n JUMPIFEQ $substr$process_loop LF@process_loop_cond bool@true" \
+	"\n JUMPIFEQ $substr$process_loop LF@process_loop_cond void@true" \
 	"\n LABEL $substr$return" \
 	"\n POPFRAME" \
 	"\n RETURN"
@@ -145,7 +145,7 @@
 	"\n MOVE LF@%retval int@0" \
 	"\n DEFVAR LF@cond_length" \
 	"\n LT LF@cond_length LF@%1 int@1" \
-	"\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
+	"\n JUMPIFEQ $ord$return LF@cond_length void@true" \
 	"\n DEFVAR LF@length_str" \
 	"\n CREATEFRAME" \
 	"\n DEFVAR TF@%0" \
@@ -153,7 +153,7 @@
 	"\n CALL $length" \
 	"\n MOVE LF@length_str TF@%retval" \
 	"\n GT LF@cond_length LF@%1 LF@length_str" \
-	"\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
+	"\n JUMPIFEQ $ord$return LF@cond_length void@true" \
 	"\n SUB LF@%1 LF@%1 int@1" \
 	"\n STRI2INT LF@%retval LF@%0 LF@%1" \
 	"\n LABEL $ord$return" \
@@ -169,9 +169,9 @@
 	"\n MOVE LF@%retval string@" \
     "\n DEFVAR LF@%return" \
 	"\n LT LF@cond_range LF@%0 int@0" \
-	"\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
+	"\n JUMPIFEQ $chr$return LF@cond_range void@true" \
 	"\n GT LF@cond_range LF@%0 int@255" \
-	"\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
+	"\n JUMPIFEQ $chr$return LF@cond_range void@true" \
 	"\n INT2CHAR LF@%retval LF@%0" \
 	"\n LABEL $chr$return" \
 	"\n POPFRAME" \
@@ -239,64 +239,203 @@ void generate_function_start(struct tToken function);
 
 /**
  * @brief Generate function end
+ * @param function Token with function
  */
 void generate_function_end(struct tToken function);
 
+/**
+ * @brief Generate defaulte value for variable
+ * @param var tToken with variable
+ */
 void generate_defaul_value(struct tToken var);
 
+/**
+ * @brief Generate function return value
+ * @param var tToken with variable
+ */
 void generate_function_return_val(struct tToken var);
 
+/**
+ * @brief Generate defaulte value assign
+ * @param var tToken with variable
+ */
 void generate_function_return_val_assign(struct tToken var);
 
+/**
+ * @brief Generate value for variable
+ * @param var tToken with variable
+ */
 void generate_value(struct tToken var);
 
+/**
+ * @brief Generate function pass param
+ * @param var tToken with variable
+ * @param index index of parameter
+ */
 void generate_function_pass_par(struct tToken par, int index);
 
+/**
+ * @brief Generate variable declaretion
+ * @param var tToken with variable
+ */
 void generate_var_decl(struct tToken var);
 
+/**
+ * @brief Pass value to variable
+ * @param var tToken with variable
+ */
 void generate_var_pass_value(struct tToken var);
 
+/**
+ * @brief Generate push on stack
+ * @param var tToken with variable
+ */
 void generate_push(struct tToken var);
+/**
+ * @brief generate label
+ * @param function tToken with function
+ * @param label_index index of label
+ * @param label_deep deep of label
+ */
 
 void generate_label(struct tToken function, int label_index, int label_deep);
 
+/**
+ * @brief generate if head
+ */
 void generate_if_head();
 
-bool generate_if_start(struct tToken function, int label_index, int label_deep);
+/**
+ * @brief generate if start
+ * @param function tToken with function
+ * @param label_index index of label
+ * @param label_deep deep of label
+ */
+void generate_if_start(struct tToken function, int label_index, int label_deep);
 
-bool generate_if_else_part(struct tToken function, int label_index, int label_deep);
+/**
+ * @brief generate if else
+ * @param function tToken with function
+ * @param label_index index of label
+ * @param label_deep deep of label
+ */
+void generate_if_else_part(struct tToken function, int label_index, int label_deep);
 
-bool generate_if_end(struct tToken function, int label_index, int label_deep);
+/**
+ * @brief generate if end
+ * @param function tToken with function
+ * @param label_index index of label
+ * @param label_deep deep of label
+ */
+void generate_if_end(struct tToken function, int label_index, int label_deep);
 
-bool generate_while_head(struct tToken function, int label_index, int label_deep);
+/**
+ * @brief generate while end
+ * @param function tToken with function
+ * @param label_index index of label
+ * @param label_deep deep of label
+ */
+void generate_while_head(struct tToken function, int label_index, int label_deep);
 
-bool generate_while_start(struct tToken function, int label_index, int label_deep);
+/**
+ * @brief generate while start
+ * @param function tToken with function
+ * @param label_index index of label
+ * @param label_deep deep of label
+ */
+void generate_while_start(struct tToken function, int label_index, int label_deep);
 
-bool generate_while_end(struct tToken function, int label_index, int label_deep);
+/**
+ * @brief generate while end
+ * @param function tToken with function
+ * @param label_index index of label
+ * @param label_deep deep of label
+ */
+void generate_while_end(struct tToken function, int label_index, int label_deep);
 
-bool generate_pre_operation(struct tToken var1, struct tToken var2);
+/**
+ * @brief save operant to global varialbe
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_pre_operation(struct tToken var1, struct tToken var2);
 
-bool generate_add(struct tToken var1, struct tToken var2);
+/**
+ * @brief add operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_add(struct tToken var1, struct tToken var2);
 
-bool generate_sub(struct tToken var1, struct tToken var2);
+/**
+ * @brief sub operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_sub(struct tToken var1, struct tToken var2);
 
-bool generate_mul(struct tToken var1, struct tToken var2);
+/**
+ * @brief mul operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_mul(struct tToken var1, struct tToken var2);
 
-bool generate_div(struct tToken var1, struct tToken var2);
+/**
+ * @brief div operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_div(struct tToken var1, struct tToken var2);
 
-bool generate_idiv(struct tToken var1, struct tToken var2);
+/**
+ * @brief idiv operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_idiv(struct tToken var1, struct tToken var2);
 
-bool generate_eq(struct tToken var1, struct tToken var2);
+/**
+ * @brief eq operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_eq(struct tToken var1, struct tToken var2);
 
-bool generate_gt(struct tToken var1, struct tToken var2);
+/**
+ * @brief gt operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_gt(struct tToken var1, struct tToken var2);
 
-bool generate_lt(struct tToken var1, struct tToken var2);
+/**
+ * @brief lt operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_lt(struct tToken var1, struct tToken var2);
 
-bool generate_and(struct tToken var1, struct tToken var2);
+/**
+ * @brief and operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_and(struct tToken var1, struct tToken var2);
 
-bool generate_or(struct tToken var1, struct tToken var2);
+/**
+ * @brief  or operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_or(struct tToken var1, struct tToken var2);
 
-bool generate_not(struct tToken var1, struct tToken var2);
+/**
+ * @brief not operands
+ * @param var1 first operand
+ * @param var2 second operand
+ */
+void generate_not(struct tToken var1, struct tToken var2);
 
 
 
