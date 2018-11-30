@@ -55,13 +55,7 @@ struct tToken get_token(FILE *source_file) {
 
                 if (c == '\n') {
                     current_state = EOL;
-                    if (c == '=') {
-                        ungetc(c, source_file);
-                        new_line = true;
-                    } else {
-                        ungetc(c, source_file);
-                        new_line = false;
-                    }
+
                 }
 
                  else if (c == '/') {
@@ -79,7 +73,7 @@ struct tToken get_token(FILE *source_file) {
                 } else if (c == '>') {
                     current_state = GREATER_THAN;
                 } else if (c == '=') {
-                     if (start_token == 0) {
+                     if ((start_token == 0) || (new_line)) {
                          current_state = MIGHTBECOMMENT;
                      }
                      else {
@@ -150,7 +144,13 @@ struct tToken get_token(FILE *source_file) {
                 if (isspace(c)) {
                     break;
                 }
-
+                if (c == '=') {
+                    ungetc(c, source_file);
+                    new_line = true;
+                } else {
+                    ungetc(c, source_file);
+                    new_line = false;
+                }
                 ungetc(c, source_file);
                 token.set_type_of_token = CHAR_EOL;
                 return token;
