@@ -367,11 +367,11 @@ int parse_identifier(tDList *token_list) {
             return SYNTAX_ERROR;
         }
 
-        if (tmp->funkce) {
+        if (tmp->funkce && tmp->par_count==0) {
             token_list->Act = token_list->Act->lptr;
             return check_end_of_line(&(*token_list));
         } else {
-            return PROG_SEM_ERROR;
+            return FUNCTION_ERROE;
         }
 
 
