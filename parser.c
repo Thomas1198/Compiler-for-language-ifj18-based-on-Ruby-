@@ -22,7 +22,7 @@ int run_parser(FILE *source_code) {
 }
 
 void first_run(tDList *token_list, FILE *source_code) {
-    struct tToken token_actual, *tmp = NULL, *tmp_func = NULL;
+    struct tToken token_actual, *tmp = NULL, *tmp_func = NULL,*tmp_set=NULL;
     bool function_par = false, function_var = false;
     int end_count = 0;
 
@@ -30,7 +30,6 @@ void first_run(tDList *token_list, FILE *source_code) {
         DLInsertLast(&(*token_list), token_actual);
 
 
-        //TODO zastínění proměné
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
 
             if (function_par) {
@@ -242,7 +241,6 @@ int parse_def_arguments_with_bracket(tDList *token_list) {
     }
 }
 
-
 int check_end_of_line(tDList *token_list) {
     struct tToken token_actual;
     try_next_token_list_p(token_actual, token_list);
@@ -265,18 +263,18 @@ int parse_if(tDList *token_list) {
 
     end_req++;
 
-    return parse_condition(token_list);
+    return parse_condition(token_list, KEY_WORD_THEN);
 }
 
 int parse_while(tDList *token_list) {
 
     end_req++;
 
-    return parse_condition(token_list);
+    return parse_condition(token_list, KEY_WORD_DO);
 
 }
 
-int parse_condition(tDList *token_list) {
+int parse_condition(tDList *token_list, int set) {
     int errcode;
     struct tToken token_actual;
 
@@ -301,11 +299,11 @@ int parse_condition(tDList *token_list) {
     }
 */
 
-    if ((errcode = parse_condition_expr(token_list)) != 0) {
+    if ((errcode = parse_condition_expr(token_list, NONE)) != 0) {
         return errcode;
     }
 
-    if ((errcode = parse_condition_expr(token_list)) != 0) {
+    if ((errcode = parse_condition_expr(token_list, set)) != 0) {
         return errcode;
     }
 
@@ -398,7 +396,7 @@ int parse_assign_value(tDList *token_list) {
             return SYNTAX_ERROR;
         }
     }
-    if (br_count != 0) {
+    if (br_count != 0 || exp_value) {
         return SYNTAX_ERROR;
     }
     token_list->Act = token_list->Act->lptr;
@@ -406,7 +404,6 @@ int parse_assign_value(tDList *token_list) {
     return check_end_of_line(token_list);
 
 }
-
 
 int parse_call_function(tDList *token_list) {
 
@@ -440,7 +437,7 @@ int parse_call_function(tDList *token_list) {
 
 }
 
-int parse_condition_expr(tDList *token_list) {
+int parse_condition_expr(tDList *token_list, int set) {
     int br_count = 0;
     struct tToken token_actual;
     bool exp_value = false, exp_ar = false;
@@ -489,7 +486,7 @@ int parse_condition_expr(tDList *token_list) {
             exp_value = true;
             exp_ar = false;
         } else if (is_set_type(token_actual, CHAR_EOL) || is_set_type(token_actual, SEMICOLON) ||
-                   is_set_type(token_actual, KEY_WORD_THEN) || is_set_type(token_actual, KEY_WORD_DO)) {
+                   is_set_type(token_actual, set)) {
             break;
         } else if (reational_char) {
             break;
@@ -497,7 +494,7 @@ int parse_condition_expr(tDList *token_list) {
             return SYNTAX_ERROR;
         }
     }
-    if (br_count != 0) {
+    if (br_count != 0|| exp_value) {
         return SYNTAX_ERROR;
     }
 

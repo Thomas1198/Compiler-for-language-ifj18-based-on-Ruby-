@@ -52,6 +52,7 @@ typedef enum {
     DOUBLE,
     UNDEFINED_SET,
     CHAR_EXCLAMATION,
+    NONE,
     KEY_WORD_IDENTIFIER,
     KEY_WORD_STRING
 

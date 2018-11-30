@@ -58,7 +58,7 @@ int parse_end(tDList *token_list);
 
 int parse_while(tDList *token_list);
 
-int parse_condition(tDList *token_list);
+int parse_condition(tDList *token_list,int set);
 
 int parse_identifier(tDList *token_list);
 
@@ -66,6 +66,6 @@ int parse_assign_value(tDList *token_list);
 
 int parse_call_function(tDList *token_list);
 
-int parse_condition_expr(tDList *token_list);
+int parse_condition_expr(tDList *token_list,int set);
 
 #endif //PROJECT_PARSER_H
