@@ -40,7 +40,7 @@ Symtable hTable;
 
 int run_parser(FILE *source_code);
 
-void first_run(tDList *token_list, FILE *source_code);
+int first_run(tDList *token_list, FILE *source_code);
 
 int parsing(tDList token_list);
 

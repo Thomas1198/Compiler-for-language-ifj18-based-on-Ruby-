@@ -8,8 +8,11 @@ int run_parser(FILE *source_code) {
 
     symtable_create(&hTable);
 
-    first_run(&token_list, source_code);
 
+    if ((error_code = first_run(&token_list, source_code)) != 0) {
+        //TODO uvolnění paměti
+        exit(error_code);
+    }
 
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
@@ -21,8 +24,8 @@ int run_parser(FILE *source_code) {
     return 0;
 }
 
-void first_run(tDList *token_list, FILE *source_code) {
-    struct tToken token_actual, *tmp = NULL, *tmp_func = NULL,*tmp_set=NULL;
+int first_run(tDList *token_list, FILE *source_code) {
+    struct tToken token_actual, *tmp = NULL, *tmp_func = NULL, *tmp_set = NULL;
     bool function_par = false, function_var = false;
     int end_count = 0;
 
@@ -49,6 +52,10 @@ void first_run(tDList *token_list, FILE *source_code) {
             }
             if (token_list->Last->lptr != NULL) {
                 if (is_set_type(token_list->Last->lptr->token, KEY_WORD_DEF)) {
+                    if(tmp->defined){
+                        return PROG_SEM_ERROR;
+                    }
+
                     end_count++;
                     tmp->funkce = true;
                     tmp->defined = true;
@@ -99,7 +106,7 @@ void first_run(tDList *token_list, FILE *source_code) {
         }
 
     }
-
+    return 0;
 }
 
 bool is_set_type(struct tToken token, set_type set_type1) {
@@ -495,7 +502,7 @@ int parse_condition_expr(tDList *token_list, int set) {
             return SYNTAX_ERROR;
         }
     }
-    if (br_count != 0|| exp_value) {
+    if (br_count != 0 || exp_value) {
         return SYNTAX_ERROR;
     }
 
