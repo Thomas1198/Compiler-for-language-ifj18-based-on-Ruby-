@@ -301,11 +301,12 @@ int parse_while(tDList *token_list) {
 }
 
 int parse_condition(tDList *token_list) {
-
+    int errcode;
     struct tToken token_actual;
 
     try_next_token_list_p(token_actual, token_list);
 
+    /*
     if (!(is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
           is_set_type(token_actual, LITERAL_STRING))) {
         return SYNTAX_ERROR;
@@ -313,9 +314,7 @@ int parse_condition(tDList *token_list) {
 
     try_next_token_list_p(token_actual, token_list);
 
-    if (!(is_set_type(token_actual, CHAR_DOUBLEEQ) || is_set_type(token_actual, CHAR_LEQ) ||
-          is_set_type(token_actual, CHAR_GEQ) || is_set_type(token_actual, CHAR_LT) ||
-          is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))) {
+    if (!(reational_char)) {
         return SYNTAX_ERROR;
     }
 
@@ -325,8 +324,19 @@ int parse_condition(tDList *token_list) {
           is_set_type(token_actual, LITERAL_STRING))) {
         return SYNTAX_ERROR;
     }
+*/
 
-    return 0;
+    if((errcode=parse_condition_expr(token_list))!=0){
+        return errcode;
+    }
+
+    if((errcode=parse_condition_expr(token_list))!=0){
+        return errcode;
+    }
+
+    token_list->Act = token_list->Act->lptr;
+
+    return check_end_of_line(token_list);
 }
 
 int parse_identifier(tDList *token_list) {
@@ -424,6 +434,7 @@ int parse_assign_value(tDList *token_list) {
 
 }
 
+
 int parse_call_function(tDList *token_list) {
 
     struct tToken token_actual;
@@ -451,6 +462,70 @@ int parse_call_function(tDList *token_list) {
         } else {
             return SYNTAX_ERROR;
         }
+    }
+
+
+}
+
+int parse_condition_expr(tDList *token_list) {
+    int br_count = 0;
+    struct tToken token_actual;
+    bool exp_value = false, exp_ar = false;
+
+    while (true) {
+        try_next_token_list_p(token_actual, token_list);
+
+        if (is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
+            br_count++;
+
+            if (exp_ar) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = true;
+            exp_ar = false;
+        } else if (is_set_type(token_actual, CHAR_RIGHT_BRACKET)) {
+            br_count--;
+
+            if (exp_value) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = false;
+            exp_ar = true;
+            if (br_count < 0) {
+                return SYNTAX_ERROR;
+            }
+        } else if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, LITERAL_NAME) ||
+                   is_set_type(token_actual, LITERAL_STRING)) {
+
+            if (exp_ar) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = false;
+            exp_ar = true;
+
+
+        } else if (aritmetic_char) {
+
+            if (exp_ar) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = true;
+            exp_ar = false;
+        } else if (is_set_type(token_actual, CHAR_EOL) || is_set_type(token_actual, SEMICOLON) ||
+                   is_set_type(token_actual, KEY_WORD_THEN) || is_set_type(token_actual, KEY_WORD_DO)) {
+            break;
+        } else if (reational_char) {
+            break;
+        } else {
+            return SYNTAX_ERROR;
+        }
+    }
+    if (br_count != 0) {
+        return SYNTAX_ERROR;
     }
 
 

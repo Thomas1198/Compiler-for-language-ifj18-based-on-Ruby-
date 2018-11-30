@@ -27,6 +27,10 @@
 #define aritmetic_char  (is_set_type(token_actual,CHAR_OPERATOR_PLUS)||is_set_type(token_actual,CHAR_OPERATOR_PLUS)||\
                         is_set_type(token_actual,CHAR_OPERATOR_PLUS)||is_set_type(token_actual,CHAR_OPERATOR_PLUS))
 
+#define reational_char (is_set_type(token_actual, CHAR_DOUBLEEQ) || is_set_type(token_actual, CHAR_LEQ) ||\
+                        is_set_type(token_actual, CHAR_GEQ) || is_set_type(token_actual, CHAR_LT) ||\
+                        is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))
+
 
 int end_req;
 
@@ -61,5 +65,7 @@ int parse_identifier(tDList *token_list);
 int parse_assign_value(tDList *token_list);
 
 int parse_call_function(tDList *token_list);
+
+int parse_condition_expr(tDList *token_list);
 
 #endif //PROJECT_PARSER_H
