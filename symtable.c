@@ -29,11 +29,11 @@ void symtable_create(Symtable *table) {
 
 void symtable_insert(Symtable *table, struct tToken *token) {
     if (table == NULL || token == NULL || token->content_string == NULL)
-        ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky, tokenu nebo klice v symtable.c");
+        ErrorPrint(INTERNAL_ERROR, "[symtable_insert]Prazdny ukazatel tabulky, tokenu nebo klice v symtable.c");
 
     struct htab_item *new_item = (struct htab_item *) malloc(sizeof(struct htab_item));
     if (new_item == NULL)
-        ErrorPrint(INTERNAL_ERROR, "Neuspesna alokace nove polozky tabulky v symtable.c");
+        ErrorPrint(INTERNAL_ERROR, "[symtable_insert]Neuspesna alokace nove polozky tabulky v symtable.c");
 
     new_item->data = token;
 
@@ -47,7 +47,7 @@ void symtable_insert(Symtable *table, struct tToken *token) {
 
 struct tToken *symtable_get(Symtable *table, Dynamic_string *key) {
     if (table == NULL || key == NULL)
-        ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky nebo klice v symtable.c");
+        ErrorPrint(INTERNAL_ERROR, "[symtable_get]Prazdny ukazatel tabulky nebo klice v symtable.c");
 
     unsigned long index = hash(key->str);
 
@@ -60,7 +60,7 @@ struct tToken *symtable_get(Symtable *table, Dynamic_string *key) {
 
 void symtable_remove(Symtable *table, Dynamic_string *key) {
     if (table == NULL || key == NULL)
-        ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky nebo klice v symtable.c");
+        ErrorPrint(INTERNAL_ERROR, "[symtable_remove]Prazdny ukazatel tabulky nebo klice v symtable.c");
 
     unsigned long index = hash(key->str);
     Titem *previous = (*table)[index];
@@ -76,7 +76,7 @@ void symtable_remove(Symtable *table, Dynamic_string *key) {
 
 void symtable_destroy(Symtable *table) {
     if (table == NULL)
-        ErrorPrint(INTERNAL_ERROR, "Prazdny ukazatel tabulky v symtable.c");
+        ErrorPrint(INTERNAL_ERROR, "[symtable_destroy]Prazdny ukazatel tabulky v symtable.c");
 
     Titem *next = NULL;
 

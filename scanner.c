@@ -376,7 +376,7 @@ struct tToken get_token(FILE *source_file) {
 struct tToken process_integer(Dynamic_string *content, struct tToken token) {
     char *arrayofchars;
     int value = strtol(content->str, &arrayofchars, 10);
-    if (*arrayofchars) {
+    if (arrayofchars) { //TODO: odstranil jsem asterisk
         dynamic_string_free(content);
         ErrorPrint(INTERNAL_ERROR, "[scanner.c][process_integer]");
     }
@@ -390,7 +390,7 @@ struct tToken process_integer(Dynamic_string *content, struct tToken token) {
 struct tToken process_decimal(Dynamic_string *content, struct tToken token) {
     char *arrayofchars;
     double value = strtod(content->str, &arrayofchars);
-    if (*arrayofchars) {
+    if (arrayofchars) { //TODO: odstranil jsem asterisk
         dynamic_string_free(content);
         ErrorPrint(INTERNAL_ERROR, "[scanner.c][process_decimal]");
     }
