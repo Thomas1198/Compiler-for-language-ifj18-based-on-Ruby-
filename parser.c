@@ -56,12 +56,12 @@ void first_run(tDList *token_list, FILE *source_code) {
                     tmp_func = tmp;
                     function_par = true;
                 }
-            }
+
             if (is_set_type(token_list->Last->lptr->token, KEY_WORD_IF) ||
                 is_set_type(token_list->Last->lptr->token, KEY_WORD_WHILE)) {
                 end_count++;
             }
-
+        }
         }
 
         if (is_set_type(token_actual, CHAR_EQUALS)) {
