@@ -371,7 +371,6 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_copy(content_string, token.content_string);
 
                     token.set_type_of_token = LITERAL_STRING;
-                    dynamic_string_free(content_string);
                     return token;
                 } else {
                     dynamic_string_add_char(content_string, (char) c);
