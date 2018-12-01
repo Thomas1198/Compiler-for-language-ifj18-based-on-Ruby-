@@ -288,6 +288,18 @@ void generate_pre_operation(struct tToken var1, struct tToken var2)
     ADD_CODE("MOVE LF@"); ADD_CODE(var2.content_string->str); ADD_CODE(" ");
     generate_defaul_value(var1); ADD_CODE("\n");
     ADD_CODE("MOVE GF@tmp_op2 "); ADD_CODE("LF@"); ADD_CODE(var2.content_string->str);
+
+    if(var1.data_type_of_token != var2.data_type_of_token)
+    {
+        if(var1.data_type_of_token == INT)
+        {
+            ADD_INSTRUCTION("FLOAT2INT GF@tmp_op2 GF@tmp_op2");
+        }
+        else if (var1.data_type_of_token == FLOAT)
+        {
+            ADD_INSTRUCTION("FLOAT2INT GF@tmp_op2 GF@tmp_op2");
+        }
+    }
 }
 
 void generate_add(struct tToken var1, struct tToken var2)
