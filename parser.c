@@ -199,6 +199,10 @@ int parsing(tDList token_list) {
 int parse_end(tDList *token_list) {
     end_req--;
 
+    if(end_req==0){
+        generate_function_end(*act_fun);
+    }
+
     if (end_req < 0) {
         return SYNTAX_ERROR;
     }
@@ -211,9 +215,14 @@ int parse_def(tDList *token_list) {
     int err_code;
     struct tToken token_actual;
 
+    act_fun=&token_list->Act->rptr->token;
+
     end_req++;
 
+    //TODO závorky a várazy
     try_next_token_list_p(token_actual, token_list);
+
+    generate_function_start(token_actual);
 
     check_set_type(token_actual, IDENTIFIER_NAME);
 
@@ -430,7 +439,17 @@ int parse_call_function(tDList *token_list, int count) {
 
     struct tToken token_actual, *tmp;
     bool comma = false;
-    int par_count = 0;
+    int par_count = 0,i=0;
+
+
+
+    generate_function_call(token_list->Act->token);
+
+    if(token_list->Act->token.par_count>0){
+        generate_function_before_par();
+    }
+
+    //TODO výraz jako parametr
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
@@ -445,6 +464,10 @@ int parse_call_function(tDList *token_list, int count) {
             is_set_type(token_actual, DOUBLE) ||
             is_set_type(token_actual, LITERAL_STRING)) {
 
+            generate_function_par_def(token_actual,i);
+
+            i++;
+            
             tmp = symtable_get(&hTable, token_actual.content_string);
 
             if (tmp != NULL && !tmp->defined) {
