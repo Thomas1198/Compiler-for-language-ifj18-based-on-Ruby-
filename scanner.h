@@ -18,7 +18,6 @@
 typedef enum {
     START,
     COMMENTARY,
-    BACKSLASH,
     KEYWORD,
     NUMBER,
     NUMBER_DOUBLE,

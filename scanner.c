@@ -264,29 +264,25 @@ struct tToken get_token(FILE *source_file) {
             case (STARTCHUNKCOMMENTARYCONTINUE):
                 if (isalpha(c)) {
                     dynamic_string_add_char(content_string, (char) tolower(c));
-                } else if (isspace(c)) {
+                } else if (!isalpha(c)) {
                     int result = process_commentary(content_string, token, source_file, &current_state);
                     if (result == 1) {
                         current_state = STARTCHUNKCOMMENTARY;
                         //dynamic_string_free(content_string);
                         dynamic_string_clear(content_string);
                     } else if (result == 2) {
-                        current_state = ENDCHUNKCOMMENTARY;
                         dynamic_string_clear(content_string);
+                        current_state = START;
                     } else {
-                        fseek(source_file, -strlen((char *) content_string), SEEK_CUR);
-                        token.set_type_of_token = CHAR_EQUALS;
-                        dynamic_string_free(content_string);
-                        return token;
+                        //fseek(source_file, -strlen((char *) content_string), SEEK_CUR);
+                        //token.set_type_of_token = CHAR_EQUALS;
+                        //dynamic_string_free(content_string);
+                        //return token;
+                        dynamic_string_clear(content_string);
+                        current_state = STARTCHUNKCOMMENTARY;
 
                     }
                 }
-                break;
-
-
-            case (ENDCHUNKCOMMENTARY): {
-                current_state = START;
-            }
                 break;
 
             case (EQUALS):
@@ -298,8 +294,6 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_free(content_string);
                     return token;
                 }
-
-
                 break;
 
             case (MIGHTBECOMMENT):
@@ -312,9 +306,9 @@ struct tToken get_token(FILE *source_file) {
                         //dynamic_string_free(content_string);
                         dynamic_string_clear(content_string);
                     } else if (result == 2) {
-                        current_state = ENDCHUNKCOMMENTARY;
                         //dynamic_string_free(content_string);
                         dynamic_string_clear(content_string);
+                        current_state = START;
                     } else {
                         fseek(source_file, -strlen((char *) content_string), SEEK_CUR);
                         token.set_type_of_token = CHAR_EQUALS;
