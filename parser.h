@@ -9,6 +9,7 @@
 #include "error.h"
 #include "symtable.h"
 #include "code_generator.h"
+#include "expression.h"
 
 
 #define check_set_type(token, set_type)do{\
@@ -70,6 +71,5 @@ int parse_call_function(tDList *token_list, int count);
 
 int parse_condition_expr(tDList *token_list, int set);
 
-void expresion(tDList *token_list);
 
 #endif //PROJECT_PARSER_H

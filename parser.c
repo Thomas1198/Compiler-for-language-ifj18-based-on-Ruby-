@@ -434,7 +434,7 @@ int parse_assign_value(tDList *token_list) {
     token_list->Act = token_list->Act->lptr;
 
 
-    expresion(token_list);
+    //vyhodnotit
 
     return check_end_of_line(token_list);
 
@@ -572,10 +572,4 @@ int parse_condition_expr(tDList *token_list, int set) {
     }
 
     return 0;
-}
-
-void expresion(tDList *token_list){
-
-
-
 }
