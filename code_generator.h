@@ -360,81 +360,89 @@ void generate_while_end(struct tToken function, int label_index, int label_deep)
 void generate_pre_operation(struct tToken var1, struct tToken var2);
 
 /**
+ * @brief Generate push on stack
+ * @param var tToken with variable
+ */
+void generate_push_var(struct tToken var);
+
+void generate_push_value(struct tToken var);
+
+/**
  * @brief add operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_add(struct tToken var1, struct tToken var2);
+void generate_adds();
 
 /**
  * @brief sub operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_sub(struct tToken var1, struct tToken var2);
+void generate_subs();
 
 /**
  * @brief mul operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_mul(struct tToken var1, struct tToken var2);
+void generate_muls();
 
 /**
  * @brief div operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_div(struct tToken var1, struct tToken var2);
+void generate_divs();
 
 /**
  * @brief idiv operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_idiv(struct tToken var1, struct tToken var2);
+void generate_idivs();
 
 /**
  * @brief eq operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_eq(struct tToken var1, struct tToken var2);
+void generate_eqs();
 
 /**
  * @brief gt operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_gt(struct tToken var1, struct tToken var2);
+void generate_gts();
 
 /**
  * @brief lt operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_lt(struct tToken var1, struct tToken var2);
+void generate_lts();
 
 /**
  * @brief and operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_and(struct tToken var1, struct tToken var2);
+void generate_ands();
 
 /**
  * @brief  or operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_or(struct tToken var1, struct tToken var2);
+void generate_ors();
 
 /**
  * @brief not operands
  * @param var1 first operand
  * @param var2 second operand
  */
-void generate_not(struct tToken var1, struct tToken var2);
+void generate_nots();
 
 
 
