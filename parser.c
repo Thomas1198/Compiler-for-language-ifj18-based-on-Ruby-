@@ -199,6 +199,10 @@ int parsing(tDList token_list) {
 int parse_end(tDList *token_list) {
     end_req--;
 
+    if (end_req == 0) {
+        generate_function_end(*act_fun);
+    }
+
     if (end_req < 0) {
         return SYNTAX_ERROR;
     }
@@ -211,9 +215,14 @@ int parse_def(tDList *token_list) {
     int err_code;
     struct tToken token_actual;
 
+    act_fun = &token_list->Act->rptr->token;
+
     end_req++;
 
+    //TODO závorky a várazy
     try_next_token_list_p(token_actual, token_list);
+
+    generate_function_start(token_actual);
 
     check_set_type(token_actual, IDENTIFIER_NAME);
 
@@ -361,6 +370,8 @@ int parse_assign_value(tDList *token_list) {
     struct tToken token_actual, *tmp;
     bool exp_value = false, exp_ar = false;
 
+    generate_var_decl(token_list->Act->lptr->token);
+
     while (true) {
         try_next_token_list_p(token_actual, token_list);
 
@@ -411,7 +422,7 @@ int parse_assign_value(tDList *token_list) {
 
             exp_value = true;
             exp_ar = false;
-        } else if (is_set_type(token_actual, CHAR_EOL) || is_set_type(token_actual, SEMICOLON)) {
+        } else if (is_set_type(token_actual, CHAR_EOL)) {
             break;
         } else {
             return SYNTAX_ERROR;
@@ -422,6 +433,9 @@ int parse_assign_value(tDList *token_list) {
     }
     token_list->Act = token_list->Act->lptr;
 
+
+    //vyhodnotit
+
     return check_end_of_line(token_list);
 
 }
@@ -430,7 +444,16 @@ int parse_call_function(tDList *token_list, int count) {
 
     struct tToken token_actual, *tmp;
     bool comma = false;
-    int par_count = 0;
+    int par_count = 0, i = 0;
+
+
+    generate_function_call(token_list->Act->token);
+
+    if (token_list->Act->token.par_count > 0) {
+        generate_function_before_par();
+    }
+
+    //TODO výraz jako parametr
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
@@ -444,6 +467,13 @@ int parse_call_function(tDList *token_list, int count) {
         if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
             is_set_type(token_actual, DOUBLE) ||
             is_set_type(token_actual, LITERAL_STRING)) {
+
+            //TODO
+            // generate_function_par_def(token_actual, i);
+
+            generate_function_pass_par(token_actual,i);
+
+            i++;
 
             tmp = symtable_get(&hTable, token_actual.content_string);
 
@@ -528,7 +558,7 @@ int parse_condition_expr(tDList *token_list, int set) {
 
             exp_value = true;
             exp_ar = false;
-        } else if (is_set_type(token_actual, CHAR_EOL) || is_set_type(token_actual, SEMICOLON) ||
+        } else if (is_set_type(token_actual, CHAR_EOL) ||
                    is_set_type(token_actual, set)) {
             break;
         } else if (reational_char) {

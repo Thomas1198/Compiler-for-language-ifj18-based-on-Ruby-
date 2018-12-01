@@ -9,6 +9,7 @@
 #include "error.h"
 #include "symtable.h"
 #include "code_generator.h"
+#include "expression.h"
 
 
 #define check_set_type(token, set_type)do{\
@@ -36,6 +37,8 @@ int end_req;
 
 int if_count;
 
+struct tToken *act_fun;
+
 Symtable hTable;
 
 int run_parser(FILE *source_code);
@@ -58,14 +61,15 @@ int parse_end(tDList *token_list);
 
 int parse_while(tDList *token_list);
 
-int parse_condition(tDList *token_list,int set);
+int parse_condition(tDList *token_list, int set);
 
 int parse_identifier(tDList *token_list);
 
 int parse_assign_value(tDList *token_list);
 
-int parse_call_function(tDList *token_list,int count);
+int parse_call_function(tDList *token_list, int count);
 
-int parse_condition_expr(tDList *token_list,int set);
+int parse_condition_expr(tDList *token_list, int set);
+
 
 #endif //PROJECT_PARSER_H

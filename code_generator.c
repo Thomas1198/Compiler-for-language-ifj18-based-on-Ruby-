@@ -251,7 +251,7 @@ void generate_push_var(struct tToken var)
 
 void generate_push_value(struct tToken var)
 {
-    ADD_CODE("PUSHS "); generate_value(var.value); ADD_CODE("\n");
+   // ADD_CODE("PUSHS "); generate_value(var.value); ADD_CODE("\n");
 }
 
 void generate_adds()
