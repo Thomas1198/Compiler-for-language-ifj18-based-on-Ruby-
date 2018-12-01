@@ -134,6 +134,7 @@ struct tToken get_token(FILE *source_file) {
 
             case (KEYWORD): {
                 if (isalnum(c) || c == '_') {
+                    dynamic_string_add_char(content_string, (char) tolower(c));
                     current_state = KEYWORDLONGER;
                 } else {
                     ungetc(c, source_file);
