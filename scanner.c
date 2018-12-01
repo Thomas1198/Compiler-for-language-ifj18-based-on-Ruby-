@@ -55,9 +55,10 @@ struct tToken get_token(FILE *source_file) {
 
                 if (c == '\n') {
                     current_state = EOL;
-
                 } else if (c == '/') {
-                    current_state = BACKSLASH;
+                    token.set_type_of_token = CHAR_BACKSLASH;
+                    dynamic_string_free(content_string);
+                    return token;
                 } else if (c == '#') {
                     current_state = COMMENTARY;
                 } else if (c == '_' || isalpha(c)) {
@@ -150,12 +151,14 @@ struct tToken get_token(FILE *source_file) {
 
 
             case (EOL):
-                if (isspace(c))
+                if (isspace(c)) {
                     break;
-                if (c == '=')
+                }
+                if (c == '=') {
                     new_line = true;
-                else
+                } else {
                     new_line = false;
+                }
                 ungetc(c, source_file);
                 token.set_type_of_token = CHAR_EOL;
                 return token;

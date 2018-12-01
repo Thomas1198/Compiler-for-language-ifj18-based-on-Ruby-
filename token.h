@@ -54,9 +54,8 @@ typedef enum {
     CHAR_EXCLAMATION,
     NONE,
     KEY_WORD_IDENTIFIER,
-    KEY_WORD_STRING
-
-
+    KEY_WORD_STRING,
+    CHAR_BACKSLASH
 } set_type;
 
 typedef enum {
