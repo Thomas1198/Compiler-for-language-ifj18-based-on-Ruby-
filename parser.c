@@ -262,13 +262,7 @@ int check_end_of_line(tDList *token_list) {
     struct tToken token_actual;
     try_next_token_list_p(token_actual, token_list);
 
-    if (is_set_type(token_actual, CHAR_SEMICOLON)) {
-        if (is_set_type(token_actual, CHAR_EOL)) {
-            return 0;
-        } else {
-            return SYNTAX_ERROR;
-        }
-    } else if (is_set_type(token_actual, CHAR_EOL)) {
+    if (is_set_type(token_actual, CHAR_EOL)) {
         return 0;
     } else {
         return SYNTAX_ERROR;
