@@ -209,12 +209,6 @@ void generate_var_pass_value(struct tToken var)
     generate_value(var); ADD_CODE("\n");
 }
 
-void generate_push(struct tToken var)
-{
-    ADD_CODE("PUSHS ");
-    generate_value(var); ADD_CODE("\n");
-}
-
 void generate_label(struct tToken function, int label_index, int label_deep)
 {
     ADD_CODE("LABEL $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
@@ -302,69 +296,69 @@ void generate_pre_operation(struct tToken var1, struct tToken var2)
     }
 }
 
-void generate_add(struct tToken var1, struct tToken var2)
+void generate_push_var(struct tToken var)
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("ADD GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_CODE("PUSHS ");
+    generate_value(var); ADD_CODE("\n");
 }
 
-void generate_sub(struct tToken var1, struct tToken var2)
+void generate_push_value(struct tToken var)
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("SUB GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_CODE("PUSHS "); generate_value(var.value); ADD_CODE("\n");
 }
 
-void generate_mul(struct tToken var1, struct tToken var2)
+void generate_adds()
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("MUL GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_INSTRUCTION("ADDS")
 }
 
-void generate_div(struct tToken var1, struct tToken var2)
+void generate_subs()
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("DIV GF@exp_result GF@tmp_op1 GF@tmp_op2")
-}
-void generate_idiv(struct tToken var1, struct tToken var2)
-{
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("IDIV GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_INSTRUCTION("SUBS")
 }
 
-
-void generate_eq(struct tToken var1, struct tToken var2)
+void generate_muls()
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("EQ GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_INSTRUCTION("MULS")
 }
 
-void generate_gt(struct tToken var1, struct tToken var2)
+void generate_divs()
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("GT GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_INSTRUCTION("DIVS")
 }
-
-void generate_lt(struct tToken var1, struct tToken var2)
+void generate_idivs()
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("LT GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_INSTRUCTION("IDIVS")
 }
 
 
-void generate_and(struct tToken var1, struct tToken var2)
+void generate_eqs()
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("AND GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_INSTRUCTION("EQS")
 }
 
-void generate_or(struct tToken var1, struct tToken var2)
+void generate_gts()
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("OR GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_INSTRUCTION("GTS")
 }
 
-void generate_not(struct tToken var1, struct tToken var2)
+void generate_lts()
 {
-    generate_pre_operation(var1, var2);
-    ADD_INSTRUCTION("NOT GF@exp_result GF@tmp_op1 GF@tmp_op2")
+    ADD_INSTRUCTION("LTS")
+}
+
+
+void generate_ands()
+{
+    ADD_INSTRUCTION("ANDS")
+}
+
+void generate_ors()
+{
+    ADD_INSTRUCTION("ORS")
+}
+
+void generate_nots()
+{
+    ADD_INSTRUCTION("NOTS")
 }
