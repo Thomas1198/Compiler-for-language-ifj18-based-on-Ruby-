@@ -29,6 +29,7 @@ Dynamic_string *dynamic_string_init() {
 
 void dynamic_string_free(Dynamic_string *s) {
     if (s != NULL) {
+        dynamic_string_clear(s);
         free(s->str);
     }
 

@@ -187,7 +187,7 @@ struct tToken get_token(FILE *source_file) {
                     current_state = NUMBER_EXP;
                 } else {
                     ungetc(c, source_file);
-                    process_integer(content_string, token);
+                    return process_integer(content_string, token);
                 }
 
                 break;
@@ -199,7 +199,7 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_add_char(content_string, (char) c);
                 } else {
                     ungetc(c, source_file);
-                    process_decimal(content_string, token);
+                    return process_decimal(content_string, token);
                     //ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][NUMBER_DEC]");
                 }
                 break;
