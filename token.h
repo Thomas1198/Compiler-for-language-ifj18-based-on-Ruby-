@@ -23,13 +23,11 @@ typedef enum {
     CHAR_OPERATOR_DIV,
     CHAR_OPERATOR_MUL,
     CHAR_EQUALS,
-    CHAR_ASSIGN,
     CHAR_DOUBLEEQ,
     CHAR_EOL,
     IDENTIFIER_NAME,
     CHAR_LEFT_BRACKET,
     CHAR_RIGHT_BRACKET,
-    LITERAL_NAME,
     KEY_WORD_DEF,
     KEY_WORD_DO,
     KEY_WORD_ELSE,
@@ -39,7 +37,6 @@ typedef enum {
     KEY_WORD_NIL,
     KEY_WORD_THEN,
     KEY_WORD_WHILE,
-    CHAR_SEMICOLON,
     CHAR_COMMA,
     CHAR_EOF,
     LITERAL_STRING,
@@ -51,10 +48,6 @@ typedef enum {
     CHAR_INTEGER,
     DOUBLE,
     UNDEFINED_SET,
-    CHAR_EXCLAMATION,
-    NONE,
-    KEY_WORD_IDENTIFIER,
-    KEY_WORD_STRING,
 } set_type;
 
 typedef enum {

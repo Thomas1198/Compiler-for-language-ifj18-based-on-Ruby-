@@ -29,13 +29,10 @@ typedef enum {
     LESS_THAN,
     GREATER_THAN,
     EOL,
-    SEMICOLON,
     EQUALS,
     EXCLAMATION,
     STARTCHUNKCOMMENTARY,
-    ENDCHUNKCOMMENTARY,
     STARTCHUNKCOMMENTARYCONTINUE,
-    MIGHTBEASSIGN,
     MIGHTBEDOUBLE_EQ,
     MIGHTBECOMMENT,
     KEYWORDLONGER
@@ -44,11 +41,12 @@ typedef enum {
 
 struct tToken get_token(FILE *source_file);
 
-struct tToken process_integer(Dynamic_string *content, struct tToken token);
+struct tToken process_integer(struct tToken token);
 
-struct tToken process_decimal(Dynamic_string *content, struct tToken token);
+struct tToken process_decimal(struct tToken token);
 
-struct tToken process_identifier(Dynamic_string *str, struct tToken token);
+struct tToken process_identifier(struct tToken token);
 
+int process_commentary(struct tToken token);
 
 #endif //PROJECT_SCANNER_H
