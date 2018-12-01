@@ -263,7 +263,8 @@ struct tToken get_token(FILE *source_file) {
             case (EQUALS):
                 if (c == '=') {
                     dynamic_string_add_char(token.content_string, (char) tolower(c));
-                    current_state = MIGHTBEDOUBLE_EQ;
+                    token.set_type_of_token = CHAR_DOUBLEEQ;
+                    return token;
                 } else {
                     ungetc(c, source_file);
                     token.set_type_of_token = CHAR_EQUALS;
@@ -288,16 +289,6 @@ struct tToken get_token(FILE *source_file) {
                         token.set_type_of_token = CHAR_EQUALS;
                         return token;
                     }
-                }
-                break;
-
-            case (MIGHTBEDOUBLE_EQ):
-                if (isspace(c) || isalnum(c)) {
-                    token.set_type_of_token = CHAR_DOUBLEEQ;
-                    ungetc(c, source_file);
-                    return token;
-                } else {
-                    ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][MIGHTBEDOUBLE_EQ]");
                 }
                 break;
 
