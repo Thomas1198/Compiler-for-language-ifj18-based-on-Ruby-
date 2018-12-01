@@ -5,6 +5,7 @@
  */
 
 #include "code_generator.h"
+#include "dynamic_string.h"
 
 Dynamic_string *gen_code; ///string to generated code
 
@@ -14,11 +15,10 @@ void generate_file_head()
     ADD_COMMENT("Start of program\n");
     ADD_INSTRUCTION(".IFJcode18");
 
-    ADD_INSTRUCTION("DEFVAR GF@%tmp_op1");
-    ADD_INSTRUCTION("DEFVAR GF@%tmp_op2");
-    ADD_INSTRUCTION("DEFVAR GF@%tmp_op3");
+    ADD_INSTRUCTION("DEFVAR GF@%tmp1");
+    ADD_INSTRUCTION("DEFVAR GF@%tmp2");
 
-    ADD_INSTRUCTION("DEFVAR GF@%exp_result");
+    ADD_INSTRUCTION("DEFVAR GF@%result");
 
     ADD_INSTRUCTION("JUMP $$main");
 }
@@ -110,32 +110,6 @@ void generate_function_end(struct tToken function)
     ADD_INSTRUCTION("RETURN");
 }
 
-void generate_defaul_value(struct tToken var)
-{
-    switch (var.data_type_of_token)
-    {
-        case INT:
-            ADD_CODE("int@0");
-            return;
-        case FLOAT:
-            ADD_CODE("float@0.0");
-            return;
-        case STRING_DT:
-            ADD_CODE("string@");
-            return;
-        /*case BOOLEAN:
-            ADD_CODE("bool@false");
-            return;*/
-        case NIL:
-            ADD_CODE("nil@nil");
-            return;
-        case UNDEFINED:
-            ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_default_value] datatype of token nepatri ani do jednoho statu");
-        default:
-            ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_default_value] datatype of token nepatri ani do jednoho statu");
-    }
-}
-
 void generate_function_return_val(struct tToken var)
 {
     ADD_INSTRUCTION("DEFVAR LF@%retval");
@@ -197,11 +171,6 @@ void generate_var_decl(struct tToken var)
     ADD_CODE("DEFVAR LF@"); ADD_CODE(var.content_string->str); ADD_CODE("\n");
 }
 
-void generate_var_def_value(struct tToken var)
-{
-    ADD_CODE("MOVE LF@"); ADD_CODE(var.content_string->str); ADD_CODE(" ");
-    generate_defaul_value(var); ADD_CODE("\n");
-}
 
 void generate_var_pass_value(struct tToken var)
 {
@@ -209,13 +178,14 @@ void generate_var_pass_value(struct tToken var)
     generate_value(var); ADD_CODE("\n");
 }
 
+
+
 void generate_label(struct tToken function, int label_index, int label_deep)
 {
     ADD_CODE("LABEL $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
     ADD_CODE("%"); ADD_INTEGER(label_index); ADD_CODE("\n");
 
 }
-
 
 void generate_if_head()
 {
@@ -225,7 +195,7 @@ void generate_if_head()
 void generate_if_start(struct tToken function, int label_index, int label_deep)
 {
     ADD_CODE("JUMPIFEQ $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
-    ADD_CODE("%"); ADD_INTEGER(label_index); ADD_CODE(" GF@%exp_result bool@false\n");
+    ADD_CODE("%"); ADD_INTEGER(label_index); ADD_CODE(" GF@%result bool@false\n");
 }
 
 
@@ -259,7 +229,7 @@ void generate_while_head(struct tToken function, int label_index, int label_deep
 void generate_while_start(struct tToken function, int label_index, int label_deep)
 {
     ADD_CODE("JUMPIFEQ $"); ADD_CODE(function.content_string->str); ADD_CODE("%"); ADD_INTEGER(label_deep);
-    ADD_CODE("%"); ADD_INTEGER(label_index); ADD_CODE(" GF@%exp_result bool@false"); ADD_CODE("\n");
+    ADD_CODE("%"); ADD_INTEGER(label_index); ADD_CODE(" GF@%result bool@false"); ADD_CODE("\n");
 }
 
 
@@ -273,33 +243,10 @@ void generate_while_end(struct tToken function, int label_index, int label_deep)
     generate_label(function, label_index, label_deep);
 }
 
-void generate_pre_operation(struct tToken var1, struct tToken var2)
-{
-    ADD_CODE("MOVE LF@"); ADD_CODE(var1.content_string->str); ADD_CODE(" ");
-    generate_defaul_value(var1); ADD_CODE("\n");
-    ADD_CODE("MOVE GF@tmp_op1 "); ADD_CODE("LF@"); ADD_CODE(var1.content_string->str);
-
-    ADD_CODE("MOVE LF@"); ADD_CODE(var2.content_string->str); ADD_CODE(" ");
-    generate_defaul_value(var1); ADD_CODE("\n");
-    ADD_CODE("MOVE GF@tmp_op2 "); ADD_CODE("LF@"); ADD_CODE(var2.content_string->str);
-
-    if(var1.data_type_of_token != var2.data_type_of_token)
-    {
-        if(var1.data_type_of_token == INT)
-        {
-            ADD_INSTRUCTION("FLOAT2INT GF@tmp_op2 GF@tmp_op2");
-        }
-        else if (var1.data_type_of_token == FLOAT)
-        {
-            ADD_INSTRUCTION("FLOAT2INT GF@tmp_op2 GF@tmp_op2");
-        }
-    }
-}
 
 void generate_push_var(struct tToken var)
 {
-    ADD_CODE("PUSHS ");
-    generate_value(var); ADD_CODE("\n");
+    ADD_CODE("PUSHS "); generate_value(var); ADD_CODE("\n");
 }
 
 void generate_push_value(struct tToken var)
@@ -309,56 +256,123 @@ void generate_push_value(struct tToken var)
 
 void generate_adds()
 {
-    ADD_INSTRUCTION("ADDS")
+    ADD_INSTRUCTION("ADDS");
 }
 
 void generate_subs()
 {
-    ADD_INSTRUCTION("SUBS")
+    ADD_INSTRUCTION("SUBS");
 }
 
 void generate_muls()
 {
-    ADD_INSTRUCTION("MULS")
+    ADD_INSTRUCTION("MULS");
 }
 
 void generate_divs()
 {
-    ADD_INSTRUCTION("DIVS")
+    ADD_INSTRUCTION("DIVS");
 }
 void generate_idivs()
 {
-    ADD_INSTRUCTION("IDIVS")
+    ADD_INSTRUCTION("IDIVS");
 }
 
 
 void generate_eqs()
 {
-    ADD_INSTRUCTION("EQS")
+    ADD_INSTRUCTION("EQS");
 }
 
 void generate_gts()
 {
-    ADD_INSTRUCTION("GTS")
+    ADD_INSTRUCTION("GTS");
 }
 
 void generate_lts()
 {
-    ADD_INSTRUCTION("LTS")
+    ADD_INSTRUCTION("LTS");
 }
-
 
 void generate_ands()
 {
-    ADD_INSTRUCTION("ANDS")
+    ADD_INSTRUCTION("ANDS");
 }
 
 void generate_ors()
 {
-    ADD_INSTRUCTION("ORS")
+    ADD_INSTRUCTION("ORS");
 }
 
-void generate_nots()
+void generate_not_eqs()
 {
-    ADD_INSTRUCTION("NOTS")
+    ADD_INSTRUCTION("EQS")
+    ADD_INSTRUCTION("NOTS");
+}
+void generate_gt_eqs()
+{
+    ADD_INSTRUCTION("POPS GF@%tmp1");
+    ADD_INSTRUCTION("POPS GF@%tmp2");
+    ADD_INSTRUCTION("PUSHS GF@%tmp2");
+    ADD_INSTRUCTION("PUSHS GF@%tmp1");
+    ADD_INSTRUCTION("GTS");
+    ADD_INSTRUCTION("PUSHS GF@%tmp2");
+    ADD_INSTRUCTION("PUSHS GF@%tmp1");
+    ADD_INSTRUCTION("EQS");
+    ADD_INSTRUCTION("ORS");
+}
+
+void generate_ls_eqs()
+{
+    ADD_INSTRUCTION("POPS GF@%tmp1");
+    ADD_INSTRUCTION("POPS GF@%tmp2");
+    ADD_INSTRUCTION("PUSHS GF@%tmp2");
+    ADD_INSTRUCTION("PUSHS GF@%tmp1");
+    ADD_INSTRUCTION("LTS");
+    ADD_INSTRUCTION("PUSHS GF@%tmp2");
+    ADD_INSTRUCTION("PUSHS GF@%tmp1");
+    ADD_INSTRUCTION("EQS");
+    ADD_INSTRUCTION("ORS");
+}
+
+void generate_pops()
+{
+    ADD_INSTRUCTION("POPS GF%result");
+}
+
+void  generate_save_result_to_var(struct tToken var)
+{
+    ADD_CODE("MOVE LF%"); ADD_CODE(var.content_string->str); ADD_CODE(" GF%result\n")
+}
+
+void generate_clear_stack()
+{
+    ADD_INSTRUCTION("CLEARS");
+}
+
+void generate_stack_op1_to_double()
+{
+    ADD_INSTRUCTION("INT2FLOATS");
+}
+
+
+void generate_stack_op1_to_integer()
+{
+    ADD_INSTRUCTION("FLOAT2R2EINTS");
+}
+
+
+void generate_stack_op2_to_double()
+{
+    ADD_INSTRUCTION("POPS GF@%tmp1");
+    ADD_INSTRUCTION("INT2FLOATS");
+    ADD_INSTRUCTION("PUSHS GF@%tmp1");
+}
+
+
+void generate_stack_op2_to_integer()
+{
+    ADD_INSTRUCTION("POPS GF@%tmp1");
+    ADD_INSTRUCTION("FLOAT2R2EINTS");
+    ADD_INSTRUCTION("PUSHS GF@%tmp1");
 }
