@@ -299,7 +299,7 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = LITERAL_STRING;
                     return token;
                 } else {
-                    dynamic_string_add_char(token.content_string, (char) tolower(c));
+                    dynamic_string_add_char(token.content_string, (char) c);
                 }
                 break;
 
