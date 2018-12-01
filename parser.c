@@ -8,20 +8,23 @@ int run_parser(FILE *source_code) {
 
     symtable_create(&hTable);
 
+    generator_start();
 
     if ((error_code = first_run(&token_list, source_code)) != 0) {
         //TODO uvolnění paměti
+        generator_clear();
         exit(error_code);
     }
-
 
 
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
+        generator_clear();
         exit(error_code);
     }
 
-
+    write_code();
+    generator_clear();
     DLDisposeList(&token_list);
     return 0;
 }
@@ -119,7 +122,6 @@ int first_run(tDList *token_list, FILE *source_code) {
 bool is_set_type(struct tToken token, set_type set_type1) {
     return (token.set_type_of_token == set_type1);
 }
-
 
 int parsing(tDList token_list) {
     struct tToken token_actual;
@@ -314,7 +316,8 @@ int parse_identifier(tDList *token_list) {
         return parse_assign_value(&(*token_list));
     }
     //funkce s parametry
-    if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) || is_set_type(token_actual,DOUBLE)||
+    if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
+        is_set_type(token_actual, DOUBLE) ||
         is_set_type(token_actual, LITERAL_STRING)) {
 
         tmp = symtable_get(&hTable, token_list->Act->lptr->token.content_string);
@@ -328,9 +331,9 @@ int parse_identifier(tDList *token_list) {
 
 
             token_list->Act = token_list->Act->lptr;
-            return parse_call_function(&(*token_list),tmp->par_count);
+            return parse_call_function(&(*token_list), tmp->par_count);
 
-        } else{
+        } else {
             return PROG_SEM_ERROR;
         }
 
@@ -345,7 +348,7 @@ int parse_identifier(tDList *token_list) {
             return SYNTAX_ERROR;
         }
 
-        if (tmp->funkce && tmp->par_count==0) {
+        if (tmp->funkce && tmp->par_count == 0) {
             token_list->Act = token_list->Act->lptr;
             return check_end_of_line(&(*token_list));
         } else {
@@ -361,7 +364,7 @@ int parse_identifier(tDList *token_list) {
 
 int parse_assign_value(tDList *token_list) {
     int br_count = 0;
-    struct tToken token_actual,*tmp;
+    struct tToken token_actual, *tmp;
     bool exp_value = false, exp_ar = false;
 
     while (true) {
@@ -388,12 +391,13 @@ int parse_assign_value(tDList *token_list) {
             if (br_count < 0) {
                 return SYNTAX_ERROR;
             }
-        } else if (is_set_type(token_actual, IDENTIFIER_NAME) ||is_set_type(token_actual, CHAR_INTEGER) || is_set_type(token_actual,DOUBLE) ||
+        } else if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
+                   is_set_type(token_actual, DOUBLE) ||
                    is_set_type(token_actual, LITERAL_STRING)) {
 
-            tmp=symtable_get(&hTable,token_actual.content_string);
+            tmp = symtable_get(&hTable, token_actual.content_string);
 
-            if(tmp != NULL && !tmp->defined){
+            if (tmp != NULL && !tmp->defined) {
                 return PROG_SEM_ERROR;
             }
 
@@ -428,26 +432,28 @@ int parse_assign_value(tDList *token_list) {
 
 }
 
-int parse_call_function(tDList *token_list,int count) {
+int parse_call_function(tDList *token_list, int count) {
 
-    struct tToken token_actual,*tmp;
+    struct tToken token_actual, *tmp;
     bool comma = false;
-    int par_count=0;
+    int par_count = 0;
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
 
-        if (comma && !(is_set_type(token_actual, IDENTIFIER_NAME) ||is_set_type(token_actual, CHAR_INTEGER) || is_set_type(token_actual,DOUBLE) ||
+        if (comma && !(is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
+                       is_set_type(token_actual, DOUBLE) ||
                        is_set_type(token_actual, LITERAL_STRING))) {
             return SYNTAX_ERROR;
         }
 
-        if (is_set_type(token_actual, IDENTIFIER_NAME) ||is_set_type(token_actual, CHAR_INTEGER) || is_set_type(token_actual,DOUBLE) ||
+        if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
+            is_set_type(token_actual, DOUBLE) ||
             is_set_type(token_actual, LITERAL_STRING)) {
 
-            tmp=symtable_get(&hTable,token_actual.content_string);
+            tmp = symtable_get(&hTable, token_actual.content_string);
 
-            if(tmp != NULL && !tmp->defined){
+            if (tmp != NULL && !tmp->defined) {
                 return PROG_SEM_ERROR;
             }
 
@@ -460,7 +466,7 @@ int parse_call_function(tDList *token_list,int count) {
         } else if (is_set_type(token_actual, CHAR_EOL)) {
             token_list->Act = token_list->Act->lptr;
 
-            if(par_count!=count){
+            if (par_count != count) {
                 return FUNCTION_ERROE;
             }
 
@@ -475,7 +481,7 @@ int parse_call_function(tDList *token_list,int count) {
 
 int parse_condition_expr(tDList *token_list, int set) {
     int br_count = 0;
-    struct tToken token_actual,*tmp;
+    struct tToken token_actual, *tmp;
     bool exp_value = false, exp_ar = false;
 
     while (true) {
@@ -502,12 +508,13 @@ int parse_condition_expr(tDList *token_list, int set) {
             if (br_count < 0) {
                 return SYNTAX_ERROR;
             }
-        } else if (is_set_type(token_actual, IDENTIFIER_NAME) ||is_set_type(token_actual, CHAR_INTEGER) || is_set_type(token_actual,DOUBLE)||
+        } else if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
+                   is_set_type(token_actual, DOUBLE) ||
                    is_set_type(token_actual, LITERAL_STRING)) {
 
-            tmp=symtable_get(&hTable,token_actual.content_string);
+            tmp = symtable_get(&hTable, token_actual.content_string);
 
-            if(tmp != NULL && !tmp->defined){
+            if (tmp != NULL && !tmp->defined) {
                 return PROG_SEM_ERROR;
             }
 

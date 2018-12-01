@@ -21,6 +21,8 @@ int main(int argc, char* argv[]) {
     //TODO ošetření vracené hodnoty
     run_parser(source_code);
 
+
+
     fclose(source_code);
 
 
