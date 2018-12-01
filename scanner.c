@@ -27,7 +27,6 @@ struct tToken get_token(FILE *source_file) {
     }
 
 
-
     Dynamic_string *content_string;
     struct tToken token;
     init_token(&token);
@@ -45,8 +44,7 @@ struct tToken get_token(FILE *source_file) {
 
     while (true) {
 
-        if (start_token < 2)
-        {
+        if (start_token < 2) {
             start_token++;
         }
 
@@ -58,9 +56,7 @@ struct tToken get_token(FILE *source_file) {
                 if (c == '\n') {
                     current_state = EOL;
 
-                }
-
-                 else if (c == '/') {
+                } else if (c == '/') {
                     current_state = BACKSLASH;
                 } else if (c == '#') {
                     current_state = COMMENTARY;
@@ -76,20 +72,18 @@ struct tToken get_token(FILE *source_file) {
                 } else if (c == '>') {
                     current_state = GREATER_THAN;
                 } else if (c == '=') {
-                     if ((start_token == 0) || (new_line)) {
-                         current_state = MIGHTBECOMMENT;
-                     }
-                     else {
-                         current_state = EQUALS;
-                     }
+                    if ((start_token == 0) || (new_line)) {
+                        current_state = MIGHTBECOMMENT;
+                    } else {
+                        current_state = EQUALS;
+                    }
                 } else if (isspace(c)) {
                     current_state = START;
                 } else if (c == '/') {
                     token.set_type_of_token = CHAR_OPERATOR_DIV;
                     dynamic_string_free(content_string);
                     return token;
-                }
-                else if (c == '+') {
+                } else if (c == '+') {
                     token.set_type_of_token = CHAR_OPERATOR_PLUS;
                     dynamic_string_free(content_string);
                     return token;
@@ -115,8 +109,7 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = CHAR_RIGHT_BRACKET;
                     dynamic_string_free(content_string);
                     return token;
-                }
-                else if (c == '"') {
+                } else if (c == '"') {
                     current_state = STRING_START;
                 } else if (c == '!') {
                     current_state = EXCLAMATION;
@@ -128,7 +121,8 @@ struct tToken get_token(FILE *source_file) {
                     return token;
                 } else {
                     dynamic_string_free(content_string);
-                    ErrorPrint(INTERNAL_ERROR, "[scanner.c][get_token]cannot read content of source_file"); //TODO: nemel by to byt error scanneru?
+                    ErrorPrint(INTERNAL_ERROR,
+                               "[scanner.c][get_token]cannot read content of source_file"); //TODO: nemel by to byt error scanneru?
                 }
                 break;
 
@@ -156,16 +150,12 @@ struct tToken get_token(FILE *source_file) {
 
 
             case (EOL):
-                if (isspace(c)) {
+                if (isspace(c))
                     break;
-                }
-                if (c == '=') {
-                    ungetc(c, source_file);
+                if (c == '=')
                     new_line = true;
-                } else {
-                    ungetc(c, source_file);
+                else
                     new_line = false;
-                }
                 ungetc(c, source_file);
                 token.set_type_of_token = CHAR_EOL;
                 return token;
@@ -254,7 +244,6 @@ struct tToken get_token(FILE *source_file) {
                 break;
 
 
-
             case (COMMENTARY):
                 if (c == '\n' || c == EOF) {
                     current_state = START;
@@ -276,7 +265,7 @@ struct tToken get_token(FILE *source_file) {
                     int result = process_commentary(content_string, token, source_file, &current_state);
                     if (result == 1) {
                         current_state = STARTCHUNKCOMMENTARY;
-                       //dynamic_string_free(content_string);
+                        //dynamic_string_free(content_string);
                         dynamic_string_clear(content_string);
                     } else if (result == 2) {
                         current_state = ENDCHUNKCOMMENTARY;
@@ -300,9 +289,8 @@ struct tToken get_token(FILE *source_file) {
             case (EQUALS):
                 if (c == '=') {
                     current_state = MIGHTBEDOUBLE_EQ;
-                }
-                else {
-                    ungetc(c,source_file);
+                } else {
+                    ungetc(c, source_file);
                     token.set_type_of_token = CHAR_EQUALS;
                     dynamic_string_free(content_string);
                     return token;
@@ -312,31 +300,23 @@ struct tToken get_token(FILE *source_file) {
                 break;
 
             case (MIGHTBECOMMENT):
-                if (isalpha(c))
-                {
-            dynamic_string_add_char(content_string, (char) tolower(c));
-                }
-                else if (isspace(c))
-                {
+                if (isalpha(c)) {
+                    dynamic_string_add_char(content_string, (char) tolower(c));
+                } else if (isspace(c)) {
                     int result = process_commentary(content_string, token, source_file, &current_state);
-                    if (result == 1)
-                    {
+                    if (result == 1) {
                         current_state = STARTCHUNKCOMMENTARY;
                         //dynamic_string_free(content_string);
                         dynamic_string_clear(content_string);
-                    }
-                    else if (result == 2)
-                    {
+                    } else if (result == 2) {
                         current_state = ENDCHUNKCOMMENTARY;
                         //dynamic_string_free(content_string);
                         dynamic_string_clear(content_string);
-                    }
-                    else
-                        {
-                            fseek(source_file, -strlen((char *) content_string), SEEK_CUR);
-                            token.set_type_of_token = CHAR_EQUALS;
-                            dynamic_string_free(content_string);
-                            return token;
+                    } else {
+                        fseek(source_file, -strlen((char *) content_string), SEEK_CUR);
+                        token.set_type_of_token = CHAR_EQUALS;
+                        dynamic_string_free(content_string);
+                        return token;
                     }
                 }
                 break;
