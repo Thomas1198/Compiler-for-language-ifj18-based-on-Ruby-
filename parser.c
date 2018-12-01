@@ -39,14 +39,14 @@ int first_run(tDList *token_list, FILE *source_code) {
 
             if (function_par) {
                 tmp_func->par_count++;
-                dynamic_string_add_const_str(token_actual.content_string, "_par_");
+                dynamic_string_add_const_str(token_actual.content_string, "_var_");
                 dynamic_string_add_const_str(token_actual.content_string, tmp_func->content_string->str);
 
                 if (symtable_get(&hTable, token_actual.content_string) != NULL) {
                     return PROG_SEM_ERROR;
                 }
 
-                token_actual.defined = true;
+                token_list->Last->token.defined = true;
             }
             if (function_var) {
                 dynamic_string_add_const_str(token_actual.content_string, "_var_");
@@ -361,7 +361,7 @@ int parse_identifier(tDList *token_list) {
 
 int parse_assign_value(tDList *token_list) {
     int br_count = 0;
-    struct tToken token_actual;
+    struct tToken token_actual,*tmp;
     bool exp_value = false, exp_ar = false;
 
     while (true) {
@@ -390,6 +390,12 @@ int parse_assign_value(tDList *token_list) {
             }
         } else if (is_set_type(token_actual, IDENTIFIER_NAME) ||is_set_type(token_actual, CHAR_INTEGER) || is_set_type(token_actual,DOUBLE) ||
                    is_set_type(token_actual, LITERAL_STRING)) {
+
+            tmp=symtable_get(&hTable,token_actual.content_string);
+
+            if(tmp != NULL && !tmp->defined){
+                return PROG_SEM_ERROR;
+            }
 
             if (exp_ar) {
                 return SYNTAX_ERROR;
@@ -424,7 +430,7 @@ int parse_assign_value(tDList *token_list) {
 
 int parse_call_function(tDList *token_list,int count) {
 
-    struct tToken token_actual;
+    struct tToken token_actual,*tmp;
     bool comma = false;
     int par_count=0;
 
@@ -438,6 +444,12 @@ int parse_call_function(tDList *token_list,int count) {
 
         if (is_set_type(token_actual, IDENTIFIER_NAME) ||is_set_type(token_actual, CHAR_INTEGER) || is_set_type(token_actual,DOUBLE) ||
             is_set_type(token_actual, LITERAL_STRING)) {
+
+            tmp=symtable_get(&hTable,token_actual.content_string);
+
+            if(tmp != NULL && !tmp->defined){
+                return PROG_SEM_ERROR;
+            }
 
             par_count++;
             comma = false;
@@ -463,7 +475,7 @@ int parse_call_function(tDList *token_list,int count) {
 
 int parse_condition_expr(tDList *token_list, int set) {
     int br_count = 0;
-    struct tToken token_actual;
+    struct tToken token_actual,*tmp;
     bool exp_value = false, exp_ar = false;
 
     while (true) {
@@ -492,6 +504,12 @@ int parse_condition_expr(tDList *token_list, int set) {
             }
         } else if (is_set_type(token_actual, IDENTIFIER_NAME) ||is_set_type(token_actual, CHAR_INTEGER) || is_set_type(token_actual,DOUBLE)||
                    is_set_type(token_actual, LITERAL_STRING)) {
+
+            tmp=symtable_get(&hTable,token_actual.content_string);
+
+            if(tmp != NULL && !tmp->defined){
+                return PROG_SEM_ERROR;
+            }
 
             if (exp_ar) {
                 return SYNTAX_ERROR;
