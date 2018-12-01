@@ -56,7 +56,7 @@ struct tToken get_token(FILE *source_file) {
                 if (c == '\n') {
                     current_state = EOL;
                 } else if (c == '/') {
-                    token.set_type_of_token = CHAR_BACKSLASH;
+                    token.set_type_of_token = CHAR_OPERATOR_DIV;
                     dynamic_string_free(content_string);
                     return token;
                 } else if (c == '#') {
