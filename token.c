@@ -16,4 +16,5 @@ void init_token(struct tToken *token) {
     token->funkce = false;
     token->content_string = dynamic_string_init();
     token->par_count = 0;
+    token->buidl_in=false;
 }

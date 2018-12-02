@@ -37,7 +37,7 @@ int end_req;
 
 int if_count;
 
-struct tToken *act_fun;
+struct tToken *act_fun,*inputs,*inputi,*inputf,*print;
 
 Symtable hTable;
 
@@ -73,5 +73,8 @@ int parse_call_function(tDList *token_list, int count);
 
 int parse_condition_expr(tDList *token_list, int set);
 
+void init_build_in();
+
+void free_build_in();
 
 #endif //PROJECT_PARSER_H
