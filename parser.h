@@ -1,4 +1,3 @@
-
 #ifndef PROJECT_PARSER_H
 #define PROJECT_PARSER_H
 
@@ -41,6 +40,8 @@ int if_count;
 struct tToken *act_fun;
 
 Symtable hTable;
+
+tDList token_list;
 
 int run_parser(FILE *source_code);
 

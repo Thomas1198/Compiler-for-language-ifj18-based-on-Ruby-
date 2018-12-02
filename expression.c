@@ -68,7 +68,6 @@ struct tToken a,b;
 //a=top();
 //b -aktualní znak na vstupu
 
-while(b.set_type_of_token!=CHAR_EOL/*  && top()==CHAR_EOL  */ ){
 
     switch (SA_table[get_int_for_table(a)][get_int_for_table(b)]){
         case EQ:{
@@ -86,7 +85,9 @@ while(b.set_type_of_token!=CHAR_EOL/*  && top()==CHAR_EOL  */ ){
 
     }
 
-}
+
 
     return 0;
 }
+
+
