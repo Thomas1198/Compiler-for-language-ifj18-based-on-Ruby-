@@ -27,7 +27,7 @@ void stack_push(Symstack *stack, struct tToken *token) {
 }
 
 
-Sitem *stack_pop(Symstack *stack) {
+struct tToken *stack_pop(Symstack *stack) {
     if (!stack_is_empty(stack)) {
         Sitem *tmp = stack->top;
         struct tToken *top_token = stack->top->data;
@@ -38,9 +38,9 @@ Sitem *stack_pop(Symstack *stack) {
     return NULL;
 }
 
-Sitem *get_get_top(Symstack *stack) {
+struct tToken *stack_get_top(Symstack *stack) {
     if (stack->top != NULL)
-        return stack->top;
+        return stack->top->data;
     else
         return NULL;
 }
