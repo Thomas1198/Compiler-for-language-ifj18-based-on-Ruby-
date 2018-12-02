@@ -128,30 +128,34 @@ int first_run(tDList *token_list, FILE *source_code) {
 void init_build_in() {
     inputf = (struct tToken *) malloc(sizeof(struct tToken));
     init_token(inputf);
-    inputf->buidl_in = true;
+    inputf->par_count=0;
     inputf->funkce = true;
     inputf->defined = true;
+    inputf->set_type_of_token=IDENTIFIER_NAME;
     symtable_insert(&hTable, inputf);
 
     inputi = (struct tToken *) malloc(sizeof(struct tToken));
     init_token(inputi);
-    inputi->buidl_in = true;
+    inputi->par_count=0;
     inputi->funkce = true;
     inputi->defined = true;
+    inputi->set_type_of_token=IDENTIFIER_NAME;
     symtable_insert(&hTable, inputi);
 
     inputs = (struct tToken *) malloc(sizeof(struct tToken));
     init_token(inputs);
-    inputs->buidl_in = true;
+    inputs->par_count=0;
     inputs->funkce = true;
     inputs->defined = true;
+    inputs->set_type_of_token=IDENTIFIER_NAME;
     symtable_insert(&hTable, inputs);
 
     print = (struct tToken *) malloc(sizeof(struct tToken));
     init_token(print);
-    print->buidl_in = true;
+    print->more_params = true;
     print->funkce = true;
     print->defined = true;
+    print->set_type_of_token=IDENTIFIER_NAME;
     symtable_insert(&hTable, print);
 }
 
@@ -366,7 +370,7 @@ int parse_identifier(tDList *token_list) {
             return SYNTAX_ERROR;
         }
 
-        if (tmp->funkce || tmp->buidl_in) {
+        if (tmp->funkce || tmp->more_params) {
 
 
             token_list->Act = token_list->Act->lptr;
@@ -387,7 +391,7 @@ int parse_identifier(tDList *token_list) {
             return SYNTAX_ERROR;
         }
 
-        if ((tmp->funkce && tmp->par_count == 0) || tmp->buidl_in) {
+        if ((tmp->funkce && tmp->par_count == 0) || tmp->more_params) {
             token_list->Act = token_list->Act->lptr;
             return check_end_of_line(&(*token_list));
         } else {
@@ -528,7 +532,7 @@ int parse_call_function(tDList *token_list, int count) {
         } else if (is_set_type(token_actual, CHAR_EOL)) {
             token_list->Act = token_list->Act->lptr;
 
-            if (par_count != count || !tmp->buidl_in) {
+            if (par_count != count || !tmp->more_params) {
                 return FUNCTION_ERROE;
             }
 
