@@ -114,7 +114,7 @@ void generate_function_return_val(struct tToken var)
 {
     ADD_INSTRUCTION("DEFVAR LF@%retval");
     ADD_CODE("MOVE LF@retval ");
-    generate_defaul_value(var); ADD_CODE("\n");
+//    generate_defaul_value(var); ADD_CODE("\n");
 }
 
 void generate_function_return_val_assign(struct tToken var)
@@ -342,7 +342,8 @@ void generate_pops()
 
 void  generate_save_result_to_var(struct tToken var)
 {
-    ADD_CODE("MOVE LF%"); ADD_CODE(var.content_string->str); ADD_CODE(" GF%result\n")
+    ADD_CODE("MOVE LF%"); ADD_CODE(var.content_string->str);
+    ADD_CODE(" GF%result\n");
 }
 
 void generate_clear_stack()
