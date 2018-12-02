@@ -1,0 +1,4 @@
+# 0
+def test?(k)
+	a = 5
+end
