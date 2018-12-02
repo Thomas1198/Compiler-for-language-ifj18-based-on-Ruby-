@@ -96,6 +96,13 @@ void stack_push(Symstack *stack, struct tToken *token);
  */
 Sitem *stack_pop(Symstack *stack);
 
+/**
+ * Returns top symbol from stack.
+ *
+ * @param stack Pointer to stack.
+ * @return Top item or NULL if it does not exist
+ */
+Sitem *get_get_top(Symstack *stack);
 
 /**
  * Checks if is stack empty.

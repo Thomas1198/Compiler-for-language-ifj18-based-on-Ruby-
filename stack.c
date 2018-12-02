@@ -38,6 +38,13 @@ Sitem *stack_pop(Symstack *stack) {
     return NULL;
 }
 
+Sitem *get_get_top(Symstack *stack) {
+    if (stack->top != NULL)
+        return stack->top;
+    else
+        return NULL;
+}
+
 /*
 struct tToken *stack_next_terminal(Symstack *stack) {
     Sitem *top = stack->top;
