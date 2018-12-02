@@ -243,12 +243,6 @@ void generate_function_start(struct tToken function);
 void generate_function_end(struct tToken function);
 
 /**
- * @brief Generate defaulte value for variable
- * @param var tToken with variable
- */
-void generate_defaul_value(struct tToken var);
-
-/**
  * @brief Generate function return value
  * @param var tToken with variable
  */
@@ -279,17 +273,8 @@ void generate_function_pass_par(struct tToken par, int index);
  */
 void generate_var_decl(struct tToken var);
 
-/**
- * @brief Pass value to variable
- * @param var tToken with variable
- */
-void generate_var_pass_value(struct tToken var);
 
-/**
- * @brief Generate push on stack
- * @param var tToken with variable
- */
-void generate_push(struct tToken var);
+
 /**
  * @brief generate label
  * @param function tToken with function
@@ -352,99 +337,120 @@ void generate_while_start(struct tToken function, int label_index, int label_dee
  */
 void generate_while_end(struct tToken function, int label_index, int label_deep);
 
-/**
- * @brief save operant to global varialbe
- * @param var1 first operand
- * @param var2 second operand
- */
-void generate_pre_operation(struct tToken var1, struct tToken var2);
+
 
 /**
- * @brief Generate push on stack
+ * @brief Generate push variable on stack
  * @param var tToken with variable
  */
 void generate_push_var(struct tToken var);
 
+/**
+ * @brief Generate push value on stack
+ * @param var tToken with variable
+ */
 void generate_push_value(struct tToken var);
 
 /**
- * @brief add operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief add operands in stack
  */
 void generate_adds();
 
 /**
- * @brief sub operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief sub operands in stack
  */
 void generate_subs();
 
 /**
- * @brief mul operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief mul operands in stack
  */
 void generate_muls();
 
 /**
- * @brief div operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief div operands in stack
  */
 void generate_divs();
 
 /**
- * @brief idiv operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief idiv operands in stack
  */
 void generate_idivs();
 
 /**
- * @brief eq operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief eq operands in stack
  */
 void generate_eqs();
 
 /**
- * @brief gt operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief gt operands in stack
  */
 void generate_gts();
 
 /**
- * @brief lt operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief lt operands in stack
  */
 void generate_lts();
 
 /**
- * @brief and operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief and operands in stack
  */
 void generate_ands();
 
 /**
- * @brief  or operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief  or operands in stack
  */
 void generate_ors();
 
 /**
- * @brief not operands
- * @param var1 first operand
- * @param var2 second operand
+ * @brief not equal in stack
  */
-void generate_nots();
+void generate_not_eqs();
 
+/**
+ * @brief equal or greater operands in stack
+ */
+void generate_gt_eqs();
 
+/**
+ * @brief equal or less operands in stack
+ */
+void generate_ls_eqs();
+
+/**
+ * @brief pop stack to global frame
+ */
+void generate_pops();
+
+/**
+ * @brief Save result to variable
+ * @param var Token with variable
+ */
+void  generate_save_result_to_var(struct tToken var);
+
+/**
+ * @brief clear stack
+ */
+void generate_clear_stack();
+
+/**
+ * @brief convert first operand to double
+ */
+void generate_stack_op1_to_double();
+
+/**
+ * @brief convert second operand to intiger
+ */
+void generate_stack_op1_to_integer();
+
+/**
+ * @brief convert second operand to double
+ */
+void generate_stack_op2_to_double();
+
+/**
+ * @brief convert second operand to intiger
+ */
+void generate_stack_op2_to_integer();
 
 
 

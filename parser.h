@@ -10,6 +10,7 @@
 #include "symtable.h"
 #include "code_generator.h"
 #include "expression.h"
+#include "stack.h"
 
 
 #define check_set_type(token, set_type)do{\
