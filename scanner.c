@@ -100,6 +100,7 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_add_char(token.content_string, (char) tolower(c));
                     current_state = EXCLAMATION;
                 } else if (c == EOF) {
+                    dynamic_string_add_const_str(token.content_string, "EOF");
                     token.set_type_of_token = CHAR_EOF;
                     return token;
                 } else {

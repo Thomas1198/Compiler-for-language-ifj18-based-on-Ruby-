@@ -81,4 +81,6 @@ struct tToken {
 //TODO: dopsat komentar
 void init_token(struct tToken *token);
 
+void copy_token(struct tToken *dst, struct tToken *src);
+
 #endif //PROJECT_TOKEN_H
