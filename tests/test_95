@@ -1,0 +1,4 @@
+#0
+vara = 0.4242
+varb = 2.4242
+varc = substr("Hello", vara, varb)

@@ -1,0 +1,3 @@
+#0
+
+var = substr("Hello world", 1, 2.42)

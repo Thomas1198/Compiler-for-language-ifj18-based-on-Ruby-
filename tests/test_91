@@ -1,0 +1,15 @@
+#0
+def funkce(a)
+var=42
+abc(var)
+end
+
+def abc(x)
+if x  then
+5
+else
+6
+end
+end
+
+funkce "5"
