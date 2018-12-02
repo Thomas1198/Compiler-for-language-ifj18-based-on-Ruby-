@@ -10,7 +10,7 @@ int run_parser(FILE *source_code) {
     symtable_create(&hTable);
 
     // generator_start();
-
+    init_build_in();
     if ((error_code = first_run(&token_list, source_code)) != 0) {
         //TODO uvolnění paměti
         // generator_clear();
@@ -18,7 +18,7 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
-    init_build_in();
+
 
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
@@ -36,11 +36,12 @@ int run_parser(FILE *source_code) {
 
 int first_run(tDList *token_list, FILE *source_code) {
     struct tToken token_actual, *tmp = NULL, *tmp_func = NULL;
-    bool function_par = false, function_var = false;
+    bool function_par = false, function_var = false, end = true;
     int end_count = 0;
 
 
     while (((token_actual = get_token(source_code))).set_type_of_token != CHAR_EOF) {
+
         DLInsertLast(&(*token_list), token_actual);
 
 
@@ -58,8 +59,13 @@ int first_run(tDList *token_list, FILE *source_code) {
                 token_list->Last->token.defined = true;
             }
             if (function_var) {
-                dynamic_string_add_const_str(token_actual.content_string, "_var_");
-                dynamic_string_add_const_str(token_actual.content_string, tmp_func->content_string->str);
+
+                tmp = symtable_get(&hTable, token_actual.content_string);
+                if (tmp == NULL) {
+
+                    dynamic_string_add_const_str(token_actual.content_string, "_var_");
+                    dynamic_string_add_const_str(token_actual.content_string, tmp_func->content_string->str);
+                }
             }
 
             if ((tmp = symtable_get(&hTable, token_actual.content_string)) == NULL) {
@@ -76,8 +82,13 @@ int first_run(tDList *token_list, FILE *source_code) {
                     tmp->funkce = true;
                     tmp->defined = true;
                     tmp->par_count = 0;
-                    tmp_func = tmp;
-                    function_par = true;
+                    if (end) {
+                        tmp_func = tmp;
+                        end = false;
+                        function_par = true;
+                    }
+
+
                 }
 
                 if (is_set_type(token_list->Last->lptr->token, KEY_WORD_IF) ||
@@ -110,6 +121,7 @@ int first_run(tDList *token_list, FILE *source_code) {
             end_count--;
             if (end_count == 0) {
                 function_var = false;
+                end = true;
             }
         }
 
@@ -131,6 +143,7 @@ void init_build_in() {
     inputf->par_count = 0;
     inputf->funkce = true;
     inputf->defined = true;
+    inputf->build_id = true;
     dynamic_string_add_const_str(inputf->content_string, "inputf");
     inputf->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, inputf);
@@ -140,6 +153,7 @@ void init_build_in() {
     inputi->par_count = 0;
     inputi->funkce = true;
     inputi->defined = true;
+    inputf->build_id = true;
     dynamic_string_add_const_str(inputi->content_string, "inputi");
     inputi->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, inputi);
@@ -149,6 +163,7 @@ void init_build_in() {
     inputs->par_count = 0;
     inputs->funkce = true;
     inputs->defined = true;
+    inputf->build_id = true;
     dynamic_string_add_const_str(inputs->content_string, "inputs");
     inputs->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, inputs);
@@ -158,6 +173,7 @@ void init_build_in() {
     print->more_params = true;
     print->funkce = true;
     print->defined = true;
+    inputf->build_id = true;
     dynamic_string_add_const_str(print->content_string, "print");
     print->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, print);
@@ -481,7 +497,7 @@ int parse_assign_value(tDList *token_list) {
     //vyhodnotit
     //proces_expression();
 
-   // proces_expression(token_list);
+    // proces_expression(token_list);
 
     return 0;
 
