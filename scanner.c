@@ -177,8 +177,8 @@ struct tToken get_token(FILE *source_file) {
                     current_state = NUMBER_DOUBLE;
                     dynamic_string_add_char(token.content_string, (char) c);
                 } else {
-                    ungetc(c, source_file);
-                    return process_decimal(token);
+                    //ungetc(c, source_file);
+                    ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token] DEC POINT ONLY");
                 }
                 break;
 
