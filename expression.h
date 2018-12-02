@@ -9,6 +9,6 @@
 #include "token_list.h"
 #include "stack.h"
 
-int proces_expression();
+int proces_expression(tDList *token_list);
 
 #endif //PROJECT_EXPRESSION_H

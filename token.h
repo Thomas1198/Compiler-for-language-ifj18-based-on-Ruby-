@@ -48,6 +48,7 @@ typedef enum {
     CHAR_INTEGER,
     DOUBLE,
     UNDEFINED_SET,
+    END_PRECE,
     NONE,
 } set_type;
 

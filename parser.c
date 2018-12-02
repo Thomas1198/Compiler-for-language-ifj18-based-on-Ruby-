@@ -479,8 +479,9 @@ int parse_assign_value(tDList *token_list) {
 
 
     //vyhodnotit
-
     //proces_expression();
+
+   // proces_expression(token_list);
 
     return check_end_of_line(token_list);
 

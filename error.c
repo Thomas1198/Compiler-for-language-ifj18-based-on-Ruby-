@@ -11,3 +11,4 @@ void ErrorPrint(enum ERROR_CODE err_code, const char *msg) {
     fprintf(stderr, "ERROR (%d): %s", err_code, msg);
     exit(err_code);
 }
+

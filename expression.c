@@ -2,7 +2,7 @@
 // Created by kony on 1.12.18.
 //
 
-#include "token.h"
+#include "expression.h"
 
 #define LS  -1
 #define GR   1
@@ -44,7 +44,7 @@ switch (token.set_type_of_token){
         return 5;
     case IDENTIFIER_NAME:
         return 6;
-    case CHAR_EOL:
+    case END_PRECE:
         return 7;
     case CHAR_LT:
         return 8;
@@ -62,11 +62,16 @@ switch (token.set_type_of_token){
 }
 }
 
-int proces_expression(){
-struct tToken a,b;
+int proces_expression(tDList *token_list){
 
-//a=top();
-//b -aktualní znak na vstupu
+    Symstack *stack;
+
+    stack=(Symstack*)malloc(sizeof(stack));
+
+    stack_init(stack);
+    struct tToken a,b;
+
+    do{
 
 
     switch (SA_table[get_int_for_table(a)][get_int_for_table(b)]){
@@ -84,6 +89,7 @@ struct tToken a,b;
         }
 
     }
+    }while (0);
 
 
 
