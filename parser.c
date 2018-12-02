@@ -489,7 +489,7 @@ int parse_assign_value(tDList *token_list) {
 
 int parse_call_function(tDList *token_list, int count) {
 
-    struct tToken token_actual, *tmp;
+    struct tToken token_actual, *tmp,*func;
     bool comma = false;
     int par_count = 0, i = 0;
 
@@ -499,6 +499,9 @@ int parse_call_function(tDList *token_list, int count) {
     if (token_list->Act->token.par_count > 0) {
         //    generate_function_before_par();
     }
+
+    func=symtable_get(&hTable,token_list->Act->token.content_string);
+
 
     //TODO výraz jako parametr
 
@@ -537,7 +540,7 @@ int parse_call_function(tDList *token_list, int count) {
         } else if (is_set_type(token_actual, CHAR_EOL)) {
             token_list->Act = token_list->Act->lptr;
 
-            if (par_count != count || !tmp->more_params) {
+            if (par_count != count && !func->more_params) {
                 return FUNCTION_ERROE;
             }
 
