@@ -360,7 +360,7 @@ int parse_identifier(tDList *token_list) {
 
     //přiřazení
     if (is_set_type(token_actual, CHAR_EQUALS)) {
-        return parse_assign_value(&(*token_list));
+        return parse_assign_value(token_list);
     }
     //funkce s parametry
     if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
@@ -483,7 +483,7 @@ int parse_assign_value(tDList *token_list) {
 
    // proces_expression(token_list);
 
-    return check_end_of_line(token_list);
+    return 0;
 
 }
 
