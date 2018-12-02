@@ -69,7 +69,15 @@ int proces_expression(tDList *token_list){
     stack=(Symstack*)malloc(sizeof(stack));
 
     stack_init(stack);
-    struct tToken a,b;
+    struct tToken a,b,*tmp;
+
+    tmp=malloc(sizeof(struct tToken));
+    init_token(tmp);
+    
+    tmp->set_type_of_token=END_PRECE;
+    stack_push(stack,tmp);
+
+
 
     do{
 
@@ -85,11 +93,11 @@ int proces_expression(tDList *token_list){
             break;
         }
         default:{
-            exit(99);
+            exit(0);
         }
 
     }
-    }while (0);
+    }while (b.set_type_of_token==END_PRECE && 0 );
 
 
 

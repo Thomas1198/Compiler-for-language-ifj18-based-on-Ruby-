@@ -19,7 +19,6 @@ int run_parser(FILE *source_code) {
     }
 
 
-
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         //generator_clear();
@@ -429,6 +428,9 @@ int parse_assign_value(tDList *token_list) {
     int br_count = 0;
     struct tToken token_actual, *tmp;
     bool exp_value = false, exp_ar = false;
+    tDList tmp_list;
+
+    DLInitList(&tmp_list);
 
     // generate_var_decl(token_list->Act->lptr->token);
 
@@ -473,8 +475,12 @@ int parse_assign_value(tDList *token_list) {
             exp_value = false;
             exp_ar = true;
 
+            DLInsertLast(&(tmp_list), token_actual);
+
 
         } else if (aritmetic_char) {
+
+            DLInsertLast(&(tmp_list), token_actual);
 
             if (!exp_ar) {
                 return SYNTAX_ERROR;
@@ -495,9 +501,8 @@ int parse_assign_value(tDList *token_list) {
 
 
     //vyhodnotit
-    //proces_expression();
 
-    // proces_expression(token_list);
+    proces_expression(&tmp_list);
 
     return 0;
 
