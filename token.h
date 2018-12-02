@@ -76,6 +76,7 @@ struct tToken {
     bool funkce;
     int par_count;
     bool more_params;
+    bool build_id;
 };
 
 //TODO: dopsat komentar
