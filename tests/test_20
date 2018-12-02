@@ -1,0 +1,5 @@
+#
+var=5
+def function()
+c=var
+end
