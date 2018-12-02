@@ -1,0 +1,7 @@
+#0
+def a()
+b=5
+print b
+end
+
+a()
