@@ -502,7 +502,7 @@ int parse_assign_value(tDList *token_list) {
 
     //vyhodnotit
 
-    proces_expression(&tmp_list);
+    //proces_expression(&tmp_list);
 
     return 0;
 
