@@ -294,16 +294,6 @@ void generate_lts()
     ADD_INSTRUCTION("LTS");
 }
 
-void generate_ands()
-{
-    ADD_INSTRUCTION("ANDS");
-}
-
-void generate_ors()
-{
-    ADD_INSTRUCTION("ORS");
-}
-
 void generate_not_eqs()
 {
     ADD_INSTRUCTION("EQS")

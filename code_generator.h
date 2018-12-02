@@ -218,8 +218,10 @@ void generate_main_end();
  * @param name Name of function
  */
 void generate_function_call(struct tToken function);
+
 /**
  * @brief Generate frame to load parameters
+ * Vlozeni ramce na pred vlozenim parametru parametry
  */
 void generate_function_before_par();
 
@@ -227,12 +229,14 @@ void generate_function_before_par();
  * @brief Generate pass parameter
  * @param param token with parametr
  * @param index index
+ * Vlozeni do funkce, po function_start, pokud ma parametry
  */
 void generate_function_par_def( struct tToken param, int index);
 
 /**
  * @brief Generate function start
  * @param name Name of function
+ *
  */
 void generate_function_start(struct tToken function);
 
@@ -245,18 +249,21 @@ void generate_function_end(struct tToken function);
 /**
  * @brief Generate function return value
  * @param var tToken with variable
+ * Definujes pokud ma mit funkce return value
  */
 void generate_function_return_val(struct tToken var);
 
 /**
  * @brief Generate defaulte value assign
  * @param var tToken with variable
+ * Plní navratovou hodnotu
  */
 void generate_function_return_val_assign(struct tToken var);
 
 /**
  * @brief Generate value for variable
  * @param var tToken with variable
+ * Nepouživej!
  */
 void generate_value(struct tToken var);
 
@@ -264,22 +271,24 @@ void generate_value(struct tToken var);
  * @brief Generate function pass param
  * @param var tToken with variable
  * @param index index of parameter
+ *
  */
 void generate_function_pass_par(struct tToken par, int index);
 
 /**
  * @brief Generate variable declaretion
  * @param var tToken with variable
+ * Vlozeni parametru pred volanim funkce
  */
+
 void generate_var_decl(struct tToken var);
-
-
 
 /**
  * @brief generate label
  * @param function tToken with function
  * @param label_index index of label
  * @param label_deep deep of label
+ * Nepouzivej
  */
 
 void generate_label(struct tToken function, int label_index, int label_deep);
@@ -342,12 +351,14 @@ void generate_while_end(struct tToken function, int label_index, int label_deep)
 /**
  * @brief Generate push variable on stack
  * @param var tToken with variable
+ * vloz na zasobnik hodnotu promene
  */
 void generate_push_var(struct tToken var);
 
 /**
  * @brief Generate push value on stack
  * @param var tToken with variable
+ * vloz na zasobnik primou hodnotu
  */
 void generate_push_value(struct tToken var);
 
@@ -392,16 +403,6 @@ void generate_gts();
 void generate_lts();
 
 /**
- * @brief and operands in stack
- */
-void generate_ands();
-
-/**
- * @brief  or operands in stack
- */
-void generate_ors();
-
-/**
  * @brief not equal in stack
  */
 void generate_not_eqs();
@@ -418,20 +419,27 @@ void generate_ls_eqs();
 
 /**
  * @brief pop stack to global frame
+ * ulozi konecnou promenou do globalni funkce
  */
 void generate_pops();
 
 /**
  * @brief Save result to variable
  * @param var Token with variable
+ * z globalni funkce do promene
  */
 void  generate_save_result_to_var(struct tToken var);
 
 /**
  * @brief clear stack
+ * vymaze stack, volat vzdy pred prvnim vlozenim do stacku pri vypoctu
  */
 void generate_clear_stack();
 
+
+
+
+/// Funkce pro prevod mezi dat.typama v stacku
 /**
  * @brief convert first operand to double
  */
