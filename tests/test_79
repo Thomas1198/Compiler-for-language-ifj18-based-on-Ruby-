@@ -1,0 +1,8 @@
+#0
+def f(a)
+b=a
+print b
+end
+
+geb="ahoj"
+f(geb)
