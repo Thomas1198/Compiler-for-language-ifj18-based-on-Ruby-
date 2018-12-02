@@ -40,7 +40,6 @@ int first_run(tDList *token_list, FILE *source_code) {
     int end_count = 0;
 
 
-
     while (((token_actual = get_token(source_code))).set_type_of_token != CHAR_EOF) {
         DLInsertLast(&(*token_list), token_actual);
 
@@ -129,29 +128,29 @@ int first_run(tDList *token_list, FILE *source_code) {
 void init_build_in() {
     inputf = (struct tToken *) malloc(sizeof(struct tToken));
     init_token(inputf);
-    inputf->par_count=0;
+    inputf->par_count = 0;
     inputf->funkce = true;
     inputf->defined = true;
-    dynamic_string_add_const_str(inputf->content_string,"inputf");
-    inputf->set_type_of_token=IDENTIFIER_NAME;
+    dynamic_string_add_const_str(inputf->content_string, "inputf");
+    inputf->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, inputf);
 
     inputi = (struct tToken *) malloc(sizeof(struct tToken));
     init_token(inputi);
-    inputi->par_count=0;
+    inputi->par_count = 0;
     inputi->funkce = true;
     inputi->defined = true;
-    dynamic_string_add_const_str(inputi->content_string,"inputi");
-    inputi->set_type_of_token=IDENTIFIER_NAME;
+    dynamic_string_add_const_str(inputi->content_string, "inputi");
+    inputi->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, inputi);
 
     inputs = (struct tToken *) malloc(sizeof(struct tToken));
     init_token(inputs);
-    inputs->par_count=0;
+    inputs->par_count = 0;
     inputs->funkce = true;
     inputs->defined = true;
-    dynamic_string_add_const_str(inputs->content_string,"inputs");
-    inputs->set_type_of_token=IDENTIFIER_NAME;
+    dynamic_string_add_const_str(inputs->content_string, "inputs");
+    inputs->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, inputs);
 
     print = (struct tToken *) malloc(sizeof(struct tToken));
@@ -159,8 +158,8 @@ void init_build_in() {
     print->more_params = true;
     print->funkce = true;
     print->defined = true;
-    dynamic_string_add_const_str(print->content_string,"print");
-    print->set_type_of_token=IDENTIFIER_NAME;
+    dynamic_string_add_const_str(print->content_string, "print");
+    print->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, print);
 }
 
@@ -366,7 +365,7 @@ int parse_identifier(tDList *token_list) {
     //funkce s parametry
     if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
         is_set_type(token_actual, DOUBLE) ||
-        is_set_type(token_actual, LITERAL_STRING)) {
+        is_set_type(token_actual, LITERAL_STRING) || is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
 
         tmp = symtable_get(&hTable, token_list->Act->lptr->token.content_string);
 
@@ -489,8 +488,8 @@ int parse_assign_value(tDList *token_list) {
 
 int parse_call_function(tDList *token_list, int count) {
 
-    struct tToken token_actual, *tmp,*func;
-    bool comma = false;
+    struct tToken token_actual, *tmp, *func;
+    bool comma = false, exp_bra = false;
     int par_count = 0, i = 0;
 
 
@@ -500,7 +499,7 @@ int parse_call_function(tDList *token_list, int count) {
         //    generate_function_before_par();
     }
 
-    func=symtable_get(&hTable,token_list->Act->token.content_string);
+    func = symtable_get(&hTable, token_list->Act->token.content_string);
 
 
     //TODO výraz jako parametr
@@ -512,6 +511,18 @@ int parse_call_function(tDList *token_list, int count) {
                        is_set_type(token_actual, DOUBLE) ||
                        is_set_type(token_actual, LITERAL_STRING))) {
             return SYNTAX_ERROR;
+        }
+
+        if (is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
+            exp_bra = true;
+            continue;
+        }
+
+        if (is_set_type(token_actual, CHAR_RIGHT_BRACKET) && exp_bra) {
+            try_next_token_list_p(token_actual, token_list);
+            if (is_set_type(token_actual, CHAR_EOL)) {
+                return 0;
+            }
         }
 
         if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
@@ -542,6 +553,10 @@ int parse_call_function(tDList *token_list, int count) {
 
             if (par_count != count && !func->more_params) {
                 return FUNCTION_ERROE;
+            }
+
+            if (exp_bra) {
+                return SYNTAX_ERROR;
             }
 
             return check_end_of_line(&(*token_list));
