@@ -7,6 +7,7 @@
 
 #include "token.h"
 #include "token_list.h"
+#include "stack.h"
 
 int proces_expression();
 

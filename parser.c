@@ -8,7 +8,7 @@ int run_parser(FILE *source_code) {
 
     symtable_create(&hTable);
 
-    generator_start();
+   // generator_start();
 
     if ((error_code = first_run(&token_list, source_code)) != 0) {
         //TODO uvolnění paměti
@@ -23,8 +23,8 @@ int run_parser(FILE *source_code) {
         exit(error_code);
     }
 
-    write_code();
-    generator_clear();
+    //write_code();
+    //generator_clear();
     DLDisposeList(&token_list);
     return 0;
 }
@@ -200,7 +200,7 @@ int parse_end(tDList *token_list) {
     end_req--;
 
     if (end_req == 0) {
-        generate_function_end(*act_fun);
+       // generate_function_end(*act_fun);
     }
 
     if (end_req < 0) {
@@ -222,7 +222,7 @@ int parse_def(tDList *token_list) {
     //TODO závorky a várazy
     try_next_token_list_p(token_actual, token_list);
 
-    generate_function_start(token_actual);
+   // generate_function_start(token_actual);
 
     check_set_type(token_actual, IDENTIFIER_NAME);
 
@@ -370,7 +370,7 @@ int parse_assign_value(tDList *token_list) {
     struct tToken token_actual, *tmp;
     bool exp_value = false, exp_ar = false;
 
-    generate_var_decl(token_list->Act->lptr->token);
+   // generate_var_decl(token_list->Act->lptr->token);
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
@@ -436,6 +436,8 @@ int parse_assign_value(tDList *token_list) {
 
     //vyhodnotit
 
+    //proces_expression();
+
     return check_end_of_line(token_list);
 
 }
@@ -447,10 +449,10 @@ int parse_call_function(tDList *token_list, int count) {
     int par_count = 0, i = 0;
 
 
-    generate_function_call(token_list->Act->token);
+  //  generate_function_call(token_list->Act->token);
 
     if (token_list->Act->token.par_count > 0) {
-        generate_function_before_par();
+    //    generate_function_before_par();
     }
 
     //TODO výraz jako parametr
@@ -471,7 +473,7 @@ int parse_call_function(tDList *token_list, int count) {
             //TODO
             // generate_function_par_def(token_actual, i);
 
-            generate_function_pass_par(token_actual,i);
+           // generate_function_pass_par(token_actual,i);
 
             i++;
 
