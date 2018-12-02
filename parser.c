@@ -1,7 +1,7 @@
 #include "parser.h"
 
 int run_parser(FILE *source_code) {
-    tDList token_list;
+
     int error_code;
 
     DLInitList(&token_list);
