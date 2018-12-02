@@ -83,37 +83,58 @@ int proces_expression(tDList *token_list) {
     stack = (Symstack *) malloc(sizeof(stack));
 
     stack_init(stack);
-    struct tToken a, b, *tmp;
+    struct tToken *a, *b, *tmp,*left,*right;
 
     tmp = malloc(sizeof(struct tToken));
     init_token(tmp);
+
+    left = malloc(sizeof(struct tToken));
+    init_token(left);
+
+    right = malloc(sizeof(struct tToken));
+    init_token(right);
+
+
+    right->set_type_of_token=CHAR_GT;
+    left->set_type_of_token=CHAR_LT;
 
     tmp->set_type_of_token = END_PRECE;
     stack_push(stack, tmp);
 
     DLFirst(token_list);
+    b=token_list->Act;
 
     do {
 
-        a=*stack_get_top(stack);
-        b=token_list->Act->token;
-
-        switch (SA_table[get_int_for_table(a)][get_int_for_table(b)]) {
+        a=stack_get_top(stack);
+        if(b!=NULL){
+        *b=token_list->Act->token;
+    }
+        switch (SA_table[get_int_for_table(*a)][get_int_for_table(*b)]) {
             case EQ: {
+
+                stack_push(stack,b);
+                token_list->Act=token_list->Act->rptr;
+
                 break;
             }
             case LS : {
+
+                stack_push(stack,left);
+                stack_push(stack,b);
+                token_list->Act=token_list->Act->rptr;
+
                 break;
             }
             case GR: {
                 break;
             }
             default: {
-                exit(0);
+                exit(99);
             }
 
         }
-    } while (b.set_type_of_token == END_PRECE && stack_get_top(stack)->set_type_of_token == END_PRECE);
+    } while (b->set_type_of_token == END_PRECE && stack_get_top(stack)->set_type_of_token == END_PRECE);
 
 
     return 0;
