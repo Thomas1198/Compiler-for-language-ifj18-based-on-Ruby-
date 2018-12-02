@@ -41,6 +41,8 @@
     "\n LABEL $print" \
     "\n PUSHFRAME" \
     "\n WRITE LF@%0" \
+    "\n DEFVAR LF@%return" \
+    "\n MOVE LF%return nil%nil" \
 	"\n POPFRAME" \
 	"\n RETURN"
 
@@ -459,6 +461,10 @@ void generate_stack_op2_to_double();
  * @brief convert second operand to intiger
  */
 void generate_stack_op2_to_integer();
+
+void generate_concats();
+
+
 
 
 

@@ -113,8 +113,6 @@ void generate_function_end(struct tToken function)
 void generate_function_return_val(struct tToken var)
 {
     ADD_INSTRUCTION("DEFVAR LF@%retval");
-    ADD_CODE("MOVE LF@retval ");
-//    generate_defaul_value(var); ADD_CODE("\n");
 }
 
 void generate_function_return_val_assign(struct tToken var)
@@ -275,7 +273,12 @@ void generate_divs()
 }
 void generate_idivs()
 {
-    ADD_INSTRUCTION("IDIVS");
+    ADD_INSTRUCTION("POPS GF@%tmp1");
+    ADD_INSTRUCTION("INT2FLOATS");
+    ADD_INSTRUCTION("PUSHS GF@%tmp1");
+    ADD_INSTRUCTION("INT2FLOATS");
+    ADD_INSTRUCTION("DIVS");
+    ADD_INSTRUCTION("FLOAT2INTS");
 }
 
 
@@ -366,4 +369,12 @@ void generate_stack_op2_to_integer()
     ADD_INSTRUCTION("POPS GF@%tmp1");
     ADD_INSTRUCTION("FLOAT2R2EINTS");
     ADD_INSTRUCTION("PUSHS GF@%tmp1");
+}
+
+void generate_concats()
+{
+    ADD_INSTRUCTION("POPS GF@%tmp2");
+    ADD_INSTRUCTION("POPS GF@%tmp1");
+    ADD_INSTRUCTION("CONCAT GF@%result GF@%tmp1 GF@%tmp2");
+    ADD_INSTRUCTION("PUSHS GF@%result");
 }
