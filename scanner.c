@@ -10,8 +10,7 @@
 
 
 //end of includes
-bool new_line = false;
-int start_token = -1;
+
 
 //FILE *source_file;
 
@@ -19,6 +18,9 @@ struct tToken get_token(FILE *source_file) {
     if (source_file == NULL) {
         ErrorPrint(INTERNAL_ERROR, "[scanner.c][get_token] failed mount");
     }
+
+    static bool new_line = false;
+    static int start_token = -1;
 
     struct tToken token;
     init_token(&token);
