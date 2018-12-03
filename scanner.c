@@ -104,6 +104,7 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = CHAR_EOF;
                     return token;
                 } else {
+                    dynamic_string_free(token.content_string);
                     ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token] CASE START");
                 }
                 break;
@@ -151,6 +152,7 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = CHAR_NEQ;
                     return token;
                 } else {
+                    dynamic_string_free(token.content_string);
                     ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token] CASE EXCLAMATION");
                 }
 
@@ -178,6 +180,7 @@ struct tToken get_token(FILE *source_file) {
                     dynamic_string_add_char(token.content_string, (char) c);
                 } else {
                     //ungetc(c, source_file);
+                    dynamic_string_free(token.content_string);
                     ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token] DEC POINT ONLY");
                 }
                 break;
@@ -204,6 +207,7 @@ struct tToken get_token(FILE *source_file) {
                     current_state = NUMBER_EXP_SIGN;
                     dynamic_string_add_char(token.content_string, (char) c);
                 } else {
+                    dynamic_string_free(token.content_string);
                     ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][NUMBER_EXP]");
                 }
                 break;
@@ -223,6 +227,7 @@ struct tToken get_token(FILE *source_file) {
                     current_state = NUMBER_EXP_DONE;
                     dynamic_string_add_char(token.content_string, (char) c);
                 } else {
+                    dynamic_string_free(token.content_string);
                     ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][NUMBER_EXP_SIGN]");
                 }
 
@@ -295,6 +300,7 @@ struct tToken get_token(FILE *source_file) {
 
             case (STRING_START):
                 if (c < 32) {
+                    dynamic_string_free(token.content_string);
                     ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][STRING_START]");
                 } else if (c == '"') {
                     token.set_type_of_token = LITERAL_STRING;
@@ -343,6 +349,7 @@ struct tToken process_integer(struct tToken token) {
     char *arrayofchars;
     int value = strtol(token.content_string->str, &arrayofchars, 10);
     if (*arrayofchars) {
+        dynamic_string_free(token.content_string);
         ErrorPrint(INTERNAL_ERROR, "[scanner.c][process_integer]");
     }
 
@@ -355,6 +362,7 @@ struct tToken process_decimal(struct tToken token) {
     char *arrayofchars;
     double value = strtod(token.content_string->str, &arrayofchars);
     if (*arrayofchars) {
+        dynamic_string_free(token.content_string);
         ErrorPrint(INTERNAL_ERROR, "[scanner.c][process_decimal]");
     }
 
