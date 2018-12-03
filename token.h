@@ -49,6 +49,7 @@ typedef enum {
     DOUBLE,
     UNDEFINED_SET,
     END_PRECE,
+    EXPR,
     NONE,
 } set_type;
 

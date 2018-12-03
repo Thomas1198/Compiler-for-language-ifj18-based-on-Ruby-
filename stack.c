@@ -38,35 +38,20 @@ struct tToken *stack_pop(Symstack *stack) {
     return NULL;
 }
 
-struct tToken *stack_get_top(Symstack *stack) {
-    if (stack->top != NULL)
-        return stack->top->data;
-    else
-        return NULL;
+struct tToken *stack_get_top_term(Symstack *stack) {
+
+    Sitem *tmp=stack->top;
+    struct tToken token_actual=*stack->top->data;
+
+    while (tmp!=TERM){
+
+        tmp=tmp->next;
+        token_actual=*tmp->data;
+    }
+
+    return tmp->data;
 }
 
-/*
-struct tToken *stack_next_terminal(Symstack *stack) {
-    Sitem *top = stack->top;
-    struct tToken *terminal = top->data;
-    while ((terminal == NETERMINAL) || (terminal == OPER)) {
-        top = top->next;
-        terminal = top->data;
-    }
-    return term;
-}
-
-struct tToken *stack_next_terminal(Symstack *stack) {
-    Sitem *vrchol = stack->top;
-    int term = vrchol->polozka;
-    while ((term == NETERMINAL) || (term == OPER)) {
-        vrchol = vrchol - 1;
-        Sitem *p = vrchol->next;
-        term = p.polozka;
-    }
-    return term;
-}
-*/
 
 bool stack_is_empty(Symstack *stack) {
     if (stack->top != NULL)

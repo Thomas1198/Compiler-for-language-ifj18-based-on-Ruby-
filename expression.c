@@ -14,12 +14,9 @@
 ////////////////////////////////////////////// *    /   +   -   (   )   i   $   <   >  <=  >=  ==  !=
 int SA_table[num_of_tokens][num_of_tokens] = {
 /*                                    " * " */{GR, GR, GR, GR, LS, GR, LS, GR, GR, GR, GR, GR, GR, GR},
-/*                                    " / " */
-                                              {GR, GR, GR, GR, LS, GR, LS, GR, GR, GR, GR, GR, GR, GR},
-/*                                    " + " */
-                                              {LS, LS, GR, GR, LS, GR, LS, GR, GR, GR, GR, GR, GR, GR},
-/*                                    " - " */
-                                              {LS, LS, GR, GR, LS, GR, LS, GR, GR, GR, GR, GR, GR, GR},
+/*                                    " / " */{GR, GR, GR, GR, LS, GR, LS, GR, GR, GR, GR, GR, GR, GR},
+/*                                    " + " */{LS, LS, GR, GR, LS, GR, LS, GR, GR, GR, GR, GR, GR, GR},
+/*                                    " - " */{LS, LS, GR, GR, LS, GR, LS, GR, GR, GR, GR, GR, GR, GR},
 /*                                    " ( " */
                                               {LS, LS, LS, LS, LS, EQ, LS, ER, LS, LS, LS, LS, LS, LS},
 /*                                    " ) " */
@@ -106,9 +103,9 @@ int proces_expression(tDList *token_list) {
 
     do {
 
-        a=stack_get_top(stack);
+        a= stack_get_top_term(stack);
         if(b!=NULL){
-        *b=token_list->Act->token;
+        b=&token_list->Act->token;
     }
         switch (SA_table[get_int_for_table(*a)][get_int_for_table(*b)]) {
             case EQ: {
@@ -127,6 +124,23 @@ int proces_expression(tDList *token_list) {
                 break;
             }
             case GR: {
+
+                //8*4-(2*4)
+                //honza poslat cislo
+                //pop po <
+                //bool kontrola exp
+                b->set_type_of_token=EXPR;
+                stack_push(stack,b);
+                token_list->Act=token_list->Act->rptr;
+
+
+
+                if(true){
+
+                } else{
+                    return SYNTAX_ERROR;
+                }
+
                 break;
             }
             default: {
@@ -134,7 +148,7 @@ int proces_expression(tDList *token_list) {
             }
 
         }
-    } while (b->set_type_of_token == END_PRECE && stack_get_top(stack)->set_type_of_token == END_PRECE);
+    } while (b->set_type_of_token == END_PRECE && stack_get_top_term(stack)->set_type_of_token == END_PRECE);
 
 
     return 0;
