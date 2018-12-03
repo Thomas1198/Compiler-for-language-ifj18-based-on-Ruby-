@@ -38,18 +38,15 @@ struct tToken *stack_pop(Symstack *stack) {
     return NULL;
 }
 
-struct tToken *stack_get_top_term(Symstack *stack) {
-
+Sitem *stack_get_top_item(Symstack *stack) {
     Sitem *tmp=stack->top;
-    struct tToken token_actual=*stack->top->data;
 
-    while (tmp!=TERM){
-
-        tmp=tmp->next;
-        token_actual=*tmp->data;
+    while (tmp!=NULL){
+        if (tmp->next == NULL)
+            return tmp;
+        tmp = tmp->next;
     }
-
-    return tmp->data;
+    return NULL;
 }
 
 
