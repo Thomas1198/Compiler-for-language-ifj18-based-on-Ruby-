@@ -302,6 +302,7 @@ int parse_end(tDList *token_list) {
     end_req--;
 
     if (end_req == 0) {
+        generate_function_ret(*act_fun);
         generate_function_end(*act_fun);
     }
 
@@ -482,7 +483,7 @@ int parse_assign_value(tDList *token_list) {
 
     generate_var_decl(token_list->Act->lptr->token);
 
-    value = token_list;
+    value = &token_list->Act->lptr->token;
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
@@ -491,7 +492,6 @@ int parse_assign_value(tDList *token_list) {
 
         if (tmp != NULL) {
             if (tmp->funkce) {
-                generate_function_return_val();
                 errcode = parse_call_function(token_list, token_actual.par_count);
                 generate_function_return_val_assign(*value);
 

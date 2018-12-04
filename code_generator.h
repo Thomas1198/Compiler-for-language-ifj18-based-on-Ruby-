@@ -65,8 +65,7 @@
     "\n LABEL $print" \
     "\n PUSHFRAME" \
     "\n WRITE LF@%0" \
-    "\n DEFVAR LF@%return" \
-    "\n MOVE LF@%return nil@nil" \
+    "\n MOVE GF@%return nil@nil" \
     "\n POPFRAME" \
     "\n RETURN"
 
@@ -74,25 +73,19 @@
 #define INPUTS \
     "\n #INPUTS" \
     "\n LABEL $inputs" \
-    "\n PUSHFRAME" \
-    "\n READ LF@input string" \
-    "\n POPFRAME" \
+    "\n READ GF@%return string" \
     "\n RETURN"
 
 #define INPUTI \
     "\n #INPUTI" \
     "\n LABEL $inputi" \
-    "\n PUSHFRAME" \
-    "\n READ LF@input int" \
-    "\n POPFRAME" \
+    "\n READ GF@%return int" \
     "\n RETURN"
 
 #define INPUTF \
     "\n #INPUTF" \
     "\n LABEL $inputf" \
-    "\n PUSHFRAME" \
-    "\n READ LF@input float" \
-    "\n POPFRAME" \
+    "\n READ GF@%return float" \
     "\n RETURN"
 
 ///Length
@@ -100,8 +93,7 @@
     "\n #LENGTH" \
     "\n LABEL $length" \
     "\n PUSHFRAME" \
-    "\n DEFVAR LF@%return" \
-    "\n STRLEN LF@%return LF@%0" \
+    "\n STRLEN GF@%return LF@%0" \
     "\n POPFRAME" \
     "\n RETURN"
 
@@ -273,12 +265,6 @@ void generate_function_start(struct tToken function);
  */
 void generate_function_end(struct tToken function);
 
-/**
- * @brief Generate function return value
- * @param var tToken with variable
- * Definujes pokud ma mit funkce return value
- */
-void generate_function_return_val();
 
 /**
  * @brief Generate defaulte value assign
@@ -487,6 +473,8 @@ void generate_stack_op2_to_double();
 void generate_stack_op2_to_integer();
 
 void generate_concats();
+
+void generate_function_ret(struct tToken function);
 
 
 #endif //PROJECT_CODE_GENERATOR_H
