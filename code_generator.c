@@ -20,6 +20,7 @@ void generate_file_head() {
     ADD_INSTRUCTION("DEFVAR GF@%tmp2");
 
     ADD_INSTRUCTION("DEFVAR GF@%result");
+    ADD_INSTRUCTION("MOVE GF@%result nil@nil");
     ADD_INSTRUCTION("DEFVAR GF@%return");
 
     ADD_INSTRUCTION("JUMP $$main");
@@ -188,7 +189,7 @@ void generate_function_pass_par(struct tToken par, int index) {
 }
 
 void generate_function_ret(struct tToken function) {
-    ADD_INSTRUCTION("MOVE LF@%retval GF@%return");
+    ADD_INSTRUCTION("MOVE GF@%return GF@%result");
     ADD_CODE("JUMP $");
     ADD_CODE(function.content_string->str);
     ADD_CODE("%return\n");
