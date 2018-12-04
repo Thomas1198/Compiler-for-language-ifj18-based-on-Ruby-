@@ -98,8 +98,8 @@ void generate_function_before_par()
 
 void generate_function_par_def(struct tToken param, int index)
 {
-    ADD_CODE("DEFVAR LF@"); ADD_CODE("%"); ADD_INTEGER(index); ADD_CODE("\n");
-    ADD_CODE("MOVE LF@");  ADD_CODE("%"); ADD_INTEGER(index); ADD_CODE("  LF@%"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
+    ADD_CODE("DEFVAR LF@"); ADD_CODE("%"); ADD_CODE(param.content_string->str); ADD_CODE("\n");
+    ADD_CODE("MOVE LF@");  ADD_CODE("%"); ADD_CODE(param.content_string->str); ADD_CODE("  LF@%"); ADD_INTEGER(index); ADD_CODE("\n");
 }
 
 void generate_function_start(struct tToken function)
