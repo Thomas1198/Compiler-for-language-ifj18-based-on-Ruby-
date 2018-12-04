@@ -473,14 +473,16 @@ int parse_identifier(tDList *token_list) {
 }
 
 int parse_assign_value(tDList *token_list) {
-    int br_count = 0;
-    struct tToken token_actual, *tmp;
+    int br_count = 0,errcode=0;
+    struct tToken token_actual, *tmp,*value;
     bool exp_value = false, exp_ar = false;
     tDList tmp_list;
 
     DLInitList(&tmp_list);
 
     generate_var_decl(token_list->Act->lptr->token);
+
+    value=token_list;
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
@@ -489,8 +491,11 @@ int parse_assign_value(tDList *token_list) {
 
         if (tmp != NULL) {
             if (tmp->funkce) {
+                generate_function_return_val();
+                errcode= parse_call_function(token_list, token_actual.par_count);
 
-                return parse_call_function(token_list, token_actual.par_count);
+
+                return errcode;
             }
         }
         if (is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
