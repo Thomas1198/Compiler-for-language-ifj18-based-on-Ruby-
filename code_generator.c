@@ -5,7 +5,7 @@
  */
 
 #include "code_generator.h"
-#include "parser.h"
+
 
 Dynamic_string *gen_code_main; ///string to generated code
 Dynamic_string *gen_code_function; ///string to generated code
@@ -123,7 +123,6 @@ void generate_function_end(struct tToken function) {
     ADD_CODE("LABEL $");
     ADD_CODE(function.content_string->str);
     ADD_CODE("%return\n");
-    ADD_INSTRUCTION("MOVE GF@%return GF@%result");
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("RETURN");
 }

@@ -384,7 +384,7 @@ struct tToken process_decimal(struct tToken token) {
     }
 
     token.value.d = value;
-    token.set_type_of_token = DOUBLE;
+    token.set_type_of_token = CHAR_DOUBLE;
     return token;
 }
 

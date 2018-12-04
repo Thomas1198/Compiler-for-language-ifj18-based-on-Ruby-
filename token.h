@@ -46,11 +46,14 @@ typedef enum {
     CHAR_LT,
     CHAR_GT,
     CHAR_INTEGER,
-    DOUBLE,
+    CHAR_DOUBLE,
     UNDEFINED_SET,
     END_PRECE,
     EXPR,
     NONE,
+    STOP,
+    DOLLAR,
+    NON_TERM
 } set_type;
 
 typedef enum {

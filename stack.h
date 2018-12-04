@@ -4,62 +4,25 @@
  * @brief Error codes constants and function to print errors.
  */
 
-#include <stdlib.h>
+
 
 #ifndef PROJECT_STACK_H
 #define PROJECT_STACK_H
 
-
-#include <stdbool.h>
+#include <stdlib.h>
 
 #include "error.h"
 #include "symtable.h"
 #include "token.h"
 #include "parser.h"
 
-
-#define TERM (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||\
-                        is_set_type(token_actual, DOUBLE))
-
-typedef enum {
-    //priorita 1
-            NASOBENI,       //0
-    DELENI,         //1
-//-----------------------------//
-    //priorita 2
-            SCITANI,        //2
-    ODCITANI,       //3
-//----------------------------//
-    //priorita 3
-            MENSI,           //4
-    VETSI,           //5
-    MENSIROVNO,      //6
-    VETSIROVNO,      //7
-//--------------------------//
-    //priorita 4
-            ROVNO,           //8 ==
-    NEROVNO,         //9 !=
-//---------------------------//
-    //priorita 5
-            LEVA,            //10 (
-    PRAVA,           //11 )
-//--------------------------//
-    //priorita 6
-            ID,             //12
-//------------------------//
-            KONEC,          //13 $
-    CHYBA,          //14
-//--------------------------//
-            NETERMINAL,      //15
-    OPER
-} expression_type;
-
-
 /**
  * @struct Stack item representation.
  */
 typedef struct stack_item {
     struct tToken *data;      /// pointer to token
+    set_type set;
+    data_type type;
     struct stack_item *next; /// pointer to next item
 } Sitem;
 
@@ -86,7 +49,27 @@ void stack_init(Symstack *stack);
  * @param stack Pointer to stack.
  * @param token token to be pushed.
  */
-void stack_push(Symstack *stack, struct tToken *token);
+bool stack_push(Symstack *stack, struct tToken *token, set_type set, data_type type);
+
+
+/**
+ * Function pops stack more times.
+ *
+ * @param stack Pointer to stack.
+ * @param count How many times stack will be popped.
+ */
+void stack_pop_count(Symstack *stack, int count);
+
+
+/**
+ * Function inserts symbol after top terminal.
+ *
+ * @param stack Pointer to stack.
+ * @param symbol Symbol to be pushed.
+ * @param type Data type to be set.
+ * @return True if successfull else false.
+ */
+bool stack_insert_after_top(Symstack *stack, struct tToken *token, set_type set, data_type type);
 
 
 /**
@@ -95,7 +78,7 @@ void stack_push(Symstack *stack, struct tToken *token);
  * @param stack Pointer to stack.
  * @return Top item or NULL if it does not exist
  */
-struct tToken *stack_pop(Symstack *stack);
+bool stack_pop(Symstack *stack);
 
 /**
  * Returns top symbol from stack.
