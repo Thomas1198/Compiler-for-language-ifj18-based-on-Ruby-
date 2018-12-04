@@ -121,7 +121,7 @@ void generate_function_end(struct tToken function)
     ADD_INSTRUCTION("RETURN");
 }
 
-void generate_function_return_val(struct tToken var)
+void generate_function_return_val()
 {
     ADD_INSTRUCTION("DEFVAR LF@%retval");
 }
