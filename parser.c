@@ -184,7 +184,7 @@ bool is_set_type(struct tToken token, set_type set_type1) {
 
 int parsing(tDList token_list) {
     struct tToken token_actual, *fnc_token;
-    int err_code, exp_end;
+    int err_code=0, exp_end=0;
     bool fce = false, main = false, main_end = false;
     if (token_list.First == NULL) {
         return 0;
@@ -200,7 +200,7 @@ int parsing(tDList token_list) {
             if (token_list.Act->rptr != NULL) {
                 fnc_token = &token_list.Act->rptr->token;
             }
-            if (!is_set_type(*fnc_token, KEY_WORD_DEF)) {
+            if (!is_set_type(token_actual, KEY_WORD_DEF)) {
                 generate_main_start();
                 main = true;
                 main_end = true;
@@ -213,7 +213,7 @@ int parsing(tDList token_list) {
                 break;
             }
             case KEY_WORD_DEF: {
-
+                exp_end++;
                 fce = true;
 
 
@@ -233,7 +233,7 @@ int parsing(tDList token_list) {
                 if ((err_code = parse_def(&token_list)) != 0) {
                     return err_code;
                 }
-                exp_end++;
+
                 break;
             }
 
@@ -259,8 +259,7 @@ int parsing(tDList token_list) {
 
                 exp_end--;
 
-                if (fce && !exp_end) {
-                    generate_function_end(*fnc_token);
+                if (fce && exp_end == 0) {
                     fce = false;
                 }
 
@@ -303,7 +302,7 @@ int parse_end(tDList *token_list) {
     end_req--;
 
     if (end_req == 0) {
-        // generate_function_end(*act_fun);
+        generate_function_end(*act_fun);
     }
 
     if (end_req < 0) {
@@ -325,7 +324,7 @@ int parse_def(tDList *token_list) {
     //TODO závorky a várazy
     try_next_token_list_p(token_actual, token_list);
 
-    generate_function_start(token_actual);
+    act_fun = &token_list->Act->token;
 
     check_set_type(token_actual, IDENTIFIER_NAME);
 
@@ -456,6 +455,8 @@ int parse_identifier(tDList *token_list) {
 
         if ((tmp->funkce && tmp->par_count == 0) || tmp->more_params) {
             token_list->Act = token_list->Act->lptr;
+            generate_function_before_par();
+            generate_function_call(token_list->Act->token);
             return check_end_of_line(&(*token_list));
         } else {
             return FUNCTION_ERROE;
@@ -585,7 +586,7 @@ int parse_call_function(tDList *token_list, int count) {
         if (is_set_type(token_actual, CHAR_RIGHT_BRACKET) && exp_bra) {
             try_next_token_list_p(token_actual, token_list);
             if (is_set_type(token_actual, CHAR_EOL)) {
-                if(!func->more_params){
+                if (!func->more_params) {
                     generate_function_call(*func);
                 }
                 return 0;
@@ -596,7 +597,7 @@ int parse_call_function(tDList *token_list, int count) {
             is_set_type(token_actual, DOUBLE) ||
             is_set_type(token_actual, LITERAL_STRING)) {
 
-            if (before_par&& !func->more_params) {
+            if (before_par && !func->more_params) {
                 before_par = false;
                 generate_function_before_par();
             }
@@ -605,7 +606,7 @@ int parse_call_function(tDList *token_list, int count) {
                 generate_function_before_par();
                 generate_function_pass_par(token_actual, 0);
                 generate_function_call(*func);
-            } else{
+            } else {
                 generate_function_pass_par(token_actual, i);
             }
 
@@ -635,7 +636,7 @@ int parse_call_function(tDList *token_list, int count) {
             }
 
 
-            if(!func->more_params){
+            if (!func->more_params) {
                 generate_function_call(*func);
             }
 

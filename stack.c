@@ -10,7 +10,7 @@
 void stack_init(Symstack *stack) {
     stack->top = NULL;
 }
-
+/*
 
 void stack_push(Symstack *stack, struct tToken *token) {
     Sitem *new_item = (Sitem *) malloc(sizeof(Sitem));
@@ -25,7 +25,7 @@ void stack_push(Symstack *stack, struct tToken *token) {
 
     stack->top = new_item;
 }
-
+*/
 
 struct tToken *stack_pop(Symstack *stack) {
     if (!stack_is_empty(stack)) {
