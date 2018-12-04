@@ -6,9 +6,11 @@
 
 #include "code_generator.h"
 #include "dynamic_string.h"
+#include "parser.h"
 
-Dynamic_string *gen_code; ///string to generated code
-
+Dynamic_string *gen_code_main; ///string to generated code
+Dynamic_string *gen_code_function; ///string to generated code
+bool is_main= false;
 
 void generate_file_head()
 {
@@ -41,7 +43,9 @@ void generate_build_in_functions()
 void generator_start()
 {
 
-    gen_code=dynamic_string_init();
+    gen_code_main=dynamic_string_init();
+    gen_code_function=dynamic_string_init();
+
 
     generate_file_head();
     generate_build_in_functions();
@@ -49,16 +53,20 @@ void generator_start()
 
 void generator_clear()
 {
-    dynamic_string_clear(gen_code);
+    dynamic_string_clear(gen_code_main);
+    dynamic_string_clear(gen_code_function);
+
 }
 
 void write_code()
 {
-    printf ("%s", gen_code->str);
+    printf ("%s", gen_code_function->str);
+    printf ("%s", gen_code_main->str);
 }
 
 void generate_main_start()
 {
+    is_main=true;
     ADD_COMMENT("Start of main\n");
 
     ADD_INSTRUCTION("LABEL $$main");
@@ -72,6 +80,8 @@ void generate_main_end()
 
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("CLEARS");
+    ADD_INSTRUCTION("EXIT")
+    is_main = false;
 }
 
 void generate_function_call(struct tToken function)
