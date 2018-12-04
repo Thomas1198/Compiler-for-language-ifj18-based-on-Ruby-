@@ -184,7 +184,7 @@ bool is_set_type(struct tToken token, set_type set_type1) {
 
 int parsing(tDList token_list) {
     struct tToken token_actual, *fnc_token;
-    int err_code=0, exp_end=0;
+    int err_code = 0, exp_end = 0;
     bool fce = false, main = false, main_end = false;
     if (token_list.First == NULL) {
         return 0;
@@ -343,7 +343,7 @@ int parse_def(tDList *token_list) {
 
 int parse_def_arguments_with_bracket(tDList *token_list) {
     struct tToken token_actual;
-    int i=0;
+    int i = 0;
     bool comma = false;
 
     while (true) {
@@ -358,7 +358,7 @@ int parse_def_arguments_with_bracket(tDList *token_list) {
         }
 
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
-            generate_function_par_def(token_actual,i);
+            generate_function_par_def(token_actual, i);
             i++;
             comma = false;
             continue;
@@ -485,6 +485,14 @@ int parse_assign_value(tDList *token_list) {
     while (true) {
         try_next_token_list_p(token_actual, token_list);
 
+        tmp = symtable_get(&hTable, token_actual.content_string);
+
+        if (tmp != NULL) {
+            if (tmp->funkce) {
+
+                return parse_call_function(token_list, token_actual.par_count);
+            }
+        }
         if (is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
             br_count++;
 
