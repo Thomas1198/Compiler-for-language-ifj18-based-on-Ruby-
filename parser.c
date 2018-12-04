@@ -279,6 +279,15 @@ int parsing(tDList token_list) {
 
                 break;
             }
+            case CHAR_INTEGER: {
+
+            }
+            case STRING_DT: {
+
+            }
+            case LITERAL_STRING: {
+
+            }
 
             default: {
                 return SYNTAX_ERROR;
