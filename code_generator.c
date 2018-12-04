@@ -15,6 +15,7 @@ void generate_file_head()
     ADD_COMMENT("Start of program\n");
     ADD_INSTRUCTION(".IFJcode18");
 
+
     ADD_INSTRUCTION("DEFVAR GF@%tmp1");
     ADD_INSTRUCTION("DEFVAR GF@%tmp2");
 
@@ -61,7 +62,7 @@ void generate_main_start()
     ADD_COMMENT("Start of main\n");
 
     ADD_INSTRUCTION("LABEL $$main");
-    ADD_INSTRUCTION("CREATFRAME");
+    ADD_INSTRUCTION("CREATEFRAME");
     ADD_INSTRUCTION("PUSHFRAME");
 }
 
@@ -152,7 +153,7 @@ void generate_value(struct tToken var)
 
 void generate_function_pass_par(struct tToken par, int index)
 {
-    ADD_CODE("DEFVAR TF%"); ADD_INTEGER(index); ADD_CODE("\n");
+    ADD_CODE("DEFVAR TF@%"); ADD_INTEGER(index); ADD_CODE("\n");
 
     ADD_CODE("MOVE TF@%"); ADD_INTEGER(index); ADD_CODE(" ");
     generate_value(par); ADD_CODE("\n");
@@ -299,7 +300,7 @@ void generate_lts()
 
 void generate_not_eqs()
 {
-    ADD_INSTRUCTION("EQS")
+    ADD_INSTRUCTION("EQS");
     ADD_INSTRUCTION("NOTS");
 }
 void generate_gt_eqs()

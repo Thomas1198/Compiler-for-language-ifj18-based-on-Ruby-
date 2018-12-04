@@ -15,14 +15,17 @@
 #include <string.h>
 
 
-#define ADD_INSTRUCTION(instruction) \
-    //dynamic_string_add_const_str(gen_code, (instruction "\n"))
+#define ADD_INSTRUCTION(instruction) do{\
+    dynamic_string_add_const_str(gen_code, (instruction "\n"));\
+    }while(false)
 
-#define ADD_COMMENT(comment) \
-    dynamic_string_add_const_str(gen_code, ( "# "comment ))
+#define ADD_COMMENT(comment) do{\
+    dynamic_string_add_const_str(gen_code, ( "# "comment ));\
+    }while(false)
 
-#define ADD_CODE(code) \
-    dynamic_string_add_const_str(gen_code, (code))
+#define ADD_CODE(code) do{\
+    dynamic_string_add_const_str(gen_code, (code));\
+    }while(false)
 
 #define ADD_INTEGER(code) \
     do{ \
@@ -42,9 +45,9 @@
     "\n PUSHFRAME" \
     "\n WRITE LF@%0" \
     "\n DEFVAR LF@%return" \
-    "\n MOVE LF%return nil%nil" \
-	"\n POPFRAME" \
-	"\n RETURN"
+    "\n MOVE LF@%return nil@nil" \
+    "\n POPFRAME" \
+    "\n RETURN"
 
 /// Input
 #define INPUTS \
@@ -52,24 +55,24 @@
     "\n LABEL $inputs" \
     "\n PUSHFRAME" \
     "\n READ LF@input string" \
-	"\n POPFRAME" \
-	"\n RETURN"
+    "\n POPFRAME" \
+    "\n RETURN"
 
 #define INPUTI \
     "\n #INPUTI" \
     "\n LABEL $inputi" \
     "\n PUSHFRAME" \
     "\n READ LF@input int" \
-	"\n POPFRAME" \
-	"\n RETURN"
+    "\n POPFRAME" \
+    "\n RETURN"
 
 #define INPUTF \
     "\n #INPUTF" \
     "\n LABEL $inputf" \
     "\n PUSHFRAME" \
     "\n READ LF@input float" \
-	"\n POPFRAME" \
-	"\n RETURN"
+    "\n POPFRAME" \
+    "\n RETURN"
 
 ///Length
 #define LENGTH \
@@ -78,8 +81,8 @@
     "\n PUSHFRAME" \
     "\n DEFVAR LF@%return" \
     "\n STRLEN LF@%return LF@%0" \
-	"\n POPFRAME" \
-	"\n RETURN"
+    "\n POPFRAME" \
+    "\n RETURN"
 
 // TODO: POCHOPIT!!!!
 /// Substring
@@ -87,96 +90,96 @@
     "\n #SUBSTR" \
     "\n LABEL $substr" \
     "\n PUSHFRAME" \
-	"\n DEFVAR LF@%retval" \
-	"\n MOVE LF@%retval string@" \
-	"\n DEFVAR LF@length_str" \
-	"\n CREATEFRAME" \
-	"\n DEFVAR TF@%0" \
-	"\n MOVE TF@%0 LF@%0" \
-	"\n CALL $length" \
-	"\n MOVE LF@length_str TF@%retval" \
-	"\n DEFVAR LF@ret_cond"	\
-	"\n LT LF@ret_cond LF@length_str int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
-	"\n EQ LF@ret_cond LF@length_str int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
-	"\n LT LF@ret_cond LF@%1 int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
-	"\n EQ LF@ret_cond LF@%1 int@0" \
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
-	"\n GT LF@ret_cond LF@%1 LF@length_str"	\
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
-	"\n EQ LF@ret_cond LF@%2 int@0"	\
-	"\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
-	"\n DEFVAR LF@max_n" \
-	"\n MOVE LF@max_n LF@length_str" \
-	"\n SUB LF@max_n LF@max_n LF@%1" \
-	"\n ADD LF@max_n LF@max_n int@1" \
-	"\n DEFVAR LF@edit_n_cond" \
-	"\n LT LF@edit_n_cond LF@%2 int@0" \
-	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
-	"\n GT LF@edit_n_cond LF@%2 LF@max_n" \
-	"\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
-	"\n JUMP $substr$process" \
-	"\n LABEL $substr$edit_n" \
-	"\n MOVE LF@%2 LF@max_n" \
-	"\n LABEL $substr$process" \
-	"\n DEFVAR LF@index" \
-	"\n MOVE LF@index LF@%1"	\
-	"\n SUB LF@index LF@index int@1" \
-	"\n DEFVAR LF@char"	\
-	"\n DEFVAR LF@process_loop_cond" \
-	"\n LABEL $substr$process_loop"	\
-	"\n GETCHAR LF@char LF@%0 LF@index" \
-	"\n CONCAT LF@%retval LF@%retval LF@char" \
-	"\n ADD LF@index LF@index int@1" \
-	"\n SUB LF@%2 LF@%2 int@1" \
-	"\n GT LF@process_loop_cond LF@%2 int@0" \
-	"\n JUMPIFEQ $substr$process_loop LF@process_loop_cond bool@true" \
-	"\n LABEL $substr$return" \
-	"\n POPFRAME" \
-	"\n RETURN"
+    "\n DEFVAR LF@%retval" \
+    "\n MOVE LF@%retval string@" \
+    "\n DEFVAR LF@length_str" \
+    "\n CREATEFRAME" \
+    "\n DEFVAR TF@%0" \
+    "\n MOVE TF@%0 LF@%0" \
+    "\n CALL $length" \
+    "\n MOVE LF@length_str TF@%retval" \
+    "\n DEFVAR LF@ret_cond"    \
+    "\n LT LF@ret_cond LF@length_str int@0" \
+    "\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+    "\n EQ LF@ret_cond LF@length_str int@0" \
+    "\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+    "\n LT LF@ret_cond LF@%1 int@0" \
+    "\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+    "\n EQ LF@ret_cond LF@%1 int@0" \
+    "\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+    "\n GT LF@ret_cond LF@%1 LF@length_str"    \
+    "\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+    "\n EQ LF@ret_cond LF@%2 int@0"    \
+    "\n JUMPIFEQ $substr$return LF@ret_cond bool@true" \
+    "\n DEFVAR LF@max_n" \
+    "\n MOVE LF@max_n LF@length_str" \
+    "\n SUB LF@max_n LF@max_n LF@%1" \
+    "\n ADD LF@max_n LF@max_n int@1" \
+    "\n DEFVAR LF@edit_n_cond" \
+    "\n LT LF@edit_n_cond LF@%2 int@0" \
+    "\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
+    "\n GT LF@edit_n_cond LF@%2 LF@max_n" \
+    "\n JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true" \
+    "\n JUMP $substr$process" \
+    "\n LABEL $substr$edit_n" \
+    "\n MOVE LF@%2 LF@max_n" \
+    "\n LABEL $substr$process" \
+    "\n DEFVAR LF@index" \
+    "\n MOVE LF@index LF@%1"    \
+    "\n SUB LF@index LF@index int@1" \
+    "\n DEFVAR LF@char"    \
+    "\n DEFVAR LF@process_loop_cond" \
+    "\n LABEL $substr$process_loop"    \
+    "\n GETCHAR LF@char LF@%0 LF@index" \
+    "\n CONCAT LF@%retval LF@%retval LF@char" \
+    "\n ADD LF@index LF@index int@1" \
+    "\n SUB LF@%2 LF@%2 int@1" \
+    "\n GT LF@process_loop_cond LF@%2 int@0" \
+    "\n JUMPIFEQ $substr$process_loop LF@process_loop_cond bool@true" \
+    "\n LABEL $substr$return" \
+    "\n POPFRAME" \
+    "\n RETURN"
 
 ///Ord
 #define ORD \
     "\n #ORD" \
     "\n LABEL $ord" \
     "\n PUSHFRAME" \
-	"\n DEFVAR LF@%retva   l" \
-	"\n MOVE LF@%retval int@0" \
-	"\n DEFVAR LF@cond_length" \
-	"\n LT LF@cond_length LF@%1 int@1" \
-	"\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
-	"\n DEFVAR LF@length_str" \
-	"\n CREATEFRAME" \
-	"\n DEFVAR TF@%0" \
-	"\n MOVE TF@%0 LF@%0" \
-	"\n CALL $length" \
-	"\n MOVE LF@length_str TF@%retval" \
-	"\n GT LF@cond_length LF@%1 LF@length_str" \
-	"\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
-	"\n SUB LF@%1 LF@%1 int@1" \
-	"\n STRI2INT LF@%retval LF@%0 LF@%1" \
-	"\n LABEL $ord$return" \
-	"\n POPFRAME" \
-	"\n RETURN"
+    "\n DEFVAR LF@%retval" \
+    "\n MOVE LF@%retval int@0" \
+    "\n DEFVAR LF@cond_length" \
+    "\n LT LF@cond_length LF@%1 int@1" \
+    "\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
+    "\n DEFVAR LF@length_str" \
+    "\n CREATEFRAME" \
+    "\n DEFVAR TF@%0" \
+    "\n MOVE TF@%0 LF@%0" \
+    "\n CALL $length" \
+    "\n MOVE LF@length_str TF@%retval" \
+    "\n GT LF@cond_length LF@%1 LF@length_str" \
+    "\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
+    "\n SUB LF@%1 LF@%1 int@1" \
+    "\n STRI2INT LF@%retval LF@%0 LF@%1" \
+    "\n LABEL $ord$return" \
+    "\n POPFRAME" \
+    "\n RETURN"
 
 /// Chr
 #define CHR \
     "\n #CHR" \
     "\n LABEL $chr" \
     "\n PUSHFRAME" \
-	"\n DEFVAR LF@%retval" \
-	"\n MOVE LF@%retval string@" \
+    "\n DEFVAR LF@%retval" \
+    "\n MOVE LF@%retval string@" \
     "\n DEFVAR LF@%return" \
-	"\n LT LF@cond_range LF@%0 int@0" \
-	"\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
-	"\n GT LF@cond_range LF@%0 int@255" \
-	"\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
-	"\n INT2CHAR LF@%retval LF@%0" \
-	"\n LABEL $chr$return" \
-	"\n POPFRAME" \
-	"\n RETURN" \
+    "\n LT LF@cond_range LF@%0 int@0" \
+    "\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
+    "\n GT LF@cond_range LF@%0 int@255" \
+    "\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
+    "\n INT2CHAR LF@%retval LF@%0" \
+    "\n LABEL $chr$return" \
+    "\n POPFRAME" \
+    "\n RETURN" \
     "\n"
 
 
@@ -189,6 +192,7 @@ void generate_file_head();
  * @brief Generate build in functions
  */
 void generate_build_in_functions();
+
 /**
  * @brief Inicialization  of generator
  */
@@ -233,7 +237,7 @@ void generate_function_before_par();
  * @param index index
  * Vlozeni do funkce, po function_start, pokud ma parametry
  */
-void generate_function_par_def( struct tToken param, int index);
+void generate_function_par_def(struct tToken param, int index);
 
 /**
  * @brief Generate function start
@@ -349,7 +353,6 @@ void generate_while_start(struct tToken function, int label_index, int label_dee
 void generate_while_end(struct tToken function, int label_index, int label_deep);
 
 
-
 /**
  * @brief Generate push variable on stack
  * @param var tToken with variable
@@ -430,7 +433,7 @@ void generate_pops();
  * @param var Token with variable
  * z globalni funkce do promene
  */
-void  generate_save_result_to_var(struct tToken var);
+void generate_save_result_to_var(struct tToken var);
 
 /**
  * @brief clear stack
@@ -463,9 +466,6 @@ void generate_stack_op2_to_double();
 void generate_stack_op2_to_integer();
 
 void generate_concats();
-
-
-
 
 
 #endif //PROJECT_CODE_GENERATOR_H

@@ -306,6 +306,7 @@ struct tToken get_token(FILE *source_file) {
                     ErrorPrint(SCANNER_ERROR, "[scanner.c][get_token][STRING_START]");
                 } else if (c == '"') {
                     token.set_type_of_token = LITERAL_STRING;
+                    token.data_type_of_token=STRING_DT;
                     return token;
                 } else {
                     dynamic_string_add_char(token.content_string, (char) c);

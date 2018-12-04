@@ -54,6 +54,10 @@ int get_int_for_table(struct tToken token) {
             return 5;
         case IDENTIFIER_NAME:
             return 6;
+        case CHAR_INTEGER:
+            return 6;
+        case DOUBLE:
+            return 6;
         case END_PRECE:
             return 7;
         case CHAR_LT:
@@ -80,7 +84,7 @@ int proces_expression(tDList *token_list) {
     stack = (Symstack *) malloc(sizeof(stack));
 
     stack_init(stack);
-    struct tToken *a, *b, *tmp,*left,*right;
+    struct tToken *a, *b, *tmp,*left,*right,*end;
 
     tmp = malloc(sizeof(struct tToken));
     init_token(tmp);
@@ -91,21 +95,27 @@ int proces_expression(tDList *token_list) {
     right = malloc(sizeof(struct tToken));
     init_token(right);
 
+    end = malloc(sizeof(struct tToken));
+    init_token(end);
 
     right->set_type_of_token=CHAR_GT;
     left->set_type_of_token=CHAR_LT;
+    end->set_type_of_token=END_PRECE;
 
     tmp->set_type_of_token = END_PRECE;
     stack_push(stack, tmp);
 
     DLFirst(token_list);
-    b=token_list->Act;
+    b=&token_list->Act->token;
 
     do {
 
-        a= stack_get_top_term(stack);
+        a= stack->top->data;
         if(b!=NULL){
         b=&token_list->Act->token;
+        if(b==NULL){
+            b=end;
+        }
     }
         switch (SA_table[get_int_for_table(*a)][get_int_for_table(*b)]) {
             case EQ: {
@@ -129,8 +139,13 @@ int proces_expression(tDList *token_list) {
                 //honza poslat cislo
                 //pop po <
                 //bool kontrola exp
-                b->set_type_of_token=EXPR;
+
+                a->set_type_of_token=EXPR;
+
                 stack_push(stack,b);
+                if(token_list->Act==NULL){
+                    break;
+                }
                 token_list->Act=token_list->Act->rptr;
 
 
@@ -148,7 +163,7 @@ int proces_expression(tDList *token_list) {
             }
 
         }
-    } while (b->set_type_of_token == END_PRECE && stack_get_top_term(stack)->set_type_of_token == END_PRECE);
+    } while (b->set_type_of_token != END_PRECE);
 
 
     return 0;
