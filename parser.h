@@ -37,7 +37,7 @@ int end_req;
 
 int if_count;
 
-struct tToken *act_fun,*inputs,*inputi,*inputf,*print;
+struct tToken *act_fun, *inputs, *inputi, *inputf, *print;
 
 Symtable hTable;
 
@@ -72,6 +72,8 @@ int parse_assign_value(tDList *token_list);
 int parse_call_function(tDList *token_list, int count);
 
 int parse_condition_expr(tDList *token_list, int set);
+
+int assign_value(tDList *token_list);
 
 void init_build_in();
 
