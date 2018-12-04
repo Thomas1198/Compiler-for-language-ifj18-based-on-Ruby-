@@ -155,8 +155,15 @@ void generate_value(struct tToken var)
             ADD_CODE("nil@nil");
             return;
         case UNDEFINED:
-            ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_value] datatype of token nepatri ani do jednoho statu");
-        default:
+            if (var.set_type_of_token == IDENTIFIER_NAME)
+            {
+                ADD_CODE("LF@"); ADD_CODE(var.content_string->str);
+            }
+            else
+            {
+                ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_value] datatype of token nepatri ani do jednoho statu");
+            }
+            default:
             ErrorPrint(INTERNAL_ERROR, "[code_generator.c][generate_value] datatype of token nepatri ani do jednoho statu");
     }
 }
