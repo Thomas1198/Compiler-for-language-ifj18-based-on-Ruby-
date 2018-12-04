@@ -316,7 +316,7 @@ struct tToken get_token(FILE *source_file) {
                 {
                     dynamic_string_add_const_str(token.content_string, "\\010");
                 }
-                    else if (c == '\')
+                    else if (c == '\\')
                 {
                     dynamic_string_add_const_str(token.content_string, "\\052");
                 }
