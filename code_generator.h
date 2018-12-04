@@ -278,7 +278,7 @@ void generate_function_end(struct tToken function);
  * @param var tToken with variable
  * Definujes pokud ma mit funkce return value
  */
-void generate_function_return_val(struct tToken var);
+void generate_function_return_val();
 
 /**
  * @brief Generate defaulte value assign
