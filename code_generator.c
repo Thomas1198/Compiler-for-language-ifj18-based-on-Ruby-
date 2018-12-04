@@ -123,7 +123,6 @@ void generate_function_end(struct tToken function) {
     ADD_CODE("LABEL $");
     ADD_CODE(function.content_string->str);
     ADD_CODE("%return\n");
-    ADD_INSTRUCTION("MOVE GF@%return GF@%result");
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("RETURN");
 }
