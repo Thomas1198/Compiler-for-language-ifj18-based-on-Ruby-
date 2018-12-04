@@ -123,6 +123,7 @@ void generate_function_end(struct tToken function) {
     ADD_CODE("LABEL $");
     ADD_CODE(function.content_string->str);
     ADD_CODE("%return\n");
+    ADD_INSTRUCTION("MOVE GF@%return GF@%result");
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("RETURN");
 }
@@ -300,7 +301,7 @@ void generate_push_var(struct tToken var) {
 }
 
 void generate_push_value(struct tToken var) {
-    // ADD_CODE("PUSHS "); generate_value(var.value); ADD_CODE("\n");
+     ADD_CODE("PUSHS "); generate_value(var.value); ADD_CODE("\n");
 }
 
 void generate_adds() {
