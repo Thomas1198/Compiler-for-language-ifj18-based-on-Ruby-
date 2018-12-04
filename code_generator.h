@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-
+#include "parser.h"
 
 #define ADD_INSTRUCTION(instruction) do{\
     if(is_main)\

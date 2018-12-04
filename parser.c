@@ -435,7 +435,7 @@ int parse_identifier(tDList *token_list) {
     }
     //funkce s parametry
     if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
-        is_set_type(token_actual, DOUBLE) ||
+        is_set_type(token_actual, CHAR_DOUBLE) ||
         is_set_type(token_actual, LITERAL_STRING) || is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
 
         tmp = symtable_get(&hTable, token_list->Act->lptr->token.content_string);
@@ -529,7 +529,7 @@ int parse_assign_value(tDList *token_list) {
                 return SYNTAX_ERROR;
             }
         } else if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
-                   is_set_type(token_actual, DOUBLE) ||
+                   is_set_type(token_actual, CHAR_DOUBLE) ||
                    is_set_type(token_actual, LITERAL_STRING)) {
 
             tmp = symtable_get(&hTable, token_actual.content_string);
@@ -572,7 +572,9 @@ int parse_assign_value(tDList *token_list) {
 
     //vyhodnotit
 
-    //proces_expression(&tmp_list);
+    expression(&tmp_list,value);
+
+
 
     return 0;
 
@@ -598,7 +600,7 @@ int parse_call_function(tDList *token_list, int count) {
         try_next_token_list_p(token_actual, token_list);
 
         if (comma && !(is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
-                       is_set_type(token_actual, DOUBLE) ||
+                       is_set_type(token_actual, CHAR_DOUBLE) ||
                        is_set_type(token_actual, LITERAL_STRING))) {
             return SYNTAX_ERROR;
         }
@@ -619,7 +621,7 @@ int parse_call_function(tDList *token_list, int count) {
         }
 
         if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
-            is_set_type(token_actual, DOUBLE) ||
+            is_set_type(token_actual, CHAR_DOUBLE) ||
             is_set_type(token_actual, LITERAL_STRING)) {
 
             if (before_par && !func->more_params) {
@@ -705,7 +707,7 @@ int parse_condition_expr(tDList *token_list, int set) {
                 return SYNTAX_ERROR;
             }
         } else if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
-                   is_set_type(token_actual, DOUBLE) ||
+                   is_set_type(token_actual, CHAR_DOUBLE) ||
                    is_set_type(token_actual, LITERAL_STRING)) {
 
             tmp = symtable_get(&hTable, token_actual.content_string);

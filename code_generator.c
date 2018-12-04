@@ -5,7 +5,7 @@
  */
 
 #include "code_generator.h"
-#include "parser.h"
+
 
 Dynamic_string *gen_code_main; ///string to generated code
 Dynamic_string *gen_code_function; ///string to generated code
