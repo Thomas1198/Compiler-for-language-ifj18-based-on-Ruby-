@@ -287,7 +287,7 @@ int parsing(tDList token_list) {
             }
             case LITERAL_STRING: {
 
-                if ((err_code=assign_value(&token_list) != 0)) {
+                if ((err_code = assign_value(&token_list) != 0)) {
                     return err_code;
                 }
                 break;
@@ -753,20 +753,23 @@ int parse_condition_expr(tDList *token_list, int set) {
 
 int assign_value(tDList *token_list) {
     int br_count = 0, errcode = 0;
-    struct tToken token_actual, *tmp, *value;
-    bool exp_value = false, exp_ar = false;
+    struct tToken token_actual, *tmp;
+    bool exp_value = false, exp_ar = false, first = false;
     tDList tmp_list;
 
     DLInitList(&tmp_list);
 
-    token_actual=token_list->Act->token;
-
+    token_actual = token_list->Act->token;
 
     while (true) {
 
-
-        tmp = symtable_get(&hTable, token_actual.content_string);
-
+        if (first) {
+            try_next_token_list_p(token_actual, token_list);
+        }
+        first = true;
+        if (is_set_type(token_actual, IDENTIFIER_NAME)) {
+            tmp = symtable_get(&hTable, token_actual.content_string);
+        }
         if (tmp != NULL) {
             if (tmp->funkce) {
                 errcode = parse_call_function(token_list, token_actual.par_count);
@@ -831,10 +834,12 @@ int assign_value(tDList *token_list) {
             return SYNTAX_ERROR;
         }
 
-        try_next_token_list_p(token_actual, token_list);
+
     }
-    if (br_count != 0 || exp_value) {
-        return SYNTAX_ERROR;
+    if (br_count != 0 || exp_value){
+
+        exit(SYNTAX_ERROR);
+
     }
 
 
