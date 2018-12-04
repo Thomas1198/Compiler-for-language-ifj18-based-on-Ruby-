@@ -97,14 +97,12 @@
     "\n POPFRAME" \
     "\n RETURN"
 
-// TODO: POCHOPIT!!!!
 /// Substring
 #define SUBSTR \
     "\n #SUBSTR" \
     "\n LABEL $substr" \
     "\n PUSHFRAME" \
-    "\n DEFVAR LF@%retval" \
-    "\n MOVE LF@%retval string@" \
+    "\n MOVE GF@%return string@" \
     "\n DEFVAR LF@length_str" \
     "\n CREATEFRAME" \
     "\n DEFVAR TF@%0" \
@@ -144,7 +142,7 @@
     "\n DEFVAR LF@process_loop_cond" \
     "\n LABEL $substr$process_loop"    \
     "\n GETCHAR LF@char LF@%0 LF@index" \
-    "\n CONCAT LF@%retval LF@%retval LF@char" \
+    "\n CONCAT GF@%return GF@%return LF@char" \
     "\n ADD LF@index LF@index int@1" \
     "\n SUB LF@%2 LF@%2 int@1" \
     "\n GT LF@process_loop_cond LF@%2 int@0" \
@@ -158,8 +156,7 @@
     "\n #ORD" \
     "\n LABEL $ord" \
     "\n PUSHFRAME" \
-    "\n DEFVAR LF@%retval" \
-    "\n MOVE LF@%retval int@0" \
+    "\n MOVE GF@%return int@0" \
     "\n DEFVAR LF@cond_length" \
     "\n LT LF@cond_length LF@%1 int@1" \
     "\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
@@ -168,11 +165,11 @@
     "\n DEFVAR TF@%0" \
     "\n MOVE TF@%0 LF@%0" \
     "\n CALL $length" \
-    "\n MOVE LF@length_str TF@%retval" \
+    "\n MOVE LF@length_str GF@%return" \
     "\n GT LF@cond_length LF@%1 LF@length_str" \
     "\n JUMPIFEQ $ord$return LF@cond_length bool@true" \
     "\n SUB LF@%1 LF@%1 int@1" \
-    "\n STRI2INT LF@%retval LF@%0 LF@%1" \
+    "\n STRI2INT GF@%return LF@%0 LF@%1" \
     "\n LABEL $ord$return" \
     "\n POPFRAME" \
     "\n RETURN"
@@ -182,14 +179,13 @@
     "\n #CHR" \
     "\n LABEL $chr" \
     "\n PUSHFRAME" \
-    "\n DEFVAR LF@%retval" \
-    "\n MOVE LF@%retval string@" \
-    "\n DEFVAR LF@%return" \
+    "\n DEFVAR GF@%return" \
+    "\n MOVE GF@%return string@" \
     "\n LT LF@cond_range LF@%0 int@0" \
     "\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
     "\n GT LF@cond_range LF@%0 int@255" \
     "\n JUMPIFEQ $chr$return LF@cond_range bool@true" \
-    "\n INT2CHAR LF@%retval LF@%0" \
+    "\n INT2CHAR GF@%return LF@%0" \
     "\n LABEL $chr$return" \
     "\n POPFRAME" \
     "\n RETURN" \
