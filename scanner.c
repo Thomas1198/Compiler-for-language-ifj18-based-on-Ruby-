@@ -308,7 +308,25 @@ struct tToken get_token(FILE *source_file) {
                     token.set_type_of_token = LITERAL_STRING;
                     token.data_type_of_token=STRING_DT;
                     return token;
-                } else {
+                }
+                else if (isspace(c))
+                    {
+                        dynamic_string_add_const_str(token.content_string, "\\032");
+                    }
+                    else if (c == '\n')
+                {
+                    dynamic_string_add_const_str(token.content_string, "\\010");
+                }
+                    else if (c == '\\')
+                {
+                    dynamic_string_add_const_str(token.content_string, "\\052");
+                }
+                    else if (c == '#')
+                {
+                    dynamic_string_add_const_str(token.content_string, "\\035");
+                }
+
+                else {
                     dynamic_string_add_char(token.content_string, (char) c);
                 }
                 break;

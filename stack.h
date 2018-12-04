@@ -59,11 +59,7 @@ typedef enum {
  * @struct Stack item representation.
  */
 typedef struct stack_item {
-    expression_type expr;
     struct tToken *data;      /// pointer to token
-    char *atribute;
-    int reduce;
-    int znaminko;       // < = >
     struct stack_item *next; /// pointer to next item
 } Sitem;
 
@@ -107,7 +103,7 @@ struct tToken *stack_pop(Symstack *stack);
  * @param stack Pointer to stack.
  * @return Top item or NULL if it does not exist
  */
-struct tToken *stack_get_top_term(Symstack *stack);
+Sitem *stack_get_top_item(Symstack *stack);
 
 /**
  * Checks if is stack empty.
