@@ -16,15 +16,36 @@
 
 
 #define ADD_INSTRUCTION(instruction) do{\
-    dynamic_string_add_const_str(gen_code, (instruction "\n"));\
+    if(is_main)\
+    {\
+        dynamic_string_add_const_str(gen_code_main, (instruction "\n"));\
+    }\
+    else\
+    {\
+        dynamic_string_add_const_str(gen_code_function, (instruction"\n"));\
+    } \
     }while(false)
 
 #define ADD_COMMENT(comment) do{\
-    dynamic_string_add_const_str(gen_code, ( "# "comment ));\
+    if(is_main)\
+    {\
+        dynamic_string_add_const_str(gen_code_main, ("# "comment));\
+    }\
+    else\
+    {\
+        dynamic_string_add_const_str(gen_code_function, ("# "comment));\
+    } \
     }while(false)
 
 #define ADD_CODE(code) do{\
-    dynamic_string_add_const_str(gen_code, (code));\
+    if(is_main)\
+    {\
+        dynamic_string_add_const_str(gen_code_main, (code));\
+    }\
+    else\
+    {\
+        dynamic_string_add_const_str(gen_code_function, (code));\
+    } \
     }while(false)
 
 #define ADD_INTEGER(code) \
