@@ -287,6 +287,10 @@ int parsing(tDList token_list) {
             }
             case LITERAL_STRING: {
 
+                if ((err_code=assign_value(&token_list) != 0)) {
+                    return err_code;
+                }
+                break;
             }
 
             default: {
@@ -744,6 +748,98 @@ int parse_condition_expr(tDList *token_list, int set) {
     }
 
     return 0;
+}
+
+
+int assign_value(tDList *token_list) {
+    int br_count = 0, errcode = 0;
+    struct tToken token_actual, *tmp, *value;
+    bool exp_value = false, exp_ar = false;
+    tDList tmp_list;
+
+    DLInitList(&tmp_list);
+
+    token_actual=token_list->Act->token;
+
+
+    while (true) {
+
+
+        tmp = symtable_get(&hTable, token_actual.content_string);
+
+        if (tmp != NULL) {
+            if (tmp->funkce) {
+                errcode = parse_call_function(token_list, token_actual.par_count);
+
+                return errcode;
+            }
+        }
+        if (is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
+            br_count++;
+
+            if (exp_ar) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = true;
+            exp_ar = false;
+        } else if (is_set_type(token_actual, CHAR_RIGHT_BRACKET)) {
+            br_count--;
+
+            if (exp_value) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = false;
+            exp_ar = true;
+            if (br_count < 0) {
+                return SYNTAX_ERROR;
+            }
+        } else if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
+                   is_set_type(token_actual, DOUBLE) ||
+                   is_set_type(token_actual, LITERAL_STRING)) {
+
+            tmp = symtable_get(&hTable, token_actual.content_string);
+
+            if (tmp != NULL && !tmp->defined) {
+                return PROG_SEM_ERROR;
+            }
+
+            if (exp_ar) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = false;
+            exp_ar = true;
+
+            DLInsertLast(&(tmp_list), token_actual);
+
+
+        } else if (aritmetic_char) {
+
+            DLInsertLast(&(tmp_list), token_actual);
+
+            if (!exp_ar) {
+                return SYNTAX_ERROR;
+            }
+
+            exp_value = true;
+            exp_ar = false;
+        } else if (is_set_type(token_actual, CHAR_EOL)) {
+            break;
+        } else {
+            return SYNTAX_ERROR;
+        }
+
+        try_next_token_list_p(token_actual, token_list);
+    }
+    if (br_count != 0 || exp_value) {
+        return SYNTAX_ERROR;
+    }
+
+
+    return 0;
+
 }
 
 
