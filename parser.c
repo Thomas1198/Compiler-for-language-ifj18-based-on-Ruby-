@@ -343,6 +343,7 @@ int parse_def(tDList *token_list) {
 
 int parse_def_arguments_with_bracket(tDList *token_list) {
     struct tToken token_actual;
+    int i=0;
     bool comma = false;
 
     while (true) {
@@ -357,6 +358,8 @@ int parse_def_arguments_with_bracket(tDList *token_list) {
         }
 
         if (is_set_type(token_actual, IDENTIFIER_NAME)) {
+            generate_function_par_def(token_actual,i);
+            i++;
             comma = false;
             continue;
         }
@@ -601,6 +604,7 @@ int parse_call_function(tDList *token_list, int count) {
                 before_par = false;
                 generate_function_before_par();
             }
+
 
             if (func->more_params) {
                 generate_function_before_par();

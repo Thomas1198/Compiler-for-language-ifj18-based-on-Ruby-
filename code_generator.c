@@ -80,7 +80,6 @@ void generate_main_end()
 
     ADD_INSTRUCTION("POPFRAME");
     ADD_INSTRUCTION("CLEARS");
-    ADD_INSTRUCTION("EXIT")
     is_main = false;
 }
 
