@@ -89,21 +89,21 @@ bool stack_pop(Symstack *stack) {
 }
 
 Sitem *stack_get_top_item(Symstack *stack) {
-    Sitem *tmp = stack->top;
 
-    while (!stack_is_empty(stack)) {
+    for (Sitem *tmp = stack->top; tmp != NULL; tmp = tmp->next)
+    {
         if (tmp->set < STOP)
             return tmp;
-        tmp = tmp->next;
     }
+
     return NULL;
 }
 
 
 bool stack_is_empty(Symstack *stack) {
     if (stack->top != NULL)
-        return true;
-    return false;
+        return false;
+    return true;
 }
 
 

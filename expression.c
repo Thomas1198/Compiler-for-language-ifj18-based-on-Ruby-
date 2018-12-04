@@ -1,5 +1,17 @@
 #include "expression.h"
 
+// Precedence table
+int prec_table[PREC_TAB_SIZE][PREC_TAB_SIZE] =
+        {
+                //	|+- | */| r | ( | ) | i | $ |
+                { R , S , S , S , R , S , R }, /// +-
+                { R , R , R , S , R , S , R }, /// */
+                { S , S , S , S , R , S , R }, /// r (relation operators) = <> <= < >= >
+                { S , S , S , S , E , S , N }, /// (
+                { R , R , R , N , R , N , R }, /// )
+                { R , R , R , N , R , N , R }, /// i (id, int, double, string)
+                { S , S , S , S , N , S , N }  /// $
+        };
 
 Symstack stack;
 
@@ -340,7 +352,6 @@ static int reduce_by_rule() {
         GENERATE_CODE(generate_concats);
     } else {
         switch (rule_for_code_gen) {
-            {
                 case NT_PLUS_NT:
                     generate_adds();
                 break;
@@ -355,10 +366,6 @@ static int reduce_by_rule() {
 
                 case NT_DIV_NT:
                     generate_divs();
-                break;
-
-                case NT_IDIV_NT:
-                    generate_idivs();
                 break;
 
                 case NT_EQ_NT:
@@ -384,14 +391,16 @@ static int reduce_by_rule() {
                 case NT_MTN_NT:
                     generate_gts();
                 break;
-            }
+
+                default:
+                    break;
+
         }
 
         stack_pop_count(&stack, count + 1);
         stack_push(&stack, NULL, NON_TERM, final_type);
-
-        return 0;
     }
+    return 0;
 }
 
 //pridat kontrolu deleni nulou

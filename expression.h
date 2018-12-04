@@ -14,9 +14,8 @@
 	} while(0)
 
 #define GENERATE_CODE(_callback, ...)								\
-	do {										\
-	(_callback(__VA_ARGS__))	\
-	} while(0)
+	(_callback(__VA_ARGS__))
+
 
 #define PREC_TAB_SIZE 8
 
@@ -68,20 +67,6 @@ typedef enum
     I_DOLLAR			/// $
 } Prec_table_index_enum;
 
-// Precedence table
-int prec_table[PREC_TAB_SIZE][PREC_TAB_SIZE] =
-        {
-                //	|+- | */| r | ( | ) | i | $ |
-                { R , S , S , S , R , S , R }, /// +-
-                { R , R , R , S , R , S , R }, /// */
-                { S , S , S , S , R , S , R }, /// r (relation operators) = <> <= < >= >
-                { S , S , S , S , E , S , N }, /// (
-                { R , R , R , N , R , N , R }, /// )
-                { R , R , R , N , R , N , R }, /// i (id, int, double, string)
-                { S , S , S , S , N , S , N }  /// $
-        };
-
-
 
 /**
  * Implementation of <expression> rule. Parses expressions.
@@ -89,6 +74,6 @@ int prec_table[PREC_TAB_SIZE][PREC_TAB_SIZE] =
  * @param data Pointer to parser's internal data.
  * @return Given exit code.
  */
-int expression(tDList *list, struct tToken *save_location)
+int expression(tDList *list, struct tToken *save_location);
 
 #endif //PROJECT_EXPRESSION_H
