@@ -1,18 +1,10 @@
 /**
  * @file scanner.c
  * @author Patrik Strnad (xstrna11)
- * @brief Error codes constants and function to print errors.
+ * @brief Scanner, tokenize input
  */
 
-
 #include "scanner.h"
-
-
-
-//end of includes
-
-
-//FILE *source_file;
 
 struct tToken get_token(FILE *source_file) {
     if (source_file == NULL) {
@@ -25,10 +17,8 @@ struct tToken get_token(FILE *source_file) {
     struct tToken token;
     init_token(&token);
 
-    //Setuji current_state na DEFAULT
     SCANNER_STATE current_state = START;
 
-    //Declaration of the scanner char
     int c = 0;
 
     while (true) {

@@ -1,7 +1,7 @@
 /**
  * @file token.h
- * @author
- * @brief
+ * @author Tomas Dorda (xdorda00)
+ * @brief Representation of token and token functions
  */
 
 
@@ -48,8 +48,6 @@ typedef enum {
     CHAR_INTEGER,
     CHAR_DOUBLE,
     UNDEFINED_SET,
-    END_PRECE,
-    EXPR,
     NONE,
     DOLLAR,
     STOP,
@@ -74,8 +72,8 @@ struct tToken {
     Dynamic_string *content_string; ///identifier (key)
     union value_union value;
     bool defined;
-    data_type data_type_of_token;            /// Data type (int,char...)
-    set_type set_type_of_token;                  /// Which set token belongs to (sign, variable...)
+    data_type data_type_of_token;  /// Data type (int,char...)
+    set_type set_type_of_token;    /// Which set token belongs to (sign, variable...)
     bool funkce;
     int par_count;
     bool more_params;
@@ -83,9 +81,11 @@ struct tToken {
     bool assigned;
 };
 
-//TODO: dopsat komentar
+/**
+ * @brief initialise token
+ *
+ * @param tab pointer on table
+ */
 void init_token(struct tToken *token);
-
-void copy_token(struct tToken *dst, struct tToken *src);
 
 #endif //PROJECT_TOKEN_H

@@ -1,7 +1,7 @@
 /**
  * @file token_list.c
- * @author
- * @brief
+ * @author Tomas Dorda (xdorda00)
+ * @brief Token list functions and representation
  */
 
 #include "token_list.h"

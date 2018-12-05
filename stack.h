@@ -1,7 +1,7 @@
 /**
  * @file stack.h
  * @author Tomas Dorda (xdorda00)
- * @brief Error codes constants and function to print errors.
+ * @brief Implementation of stack
  */
 
 
@@ -17,7 +17,7 @@
 #include "parser.h"
 
 /**
- * @struct Stack item representation.
+ * @struct Representation of tack item
  */
 typedef struct stack_item {
     struct tToken *data;      /// pointer to token
@@ -29,7 +29,7 @@ typedef struct stack_item {
 
 
 /**
- * @struct Stack representation.
+ * @struct Representation of stack
  */
 typedef struct tStack{
     Sitem *top; /// Pointer to stack item on top of stack.
@@ -37,7 +37,7 @@ typedef struct tStack{
 
 
 /**
- * Initializes stack.
+ * @brief Initializes stack.
  *
  * @param stack Pointer to stack.
  */
@@ -45,66 +45,74 @@ void stack_init(Symstack *stack);
 
 
 /**
- * Pushes symbol to stack and sets its data type.
+ * @brief Pushes symbol to stack
  *
- * @param stack Pointer to stack.
- * @param token token to be pushed.
+ * @param stack pointer to stack.
+ * @param token token to be pushed
+ * @param set
+ * @param type
  */
 bool stack_push(Symstack *stack, struct tToken *token, set_type set, data_type type);
 
 
 /**
- * Function pops stack more times.
+ * @brief Pops more times.
  *
  * @param stack Pointer to stack.
- * @param count How many times stack will be popped.
+ * @param count number of items to be popped
  */
 void stack_pop_count(Symstack *stack, int count);
 
 
 /**
- * Function inserts symbol after top terminal.
+ * @brief Inserts symbol after top terminal.
  *
- * @param stack Pointer to stack.
- * @param symbol Symbol to be pushed.
- * @param type Data type to be set.
- * @return True if successfull else false.
+ * @param stack pointer to stack
+ * @param token token to be pushed
+ * @param set set type
+ * @param type data type
+ * @return true if successful
  */
 bool stack_insert_after_top(Symstack *stack, struct tToken *token, set_type set, data_type type);
 
 
 /**
- * Pops top symbol from stack.
+ * @brief Pops top symbol from stack.
  *
  * @param stack Pointer to stack.
- * @return Top item or NULL if it does not exist
+ * @return top item or NULL
  */
 bool stack_pop(Symstack *stack);
 
 /**
- * Returns top symbol from stack.
+ * @brief Gets top symbol from stack.
  *
  * @param stack Pointer to stack.
- * @return Top item or NULL if it does not exist
+ * @return top symbol or NULL
  */
 Sitem *stack_get_top_term(Symstack *stack);
 
 /**
- * Checks if is stack empty.
+ * @brief Checks if stack is empty.
  *
  * @param stack Pointer to stack.
- * @return True if empty, false if nonempty
+ * @return True if empty, false if its not empty
  */
 bool stack_is_empty(Symstack *stack);
 
 
 /**
- * Frees resources used for stack.
+ * @brief Frees resources.
  *
- * @param stack Pointer to stack.
+ * @param stack pointer to stack.
  */
 void stack_free(Symstack *stack);
 
+/**
+ * @brief Gets top token.
+ *
+ * @param stack pointer to stack.
+ */
 struct tToken *get_top(Symstack *stack);
 
 #endif //PROJECT_STACK_H

@@ -1,8 +1,9 @@
 /**
  * @file token.c
- * @author
- * @brief
+ * @author Tomas Dorda (xdorda00)
+ * @brief Representation of token and token functions
  */
+
 
 #include "token.h"
 

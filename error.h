@@ -22,7 +22,7 @@ enum ERROR_CODE {
 };
 
 /**
- * @brief Prints error message with coresponding error code.
+ * @brief Prints error message with error code.
  * @param err_code error number
  * @param msg Message to print.
  */
