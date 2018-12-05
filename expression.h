@@ -11,7 +11,6 @@
 #define FREE_RESOURCES_RETURN(return_code)		\
 	do {										\
 		stack_free(&stack);						\
-		ErrorPrint(return_code, "[expressions.c]");						\
 	} while(0)
 
 #define GENERATE_CODE(_callback, ...)								\

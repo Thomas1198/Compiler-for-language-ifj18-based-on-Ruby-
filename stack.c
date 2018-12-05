@@ -88,7 +88,7 @@ bool stack_pop(Symstack *stack) {
     return false;
 }
 
-Sitem *stack_get_top_item(Symstack *stack) {
+Sitem *stack_get_top_term(Symstack *stack) {
 
     for (Sitem *tmp = stack->top; tmp != NULL; tmp = tmp->next)
     {
