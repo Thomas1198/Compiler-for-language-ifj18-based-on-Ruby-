@@ -112,7 +112,7 @@ struct tToken get_token(FILE *source_file) {
                 break;
 
             case (KEYWORD): {
-                if (isalnum(c) || c == '_') {
+                if (isalpha(c) || c == '_') {
                     dynamic_string_add_char(token.content_string, (char) tolower(c));
                     current_state = KEYWORDLONGER;
                 } else {
@@ -311,11 +311,11 @@ struct tToken get_token(FILE *source_file) {
                 } else if (isspace(c)) {
                     dynamic_string_add_const_str(token.content_string, "\\032");
                 } else if (c == '\\') {
-                    c=getc(source_file);
-                    if (c=='n') {
+                    c = getc(source_file);
+                    if (c == 'n') {
                         dynamic_string_add_const_str(token.content_string, "\\010");
-                        ungetc(c,source_file);
-                        c=getc(source_file);
+                        ungetc(c, source_file);
+                        c = getc(source_file);
                     } else {
                         dynamic_string_add_const_str(token.content_string, "\\092");
                     }
