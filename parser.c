@@ -37,7 +37,6 @@ int run_parser(FILE *source_code) {
         free_build_in();
         exit(error_code);
     }
-    symtable_destroy(&hTable);
     write_code();
     generator_clear();
     free_build_in();
@@ -256,6 +255,9 @@ int parsing(tDList token_list) {
 
 
         if (!fce && !main) {
+            if (token_list.Act->rptr != NULL) {
+                fnc_token = &token_list.Act->rptr->token;
+            }
             if (!is_set_type(token_actual, KEY_WORD_DEF)) {
                 generate_main_start();
                 main = true;
@@ -742,6 +744,8 @@ int parse_call_function(tDList *token_list, int count) {
 
     func = symtable_get(&hTable, token_list->Act->token.content_string);
 
+
+    //TODO výraz jako parametr
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);
