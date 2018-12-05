@@ -30,7 +30,7 @@
 
 #define reational_char (is_set_type(token_actual, CHAR_DOUBLEEQ) || is_set_type(token_actual, CHAR_LEQ) ||\
                         is_set_type(token_actual, CHAR_GEQ) || is_set_type(token_actual, CHAR_LT) ||\
-                        is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))
+                        is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, CHAR_NEQ))
 
 
 int end_req, lable,if_count;
