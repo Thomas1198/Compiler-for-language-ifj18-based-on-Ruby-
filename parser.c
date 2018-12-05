@@ -33,7 +33,6 @@ lables_stack=(struct tStack*) malloc(sizeof(struct tStack));
         free_build_in();
         exit(error_code);
     }
-    stack_free(lables_stack);
     write_code();
     generator_clear();
     free_build_in();
