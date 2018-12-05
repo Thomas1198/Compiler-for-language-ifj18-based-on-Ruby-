@@ -1,3 +1,9 @@
+/**
+ * @file expressions.c
+ * @author Tomas Dorda (xdorda00)
+ * @brief Expressions evaluation
+ */
+
 #include "expression.h"
 
 #define FREE_RESOURCES_RETURN(return_code)        \
@@ -68,13 +74,12 @@ static Prec_table_index_enum prec_table_index(set_type type) {
 
 
 /**
- * Function tests if symbols in parameters are valid according to rules.
- *
- * @param num Number of valid symbols in parameter.
+ * @brief tests if symbols in parameters are valid according to rules.
+ * @param num number of symbols
  * @param op1 Symbol 1.
  * @param op2 Symbol 2.
  * @param op3 Symbol 3.
- * @return NOT_A_RULE if no rule is found or returns rule which is valid.
+ * @return rule or not rule
  */
 static Prec_tab_rules test_rule(int num, Sitem *op1, Sitem *op2, Sitem *op3) {
     switch (num) {
@@ -133,10 +138,9 @@ static Prec_tab_rules test_rule(int num, Sitem *op1, Sitem *op2, Sitem *op3) {
 
 
 /**
- * Function function counts number of symbols after stop symbol on stack.
- *
- * @param stop_found Pointer to bool variable which will be changed to true if stop was found else to false.
- * @return Number of charatcters after stop symbol. Is valid only when stop_found was set to true.
+ * @brief counts number of symbols after stop on stack
+ * @param stop_found points to bool variable (true if found otherwise to false)
+ * @return number of symbols after stop symbol
  */
 static int num_of_symbols_after_stop(bool *stop_found) {
     Sitem *tmp = stack.top;
@@ -158,12 +162,11 @@ static int num_of_symbols_after_stop(bool *stop_found) {
 }
 
 /**
- * Function checks semantics of operands according to rule.
- *
+ * @brief checks of operands semantics
  * @param rule Pointer to table.
- * @param op1 Symbol 1.
- * @param op2 Symbol 2.
- * @param op3 Symbol 3.
+ * @param op1 Symbol 1
+ * @param op2 Symbol 2
+ * @param op3 Symbol 3
  * @param final_type Sets data type which will be after executing rule.
  * @return Given exit code.
  */
@@ -284,10 +287,9 @@ static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *o
 
 
 /**
- * Reduces symbols after STOP symbol if rule for reducing is found.
- *
- * @param data Pointer to table.
- * @return Given exit code.
+ * @brief Reduces symbols after STOP
+ * @param data pointer to table
+ * @return exit code
  */
 static int reduce_by_rule(struct tToken *save_location) {
 
@@ -459,7 +461,7 @@ int expression(tDList *list, struct tToken *save_location) {
     if (save_location != NULL) {
         generate_pops();
         generate_clear_stack();
-        if(save_location->data_type_of_token != BOOLEAN && save_location->set_type_of_token == KEY_WORD_END)
+        if(save_location->data_type_of_token != BOOLEAN && save_location->set_type_of_token != KEY_WORD_END)
             GENERATE_CODE(generate_save_result_to_var, *save_location);
     }
 
