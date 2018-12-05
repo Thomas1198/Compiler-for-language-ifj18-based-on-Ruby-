@@ -33,7 +33,7 @@
                         is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))
 
 
-int end_req,lable;
+int end_req, lable,if_count;
 
 bool func;
 
@@ -80,5 +80,7 @@ int assign_value(tDList *token_list);
 void init_build_in();
 
 void free_build_in();
+
+int parse_else(tDList *token_list);
 
 #endif //PROJECT_PARSER_H

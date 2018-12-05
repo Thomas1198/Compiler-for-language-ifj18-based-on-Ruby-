@@ -271,13 +271,13 @@ void generate_while_end(int label_index) {
 
 
 void generate_push_var(struct tToken var) {
+    ADD_CODE("PUSHS LF@%"); ADD_CODE(var.content_string->str); ADD_CODE("\n");
+
+}
+void generate_push_value(struct tToken var) {
     ADD_CODE("PUSHS ");
     generate_value(var);
     ADD_CODE("\n");
-}
-
-void generate_push_value(struct tToken var) {
-     ADD_CODE("PUSHS "); generate_value(var); ADD_CODE("\n");
 }
 
 void generate_adds() {

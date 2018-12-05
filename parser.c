@@ -8,6 +8,7 @@ int run_parser(FILE *source_code) {
     DLInitList(&token_list);
 
     symtable_create(&hTable);
+lables_stack=(struct tStack*) malloc(sizeof(struct tStack));
 
     stack_init(lables_stack);
 
@@ -27,7 +28,7 @@ int run_parser(FILE *source_code) {
 
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
-        //generator_clear();
+        generator_clear();
         stack_free(lables_stack);
         free_build_in();
         exit(error_code);
@@ -37,7 +38,6 @@ int run_parser(FILE *source_code) {
     generator_clear();
     free_build_in();
     DLDisposeList(&token_list);
-    free(lables_stack);
     return 0;
 }
 
@@ -246,7 +246,7 @@ int parsing(tDList token_list) {
             }
 
             case KEY_WORD_IF: {
-
+                if_count++;
                 if ((err_code = parse_if(&token_list)) != 0) {
                     return err_code;
                 }
@@ -296,6 +296,15 @@ int parsing(tDList token_list) {
             case LITERAL_STRING: {
 
                 if ((err_code = assign_value(&token_list) != 0)) {
+                    return err_code;
+                }
+                break;
+            }
+
+            case KEY_WORD_ELSE: {
+
+                if ((err_code = parse_else(&token_list) != 0)) {
+                    printf("%d",err_code);
                     return err_code;
                 }
                 break;
@@ -439,7 +448,7 @@ int parse_if(tDList *token_list) {
     init_token(tmp);
 
     tmp->value.i = lable++;
-
+tmp->set_type_of_token=KEY_WORD_IF;
     stack_push(lables_stack, tmp, KEY_WORD_IF, INT);
 
     if (!func) {
@@ -551,8 +560,7 @@ int parse_assign_value(tDList *token_list) {
     DLInitList(&tmp_list);
 
 
-
-    tmp=symtable_get(&hTable, token_actual.content_string);
+    tmp=symtable_get(&hTable, token_list->Act->lptr->token.content_string);
 
     if(tmp!=NULL){
         if(!tmp->assigned){
@@ -923,4 +931,14 @@ void free_build_in() {
     free(inputi);
     free(inputs);
     free(print);
+}
+
+int parse_else(tDList *token_list){
+    struct tToken token_actual;
+
+    try_next_token_list_p(token_actual,token_list);
+    if(!is_set_type(token_actual,CHAR_EOL)){
+exit(2);
+    }
+    return 0;
 }
