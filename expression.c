@@ -71,7 +71,7 @@ static Prec_tab_rules test_rule(int num, Sitem *op1, Sitem *op2, Sitem *op3) {
         case 1:
             // rule E -> i
             if (op1->set == IDENTIFIER_NAME || op1->set == CHAR_INTEGER ||
-                op1->set == NUMBER_DOUBLE || op1->set == LITERAL_STRING)
+                op1->set == CHAR_DOUBLE || op1->set == LITERAL_STRING)
                 return OPERAND;
 
             return NOT_A_RULE;
