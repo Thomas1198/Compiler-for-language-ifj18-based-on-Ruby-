@@ -18,6 +18,7 @@ int run_parser(FILE *source_code) {
 
     generator_start();
     init_build_in();
+
     if ((error_code = first_run(&token_list, source_code)) != 0) {
         //TODO uvolnění paměti
         generator_clear();
@@ -157,7 +158,7 @@ void init_build_in() {
     inputi->par_count = 0;
     inputi->funkce = true;
     inputi->defined = true;
-    inputf->build_id = true;
+    inputi->build_id = true;
     dynamic_string_add_const_str(inputi->content_string, "inputi");
     inputi->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, inputi);
@@ -167,7 +168,7 @@ void init_build_in() {
     inputs->par_count = 0;
     inputs->funkce = true;
     inputs->defined = true;
-    inputf->build_id = true;
+    inputs->build_id = true;
     dynamic_string_add_const_str(inputs->content_string, "inputs");
     inputs->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, inputs);
@@ -177,7 +178,7 @@ void init_build_in() {
     print->more_params = true;
     print->funkce = true;
     print->defined = true;
-    inputf->build_id = true;
+    print->build_id = true;
     dynamic_string_add_const_str(print->content_string, "print");
     print->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, print);
@@ -189,7 +190,7 @@ void init_build_in() {
     length->defined = true;
     length->par_count = 1;
     length->build_id = true;
-    dynamic_string_add_const_str(print->content_string, "length");
+    dynamic_string_add_const_str(length->content_string, "length");
     length->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, length);
 
@@ -199,7 +200,7 @@ void init_build_in() {
     subsrt->defined = true;
     subsrt->par_count = 3;
     subsrt->build_id = true;
-    dynamic_string_add_const_str(print->content_string, "subsrt");
+    dynamic_string_add_const_str(subsrt->content_string, "subsrt");
     subsrt->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, subsrt);
 
@@ -210,7 +211,7 @@ void init_build_in() {
     ord->defined = true;
     ord->par_count = 2;
     ord->build_id = true;
-    dynamic_string_add_const_str(print->content_string, "ord");
+    dynamic_string_add_const_str(ord->content_string, "ord");
     ord->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, ord);
 
@@ -220,7 +221,7 @@ void init_build_in() {
     chr->defined = true;
     chr->par_count = 1;
     chr->build_id = true;
-    dynamic_string_add_const_str(print->content_string, "chr");
+    dynamic_string_add_const_str(chr->content_string, "chr");
     chr->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, chr);
 }
@@ -611,7 +612,7 @@ int parse_identifier(tDList *token_list) {
 
 int parse_assign_value(tDList *token_list) {
     int br_count = 0, errcode = 0;
-    struct tToken token_actual, *tmp, *value;
+    struct tToken token_actual, *tmp=NULL, *value;
     bool exp_value = false, exp_ar = false;
     tDList tmp_list;
 
