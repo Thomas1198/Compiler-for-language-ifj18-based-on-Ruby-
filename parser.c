@@ -21,7 +21,6 @@ lables_stack=(struct tStack*) malloc(sizeof(struct tStack));
     if ((error_code = first_run(&token_list, source_code)) != 0) {
         //TODO uvolnění paměti
         generator_clear();
-        stack_free(lables_stack);
         exit(error_code);
     }
 
@@ -29,11 +28,9 @@ lables_stack=(struct tStack*) malloc(sizeof(struct tStack));
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         generator_clear();
-        stack_free(lables_stack);
         free_build_in();
         exit(error_code);
     }
-    stack_free(lables_stack);
     write_code();
     generator_clear();
     free_build_in();
