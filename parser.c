@@ -300,6 +300,7 @@ int parsing(tDList token_list) {
                 if ((err_code = parse_if(&token_list)) != 0) {
                     return err_code;
                 }
+                use_if=true;
                 exp_end++;
                 break;
             }
@@ -380,13 +381,16 @@ int parsing(tDList token_list) {
 
 int parse_end(tDList *token_list) {
     end_req--;
-    struct tToken *tmp = get_top(lables_stack);
+
+
+
+        struct tToken *tmp = get_top(lables_stack);
 
     if (end_req < 0) {
         return SYNTAX_ERROR;
     }
 
-    if (!b_else) {
+    if (!b_else && use_if) {
         generate_if_else_part(tmp->value.i);
     }
     b_else = false;
@@ -400,6 +404,7 @@ int parse_end(tDList *token_list) {
         if (is_set_type(*tmp, KEY_WORD_IF)) {
 
             generate_if_end(tmp->value.i);
+            use_if=false;
 
         } else if (is_set_type(*tmp, KEY_WORD_WHILE)) {
             generate_while_end(tmp->value.i);

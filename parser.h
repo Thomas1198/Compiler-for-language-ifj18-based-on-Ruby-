@@ -41,7 +41,7 @@
 
 int end_req, lable,if_count;
 
-bool func,b_else;
+bool func,b_else,use_if;
 
 struct tToken *act_fun, *inputs, *inputi, *inputf, *print,*length,*subsrt,*ord,*chr,*end;
 

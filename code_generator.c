@@ -264,7 +264,7 @@ void generate_while_start(int label_index) {
 void generate_while_end(int label_index) {
     ADD_CODE("JUMP $");
     ADD_CODE("%");
-    ADD_INTEGER(label_index - 1);
+    ADD_INTEGER(label_index);
     ADD_CODE("\n");
 
     ADD_INSTRUCTION("# Loop");
