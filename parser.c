@@ -988,7 +988,7 @@ int assign_value(tDList *token_list) {
 
     errcode = expression(&tmp_list, end);
     if (errcode != 0) {
-        return errcode;
+        exit(errcode);
     }
 
     return 0;
