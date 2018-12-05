@@ -144,7 +144,7 @@ void generate_value(struct tToken var) {
             ADD_CODE("\n");
             return;
         case FLOAT:
-            sprintf(string, "%a", var.value.d);
+            sprintf(string, "%a", var.value.f);
             ADD_CODE("float@");
             ADD_CODE(string);
             ADD_CODE("\n");

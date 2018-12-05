@@ -29,7 +29,6 @@ lables_stack=(struct tStack*) malloc(sizeof(struct tStack));
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         generator_clear();
-        stack_free(lables_stack);
         free_build_in();
         exit(error_code);
     }

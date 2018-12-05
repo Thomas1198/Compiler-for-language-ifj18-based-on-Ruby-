@@ -68,7 +68,6 @@ typedef enum {
 union value_union {
     int i;
     float f;
-    double d;
 };
 
 struct tToken {
