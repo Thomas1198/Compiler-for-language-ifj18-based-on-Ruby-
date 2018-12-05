@@ -255,7 +255,7 @@ void generate_while_start(int label_index) {
     ADD_CODE("JUMPIFEQ $");
     ADD_CODE("%");
     ADD_INTEGER(label_index);
-    ADD_CODE("\n");
+    ADD_CODE("_end");
     ADD_CODE(" GF@%result bool@false");
     ADD_CODE("\n");
 }
@@ -270,7 +270,7 @@ void generate_while_end(int label_index) {
     ADD_INSTRUCTION("# Loop");
 
     generate_label(label_index);
-    ADD_CODE("\n");
+    ADD_CODE("_end\n");
 
 }
 

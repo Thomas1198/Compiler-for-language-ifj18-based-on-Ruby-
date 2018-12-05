@@ -1,3 +1,9 @@
+/**
+ * @file    parser.c
+ * @author  Jakub Konetzný(xkonet01)
+ * @brief   parser
+ */
+
 #include "parser.h"
 
 
@@ -19,19 +25,19 @@ int run_parser(FILE *source_code) {
     generator_start();
     init_build_in();
 
-    if ((error_code = first_run(&token_list, source_code)) != 0) {
-        //TODO uvolnění paměti
+    if ((error_code = tokens_to_list(&token_list, source_code)) != 0) {
         generator_clear();
+        free_build_in();
         exit(error_code);
     }
 
 
     if ((error_code = parsing(token_list)) != 0) {
-        //TODO uvolneni pameti
         generator_clear();
         free_build_in();
         exit(error_code);
     }
+    symtable_destroy(&hTable);
     write_code();
     generator_clear();
     free_build_in();
@@ -39,7 +45,7 @@ int run_parser(FILE *source_code) {
     return 0;
 }
 
-int first_run(tDList *token_list, FILE *source_code) {
+int tokens_to_list(tDList *token_list, FILE *source_code) {
     struct tToken token_actual, *tmp = NULL, *tmp_func = NULL;
     bool function_par = false, function_var = false, end = true;
     int end_count = 0;
@@ -250,9 +256,6 @@ int parsing(tDList token_list) {
 
 
         if (!fce && !main) {
-            if (token_list.Act->rptr != NULL) {
-                fnc_token = &token_list.Act->rptr->token;
-            }
             if (!is_set_type(token_actual, KEY_WORD_DEF)) {
                 generate_main_start();
                 main = true;
@@ -340,7 +343,7 @@ int parsing(tDList token_list) {
             }
             case LITERAL_STRING: {
 
-                if ((err_code = assign_value(&token_list) != 0)) {
+                if ((err_code = assign_value_const(&token_list) != 0)) {
                     return err_code;
                 }
                 break;
@@ -381,10 +384,10 @@ int parse_end(tDList *token_list) {
         return SYNTAX_ERROR;
     }
 
-    if(!b_else){
+    if (!b_else) {
         generate_if_else_part(tmp->value.i);
     }
-b_else=false;
+    b_else = false;
     if (end_req == 0 && func) {
         generate_function_ret(*act_fun);
         generate_function_end(*act_fun);
@@ -418,7 +421,6 @@ int parse_def(tDList *token_list) {
 
     end_req++;
 
-    //TODO závorky a várazy
     try_next_token_list_p(token_actual, token_list);
 
     act_fun = &token_list->Act->token;
@@ -430,7 +432,7 @@ int parse_def(tDList *token_list) {
 
     check_set_type(token_actual, CHAR_LEFT_BRACKET);
 
-    if ((err_code = parse_def_arguments_with_bracket(&(*token_list))) != 0) {
+    if ((err_code = parse_def_arguments(&(*token_list))) != 0) {
         return err_code;
     }
 
@@ -438,7 +440,7 @@ int parse_def(tDList *token_list) {
     return check_end_of_line(&*(token_list));
 }
 
-int parse_def_arguments_with_bracket(tDList *token_list) {
+int parse_def_arguments(tDList *token_list) {
     struct tToken token_actual;
     int i = 0;
     bool comma = false;
@@ -518,6 +520,7 @@ int parse_while(tDList *token_list) {
         return 0;
     }
 
+
     struct tToken *tmp;
 
     tmp = (struct tToken *) malloc(sizeof(struct tToken));
@@ -526,6 +529,8 @@ int parse_while(tDList *token_list) {
     tmp->value.i = lable++;
     tmp->set_type_of_token = KEY_WORD_WHILE;
     stack_push(lables_stack, tmp, KEY_WORD_WHILE, INT);
+
+    generate_while_start(tmp->value.i);
 
     return 0;
 
@@ -550,7 +555,7 @@ int parse_condition(tDList *token_list, int set) {
     }
 
 
-    if((errcode=expression(tmp_list, end))!=0){
+    if ((errcode = expression(tmp_list, end)) != 0) {
         return errcode;
     }
 
@@ -619,7 +624,7 @@ int parse_identifier(tDList *token_list) {
 
 int parse_assign_value(tDList *token_list) {
     int br_count = 0, errcode = 0;
-    struct tToken token_actual, *tmp=NULL, *value;
+    struct tToken token_actual, *tmp = NULL, *value;
     bool exp_value = false, exp_ar = false;
     tDList tmp_list;
 
@@ -738,8 +743,6 @@ int parse_call_function(tDList *token_list, int count) {
     func = symtable_get(&hTable, token_list->Act->token.content_string);
 
 
-    //TODO výraz jako parametr
-
     while (true) {
         try_next_token_list_p(token_actual, token_list);
 
@@ -822,7 +825,7 @@ int parse_call_function(tDList *token_list, int count) {
 }
 
 int parse_condition_expr(tDList *token_list, int set, tDList *tmp_list) {
-    int br_count = 0, errorcode;
+    int br_count = 0;
     struct tToken token_actual, *tmp;
     bool exp_value = false, exp_ar = false;
 
@@ -897,9 +900,9 @@ int parse_condition_expr(tDList *token_list, int set, tDList *tmp_list) {
 }
 
 
-int assign_value(tDList *token_list) {
+int assign_value_const(tDList *token_list) {
     int br_count = 0, errcode = 0;
-    struct tToken token_actual, *tmp=NULL;
+    struct tToken token_actual, *tmp = NULL;
     bool exp_value = false, exp_ar = false, first = false;
     tDList tmp_list;
 
@@ -913,7 +916,7 @@ int assign_value(tDList *token_list) {
             try_next_token_list_p(token_actual, token_list);
         }
         first = true;
-        if (token_actual.set_type_of_token==IDENTIFIER_NAME) {
+        if (token_actual.set_type_of_token == IDENTIFIER_NAME) {
             tmp = symtable_get(&hTable, token_actual.content_string);
         }
         if (tmp != NULL) {
@@ -1014,7 +1017,7 @@ int parse_else(tDList *token_list) {
     struct tToken token_actual;
     struct tToken *tmp = get_top(lables_stack);
 
-    b_else=true;
+    b_else = true;
 
     generate_if_else_part(tmp->value.i);
 
