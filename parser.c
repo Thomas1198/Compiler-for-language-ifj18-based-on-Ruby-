@@ -460,8 +460,8 @@ int parse_while(tDList *token_list) {
     generate_while_head(lable);
 
     end_req++;
-    err_code=parse_condition(token_list, KEY_WORD_DO);
-    if(err_code!=0){
+    err_code = parse_condition(token_list, KEY_WORD_DO);
+    if (err_code != 0) {
         return 0;
     }
 
@@ -661,9 +661,11 @@ int parse_assign_value(tDList *token_list) {
 
 
     errcode = expression(&tmp_list, value);
+    if (errcode != 0) {
+        return errcode;
+    }
 
-
-    return errcode;
+    return 0;
 
 }
 
