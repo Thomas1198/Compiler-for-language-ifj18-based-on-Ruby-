@@ -37,7 +37,6 @@ int run_parser(FILE *source_code) {
         free_build_in();
         exit(error_code);
     }
-    symtable_destroy(&hTable);
     write_code();
     generator_clear();
     free_build_in();
@@ -256,6 +255,9 @@ int parsing(tDList token_list) {
 
 
         if (!fce && !main) {
+            if (token_list.Act->rptr != NULL) {
+                fnc_token = &token_list.Act->rptr->token;
+            }
             if (!is_set_type(token_actual, KEY_WORD_DEF)) {
                 generate_main_start();
                 main = true;
@@ -298,6 +300,7 @@ int parsing(tDList token_list) {
                 if ((err_code = parse_if(&token_list)) != 0) {
                     return err_code;
                 }
+                use_if=true;
                 exp_end++;
                 break;
             }
@@ -378,13 +381,16 @@ int parsing(tDList token_list) {
 
 int parse_end(tDList *token_list) {
     end_req--;
-    struct tToken *tmp = get_top(lables_stack);
+
+
+
+        struct tToken *tmp = get_top(lables_stack);
 
     if (end_req < 0) {
         return SYNTAX_ERROR;
     }
 
-    if (!b_else) {
+    if (!b_else && use_if) {
         generate_if_else_part(tmp->value.i);
     }
     b_else = false;
@@ -398,6 +404,7 @@ int parse_end(tDList *token_list) {
         if (is_set_type(*tmp, KEY_WORD_IF)) {
 
             generate_if_end(tmp->value.i);
+            use_if=false;
 
         } else if (is_set_type(*tmp, KEY_WORD_WHILE)) {
             generate_while_end(tmp->value.i);
@@ -742,6 +749,8 @@ int parse_call_function(tDList *token_list, int count) {
 
     func = symtable_get(&hTable, token_list->Act->token.content_string);
 
+
+    //TODO výraz jako parametr
 
     while (true) {
         try_next_token_list_p(token_actual, token_list);

@@ -1,9 +1,3 @@
-/**
- * @file expressions.h
- * @author Tomas Dorda (xdorda00)
- * @brief Expressions evaluation
- */
-
 #ifndef PROJECT_EXPRESSION_H
 #define PROJECT_EXPRESSION_H
 
@@ -25,7 +19,7 @@ typedef enum
     S,    /// < SHIFT
     E,    /// = EQUAL
     R,    /// > REDUCE
-    N     /// ELSE
+    N     /// # ERROR
 } Prec_table_signs;
 
 
@@ -34,19 +28,19 @@ typedef enum
  */
 typedef enum
 {
-    NT_EQ_NT,		/// E = E
-    NT_NEQ_NT,		/// E <> E
-    NT_LEQ_NT,		/// E <= E
-    NT_LTN_NT,		/// E < E
-    NT_MEQ_NT,		/// E => E
-    NT_MTN_NT,		/// E > E
-    NT_PLUS_NT,		/// E + E
-    NT_MINUS_NT,	/// E - E
-    NT_MUL_NT,		/// E * E
-    NT_DIV_NT,		/// E / E
-    LBR_NT_RBR,		/// (E)
-    OPERAND,		/// i
-    NOT_A_RULE		/// no rule
+    NT_EQ_NT,		/// E -> E = E
+    NT_NEQ_NT,		/// E -> E <> E
+    NT_LEQ_NT,		/// E -> E <= E
+    NT_LTN_NT,		/// E -> E < E
+    NT_MEQ_NT,		/// E -> E => E
+    NT_MTN_NT,		/// E -> E > E
+    NT_PLUS_NT,		/// E -> E + E
+    NT_MINUS_NT,	/// E -> E - E
+    NT_MUL_NT,		/// E -> E * E
+    NT_DIV_NT,		/// E -> E / E
+    LBR_NT_RBR,		/// E -> (E)
+    OPERAND,		/// E -> i
+    NOT_A_RULE		/// rule doesn't exist
 } Prec_tab_rules;
 
 
@@ -55,9 +49,9 @@ typedef enum
  */
 typedef enum
 {
-    I_PLUS_MINUS,		/// +-
+    I_PLUS_MINUS,		/// 0 +-
     I_MUL_DIV,			/// */
-    I_REL_OP,			/// relation operator
+    I_REL_OP,			/// r
     I_LEFT_BRACKET,		/// (
     I_RIGHT_BRACKET,	/// )
     I_DATA,				/// i

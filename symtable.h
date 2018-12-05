@@ -14,7 +14,7 @@
 #include "token.h"
 
 
-#define MAX_TABLE_SIZE 2039   //prime number
+#define MAX_TABLE_SIZE 80   //TODO
 
 /**
  * @struct Symbol table item representation
