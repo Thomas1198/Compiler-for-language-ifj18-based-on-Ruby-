@@ -73,7 +73,7 @@
 #define INPUTS \
     "\n #INPUTS" \
     "\n LABEL $inputs" \
-    "\n READ x   string" \
+    "\n READ GF@%return string" \
     "\n RETURN"
 
 #define INPUTI \
