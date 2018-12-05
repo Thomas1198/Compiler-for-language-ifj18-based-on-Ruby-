@@ -327,17 +327,22 @@ int parsing(tDList token_list) {
 
 int parse_end(tDList *token_list) {
     end_req--;
+    struct tToken *tmp = get_top(lables_stack);
 
     if (end_req < 0) {
         return SYNTAX_ERROR;
     }
 
+    if(!b_else){
+        generate_if_else_part(tmp->value.i);
+    }
+b_else=false;
     if (end_req == 0 && func) {
         generate_function_ret(*act_fun);
         generate_function_end(*act_fun);
         func = false;
     } else {
-        struct tToken *tmp = get_top(lables_stack);
+
 
         if (is_set_type(*tmp, KEY_WORD_IF)) {
 
@@ -949,6 +954,8 @@ void free_build_in() {
 int parse_else(tDList *token_list) {
     struct tToken token_actual;
     struct tToken *tmp = get_top(lables_stack);
+
+    b_else=true;
 
     generate_if_else_part(tmp->value.i);
 
