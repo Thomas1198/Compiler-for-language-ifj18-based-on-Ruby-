@@ -154,10 +154,7 @@ void generate_value(struct tToken var) {
             ADD_CODE(var.content_string->str);
             ADD_CODE("\n");
             return;
-            /*case BOOLEAN:
-                sprintf(string, "%g", var.value.boolean);   //TODO REMOVE
-                ADD_CODE("bool@"); ADD_CODE(string); ADD_CODE("\n");
-                return;*/
+
         case NIL:
             ADD_CODE("nil@nil");
             return;
@@ -373,24 +370,12 @@ void generate_stack_op1_to_double() {
     ADD_INSTRUCTION("INT2FLOATS");
 }
 
-
-void generate_stack_op1_to_integer() {
-    ADD_INSTRUCTION("FLOAT2INTS");
-}
-
-
 void generate_stack_op2_to_double() {
     ADD_INSTRUCTION("POPS GF@%tmp1");
     ADD_INSTRUCTION("INT2FLOATS");
     ADD_INSTRUCTION("PUSHS GF@%tmp1");
 }
 
-
-void generate_stack_op2_to_integer() {
-    ADD_INSTRUCTION("POPS GF@%tmp1");
-    ADD_INSTRUCTION("FLOAT2INTS");
-    ADD_INSTRUCTION("PUSHS GF@%tmp1");
-}
 
 void generate_concats() {
     ADD_INSTRUCTION("POPS GF@%tmp2");
