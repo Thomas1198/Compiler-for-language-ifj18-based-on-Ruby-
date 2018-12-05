@@ -325,7 +325,9 @@ int parse_end(tDList *token_list) {
         generate_function_end(*act_fun);
         func = false;
     }
-    //  generate_if_end(*main,1,1);
+
+
+      generate_if_end(*main,if_id,if_deep);
 
 
     if (end_req < 0) {
@@ -428,9 +430,9 @@ int parse_if(tDList *token_list) {
     }
 
     if (func) {
-        //     generate_if_start(*main,1,1);
+             generate_if_start(*main,if_id,if_deep);
     } else {
-        //   generate_if_start(*act_fun,1,1);
+           generate_if_start(*act_fun,if_id,if_deep);
     }
 
     free(main);
@@ -545,9 +547,12 @@ int parse_assign_value(tDList *token_list) {
 
         if (tmp != NULL) {
             if (tmp->funkce) {
+                generate_function_before_par();
                 errcode = parse_call_function(token_list, token_actual.par_count);
-                generate_function_return_val_assign(*value);
 
+
+
+                generate_function_return_val_assign(*value);
                 return errcode;
             }
         }
