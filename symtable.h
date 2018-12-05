@@ -1,11 +1,8 @@
 /**
  * @file symtable.h
- * @author
- * @brief
+ * @author Tomas Dorda (xdorda00)
+ * @brief Implementation of symbol table using hash table.
  */
-
-
-
 
 #ifndef PROJECT_SYMTABLE_H
 #define PROJECT_SYMTABLE_H
@@ -17,7 +14,7 @@
 #include "token.h"
 
 
-#define MAX_TABLE_SIZE 20 //TODO change the number
+#define MAX_TABLE_SIZE 80   //TODO
 
 /**
  * @struct Symbol table item representation

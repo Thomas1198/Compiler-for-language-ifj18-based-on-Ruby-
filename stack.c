@@ -1,7 +1,7 @@
 /**
  * @file stack.c
- * @author Tomas Dorda
- * @brief
+ * @author Tomas Dorda (xdorda00)
+ * @brief Implementation of stack
  */
 
 #include "stack.h"
@@ -11,7 +11,7 @@ void stack_init(Symstack *stack) {
     stack->top = NULL;
 }
 
-bool is_token_null(struct tToken *token){
+bool is_token_null(struct tToken *token) {
     switch (token->data_type_of_token) {
         case INT:
             return token->value.i == 0;
@@ -32,7 +32,7 @@ bool stack_push(Symstack *stack, struct tToken *token, set_type set, data_type t
     if (token != NULL) {
         new_item->data = token;
         new_item->set = token->set_type_of_token;
-        new_item->type =token->data_type_of_token;
+        new_item->type = token->data_type_of_token;
         new_item->is_null = is_token_null(token);
     } else {
         new_item->data = NULL;
@@ -46,7 +46,6 @@ bool stack_push(Symstack *stack, struct tToken *token, set_type set, data_type t
     stack->top = new_item;
     return true;
 }
-
 
 void stack_pop_count(Symstack *stack, int count) {
     for (int i = 0; i < count; i++)
@@ -66,7 +65,7 @@ bool stack_insert_after_top(Symstack *stack, struct tToken *token, set_type set,
             if (token != NULL) {
                 new_item->data = token;
                 new_item->set = token->set_type_of_token;
-                new_item->type =token->data_type_of_token;
+                new_item->type = token->data_type_of_token;
                 new_item->is_null = is_token_null(token);
             } else {
                 new_item->data = NULL;
@@ -92,7 +91,6 @@ bool stack_insert_after_top(Symstack *stack, struct tToken *token, set_type set,
     return false;
 }
 
-
 bool stack_pop(Symstack *stack) {
     if (!stack_is_empty(stack)) {
         Sitem *tmp = stack->top;
@@ -105,8 +103,7 @@ bool stack_pop(Symstack *stack) {
 
 Sitem *stack_get_top_term(Symstack *stack) {
 
-    for (Sitem *tmp = stack->top; tmp != NULL; tmp = tmp->next)
-    {
+    for (Sitem *tmp = stack->top; tmp != NULL; tmp = tmp->next) {
         if (tmp->set < STOP)
             return tmp;
     }
@@ -124,7 +121,6 @@ bool stack_is_empty(Symstack *stack) {
         return false;
     return true;
 }
-
 
 void stack_free(Symstack *stack) {
     while (stack_pop(stack));

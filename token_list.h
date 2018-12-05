@@ -1,8 +1,9 @@
 /**
  * @file token_list.h
- * @author
- * @brief
+ * @author Tomas Dorda (xdorda00)
+ * @brief Token list functions and representation
  */
+
 
 
 #ifndef PROJECT_TOKEN_LIST_H
@@ -11,12 +12,19 @@
 #include "token.h"
 #include "error.h"
 
+
+/**
+ * @struct List element representation
+ */
 typedef struct tDLElem {
     struct tToken token;
     struct tDLElem *lptr;
     struct tDLElem *rptr;
 } *tDLElemPtr;
 
+/**
+ * @struct List representation
+ */
 typedef struct {
     tDLElemPtr First;
     tDLElemPtr Act;

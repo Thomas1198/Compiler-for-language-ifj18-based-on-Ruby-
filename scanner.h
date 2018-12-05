@@ -1,7 +1,7 @@
 /**
  * @file scanner.h
  * @author Patrik Strnad (xstrna11)
- * @brief
+ * @brief Scanner, tokenize input
  */
 
 #ifndef PROJECT_SCANNER_H

@@ -1,16 +1,15 @@
 /**
- * @file symtable.c
- * @author
- * @brief
+ * @file symtable.h
+ * @author Tomas Dorda (xdorda00)
+ * @brief Implementation of symbol table using hash table.
  */
 
 #include "symtable.h"
 
-
 /**
  * @brief calculates hash and returning index to table
  * @param str string which is used to calculate hash
- * @return table index.
+ * @return table index
  */
 static unsigned long hash(const char *str) {
     unsigned int h = 0;
