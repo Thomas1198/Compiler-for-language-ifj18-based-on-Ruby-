@@ -394,10 +394,10 @@ static int reduce_by_rule() {
                     break;
 
         }
-
-        stack_pop_count(&stack, count + 1);
-        stack_push(&stack, NULL, NON_TERM, final_type);
     }
+    stack_pop_count(&stack, count + 1);
+    stack_push(&stack, NULL, NON_TERM, final_type);
+
     return 0;
 }
 
