@@ -1,11 +1,17 @@
 /**
  * @file scanner.c
  * @author Patrik Strnad (xstrna11)
- * @brief Scanner, tokenize input
+ * @brief Error codes constants and function to print errors.
  */
+
 
 #include "scanner.h"
 
+
+
+//end of includes
+
+//The main function of the scanner. decides what's the next token in the input file. It is mostly being used by the parser.
 struct tToken get_token(FILE *source_file) {
     if (source_file == NULL) {
         ErrorPrint(INTERNAL_ERROR, "[scanner.c][get_token] failed mount");
@@ -17,17 +23,19 @@ struct tToken get_token(FILE *source_file) {
     struct tToken token;
     init_token(&token);
 
+    //Setuji current_state na DEFAULT
     SCANNER_STATE current_state = START;
 
+    //Declaration of the scanner char
     int c = 0;
 
-    while (true) {
+    while (true) { //infinite cycle with ensured exits and returns
 
         if (start_token < 2) {
             start_token++;
         }
 
-        c = getc(source_file);
+        c = getc(source_file); //taking char by char to decide whats is the type of the token.
 
         switch (current_state) {
             case (START):
@@ -134,7 +142,7 @@ struct tToken get_token(FILE *source_file) {
                     new_line = false;
                 }
                 ungetc(c, source_file);
-                dynamic_string_add_const_str(token.content_string, "\n");
+                dynamic_string_add_const_str(token.content_string, "\\n");
                 token.set_type_of_token = CHAR_EOL;
                 return token;
 
