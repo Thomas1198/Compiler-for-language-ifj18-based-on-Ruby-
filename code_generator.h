@@ -294,9 +294,7 @@ void generate_var_decl(struct tToken var);
 
 /**
  * @brief generate label
- * @param function tToken with function
  * @param label_index index of label
- * @param label_deep deep of label
  * Nepouzivej
  */
 
@@ -309,49 +307,37 @@ void generate_if_head();
 
 /**
  * @brief generate if start
- * @param function tToken with function
  * @param label_index index of label
- * @param label_deep deep of label
  */
 void generate_if_start(int label_index);
 
 /**
  * @brief generate if else
- * @param function tToken with function
  * @param label_index index of label
- * @param label_deep deep of label
  */
 void generate_if_else_part(int label_index);
 
 /**
  * @brief generate if end
- * @param function tToken with function
  * @param label_index index of label
- * @param label_deep deep of label
  */
 void generate_if_end(int label_index);
 
 /**
  * @brief generate while end
- * @param function tToken with function
  * @param label_index index of label
- * @param label_deep deep of label
  */
 void generate_while_head(int label_index);
 
 /**
  * @brief generate while start
- * @param function tToken with function
  * @param label_index index of label
- * @param label_deep deep of label
  */
 void generate_while_start(int label_index);
 
 /**
  * @brief generate while end
- * @param function tToken with function
  * @param label_index index of label
- * @param label_deep deep of label
  */
 void generate_while_end(int label_index);
 
@@ -444,9 +430,6 @@ void generate_save_result_to_var(struct tToken var);
  */
 void generate_clear_stack();
 
-
-
-
 /// Funkce pro prevod mezi dat.typama v stacku
 /**
  * @brief convert first operand to double
@@ -454,22 +437,18 @@ void generate_clear_stack();
 void generate_stack_op1_to_double();
 
 /**
- * @brief convert second operand to intiger
- */
-void generate_stack_op1_to_integer();
-
-/**
  * @brief convert second operand to double
  */
 void generate_stack_op2_to_double();
-
 /**
- * @brief convert second operand to intiger
+ * @brief convcaterance two strings
  */
-void generate_stack_op2_to_integer();
 
 void generate_concats();
-
+/**
+ * @brief convert second operand to double
+ * @par function name of function
+ */
 void generate_function_ret(struct tToken function);
 
 
