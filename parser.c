@@ -8,11 +8,11 @@ int run_parser(FILE *source_code) {
     DLInitList(&token_list);
 
     symtable_create(&hTable);
-lables_stack=(struct tStack*) malloc(sizeof(struct tStack));
+    lables_stack = (struct tStack *) malloc(sizeof(struct tStack));
 
     stack_init(lables_stack);
 
-    lables_stack=(struct tStack*)malloc(sizeof(struct tStack));
+    lables_stack = (struct tStack *) malloc(sizeof(struct tStack));
 
     func = false;
 
@@ -301,7 +301,7 @@ int parsing(tDList token_list) {
             case KEY_WORD_ELSE: {
 
                 if ((err_code = parse_else(&token_list) != 0)) {
-                    printf("%d",err_code);
+                    printf("%d", err_code);
                     return err_code;
                 }
                 break;
@@ -445,22 +445,36 @@ int parse_if(tDList *token_list) {
     init_token(tmp);
 
     tmp->value.i = lable++;
-tmp->set_type_of_token=KEY_WORD_IF;
+    tmp->set_type_of_token = KEY_WORD_IF;
     stack_push(lables_stack, tmp, KEY_WORD_IF, INT);
 
-    if (!func) {
-        generate_if_start(tmp->value.i);
-    } else {
-        generate_if_start(tmp->value.i);
-    }
+
+    generate_if_start(tmp->value.i);
+
     return 0;
 }
 
 int parse_while(tDList *token_list) {
+    int err_code;
+
+    generate_while_head(lable);
 
     end_req++;
+    err_code=parse_condition(token_list, KEY_WORD_DO);
+    if(err_code!=0){
+        return 0;
+    }
 
-    return parse_condition(token_list, KEY_WORD_DO);
+    struct tToken *tmp;
+
+    tmp = (struct tToken *) malloc(sizeof(struct tToken));
+    init_token(tmp);
+
+    tmp->value.i = lable++;
+    tmp->set_type_of_token = KEY_WORD_WHILE;
+    stack_push(lables_stack, tmp, KEY_WORD_WHILE, INT);
+
+    return 0;
 
 }
 
@@ -557,11 +571,11 @@ int parse_assign_value(tDList *token_list) {
     DLInitList(&tmp_list);
 
 
-    tmp=symtable_get(&hTable, token_list->Act->lptr->token.content_string);
+    tmp = symtable_get(&hTable, token_list->Act->lptr->token.content_string);
 
-    if(tmp!=NULL){
-        if(!tmp->assigned){
-            tmp->assigned=true;
+    if (tmp != NULL) {
+        if (!tmp->assigned) {
+            tmp->assigned = true;
             generate_var_decl(token_list->Act->lptr->token);
         }
     }
@@ -930,12 +944,15 @@ void free_build_in() {
     free(print);
 }
 
-int parse_else(tDList *token_list){
+int parse_else(tDList *token_list) {
     struct tToken token_actual;
+    struct tToken *tmp = get_top(lables_stack);
 
-    try_next_token_list_p(token_actual,token_list);
-    if(!is_set_type(token_actual,CHAR_EOL)){
-exit(2);
+    generate_if_else_part(tmp->value.i);
+
+    try_next_token_list_p(token_actual, token_list);
+    if (!is_set_type(token_actual, CHAR_EOL)) {
+        exit(2);
     }
     return 0;
 }
