@@ -1,5 +1,15 @@
 #include "expression.h"
 
+#define FREE_RESOURCES_RETURN(return_code)		\
+	do {										\
+		stack_free(&stack);						\
+		return return_code;				    	\
+	} while(0)
+
+
+#define GENERATE_CODE(_callback, ...)								\
+	(_callback(__VA_ARGS__))
+
 // Precedence table
 int prec_table[PREC_TAB_SIZE][PREC_TAB_SIZE] =
         {
