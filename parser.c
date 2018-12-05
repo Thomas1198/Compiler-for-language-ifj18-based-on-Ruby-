@@ -319,16 +319,16 @@ int parse_end(tDList *token_list) {
     main = (struct tToken *) malloc(sizeof(struct tToken));
     init_token(main);
 
+
     dynamic_string_add_const_str(main->content_string, "main");
     if (end_req == 0 && func) {
         generate_function_ret(*act_fun);
         generate_function_end(*act_fun);
         func = false;
+    } else {
+        generate_if_end(*main, if_id + 1, if_deep);
+        if_deep--;
     }
-
-
-      generate_if_end(*main,if_id,if_deep);
-
 
     if (end_req < 0) {
         return SYNTAX_ERROR;
@@ -414,6 +414,11 @@ int check_end_of_line(tDList *token_list) {
 int parse_if(tDList *token_list) {
     int err_code;
     struct tToken *main;
+
+    if_deep++;
+    if_act = if_id;
+    if_id = if_id + 2;
+
     main = (struct tToken *) malloc(sizeof(struct tToken));
 
     init_token(main);
@@ -421,18 +426,17 @@ int parse_if(tDList *token_list) {
     dynamic_string_add_const_str(main->content_string, "main");
 
     generate_if_head();
-//TODO
-//tom podmínka
+
     end_req++;
     err_code = parse_condition(token_list, KEY_WORD_THEN);
     if (err_code != 0) {
         return err_code;
     }
 
-    if (func) {
-             generate_if_start(*main,if_id,if_deep);
+    if (!func) {
+        generate_if_start(*main, if_act, if_deep);
     } else {
-           generate_if_start(*act_fun,if_id,if_deep);
+        generate_if_start(*act_fun, if_act, if_deep);
     }
 
     free(main);
@@ -464,6 +468,9 @@ int parse_condition(tDList *token_list, int set) {
         free(tmp_list);
         return errcode;
     }
+
+
+    expression(tmp_list, &tmp_list->First->token);
 
     free(tmp_list);
     return check_end_of_line(token_list);
@@ -549,7 +556,6 @@ int parse_assign_value(tDList *token_list) {
             if (tmp->funkce) {
                 generate_function_before_par();
                 errcode = parse_call_function(token_list, token_actual.par_count);
-
 
 
                 generate_function_return_val_assign(*value);
@@ -794,9 +800,8 @@ int parse_condition_expr(tDList *token_list, int set, tDList *tmp_list) {
         return SYNTAX_ERROR;
     }
 
-    errorcode = expression(tmp_list, &token_actual);
 
-    return errorcode;
+    return 0;
 }
 
 
