@@ -144,7 +144,7 @@ struct tToken get_token(FILE *source_file) {
                     new_line = false;
                 }
                 ungetc(c, source_file);
-                dynamic_string_add_const_str(token.content_string, "\\n");
+                dynamic_string_add_const_str(token.content_string, "\n");
                 token.set_type_of_token = CHAR_EOL;
                 return token;
 
