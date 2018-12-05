@@ -235,7 +235,7 @@ static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *o
                 return PROG_SEM_ERROR;
 
             if (op3->is_null)
-                return ZERO_DIVISION_ERROR;
+                exit(ZERO_DIVISION_ERROR);
 
             if (op1->type == INT && op3->type == INT)
                 break;
@@ -284,7 +284,7 @@ static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *o
 
 
 /**
- * Function reduces symbols after STOP symbol if rule for reducing is found.
+ * Reduces symbols after STOP symbol if rule for reducing is found.
  *
  * @param data Pointer to table.
  * @return Given exit code.
@@ -459,7 +459,7 @@ int expression(tDList *list, struct tToken *save_location) {
     if (save_location != NULL) {
         generate_pops();
         generate_clear_stack();
-        if(save_location->data_type_of_token != BOOLEAN)
+        if(save_location->data_type_of_token != BOOLEAN && save_location->set_type_of_token == KEY_WORD_END)
             GENERATE_CODE(generate_save_result_to_var, *save_location);
     }
 
