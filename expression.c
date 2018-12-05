@@ -470,6 +470,7 @@ int expression(tDList *list, struct tToken *save_location) {
 
     if (save_location != NULL) {
         generate_pops();
+        generate_clear_stack();
         if(save_location->data_type_of_token != BOOLEAN)
             GENERATE_CODE(generate_save_result_to_var, *save_location);
     }
