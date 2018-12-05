@@ -1,26 +1,26 @@
 #include "expression.h"
 
-#define FREE_RESOURCES_RETURN(return_code)		\
-	do {										\
-		stack_free(&stack);						\
-		return return_code;				    	\
-	} while(0)
+#define FREE_RESOURCES_RETURN(return_code)        \
+    do {                                        \
+        stack_free(&stack);                        \
+        return return_code;                        \
+    } while(0)
 
 
-#define GENERATE_CODE(_callback, ...)								\
-	(_callback(__VA_ARGS__))
+#define GENERATE_CODE(_callback, ...)                                \
+    (_callback(__VA_ARGS__))
 
 // Precedence table
 int prec_table[PREC_TAB_SIZE][PREC_TAB_SIZE] =
         {
                 //	|+- | */| r | ( | ) | i | $ |
-                { R , S , S , S , R , S , R }, /// +-
-                { R , R , R , S , R , S , R }, /// */
-                { S , S , S , S , R , S , R }, /// r (relation operators) = <> <= < >= >
-                { S , S , S , S , E , S , N }, /// (
-                { R , R , R , N , R , N , R }, /// )
-                { R , R , R , N , R , N , R }, /// i (id, int, double, string)
-                { S , S , S , S , N , S , N }  /// $
+                {R, S, S, S, R, S, R}, /// +-
+                {R, R, R, S, R, S, R}, /// */
+                {S, S, S, S, R, S, R}, /// r (relation operators) = <> <= < >= >
+                {S, S, S, S, E, S, N}, /// (
+                {R, R, R, N, R, N, R}, /// )
+                {R, R, R, N, R, N, R}, /// i (id, int, double, string)
+                {S, S, S, S, N, S, N}  /// $
         };
 
 Symstack stack;
@@ -92,8 +92,7 @@ static Prec_tab_rules test_rule(int num, Sitem *op1, Sitem *op2, Sitem *op3) {
                 op3->set == CHAR_RIGHT_BRACKET)
                 return LBR_NT_RBR;
 
-            if (op1->set == NON_TERM && op3->set == NON_TERM)
-            {
+            if (op1->set == NON_TERM && op3->set == NON_TERM) {
                 switch (op2->set) {
                     // rule E -> E + E
                     case CHAR_OPERATOR_PLUS:
@@ -188,7 +187,7 @@ static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *o
     bool retype_op3_to_integer = false;
 
     if (rule == OPERAND) {
-        if (op1->type == UNDEFINED)
+        if (op1->set == UNDEFINED)
             return PROG_SEM_ERROR;
 
         if (op1->type == BOOLEAN)
@@ -299,6 +298,7 @@ jej využít pouze u příkazů if a while.
             break;
     }
 
+    //TODO
     if (retype_op1_to_double) {
         GENERATE_CODE(generate_stack_op2_to_double);
     }
@@ -325,7 +325,7 @@ jej využít pouze u příkazů if a while.
  * @param data Pointer to table.
  * @return Given exit code.
  */
-static int reduce_by_rule() {
+static int reduce_by_rule(struct tToken *save_location) {
 
     int result;
 
@@ -360,166 +360,142 @@ static int reduce_by_rule() {
         GENERATE_CODE(generate_concats);
     } else {
         switch (rule_for_code_gen) {
-                case NT_PLUS_NT:
-                    generate_adds();
+            case NT_PLUS_NT:
+                generate_adds();
                 break;
 
-                case NT_MINUS_NT:
-                    generate_subs();
+            case NT_MINUS_NT:
+                generate_subs();
                 break;
 
-                case NT_MUL_NT:
-                    generate_muls();
+            case NT_MUL_NT:
+                generate_muls();
                 break;
 
-                case NT_DIV_NT:
-                    generate_divs();
+            case NT_DIV_NT:
+                generate_divs();
                 break;
 
-                case NT_EQ_NT:
-                    generate_eqs();
+            case NT_EQ_NT:
+                generate_eqs();
                 break;
 
-                case NT_NEQ_NT:
-                    generate_not_eqs();
+            case NT_NEQ_NT:
+                generate_not_eqs();
                 break;
 
-                case NT_LEQ_NT:
-                    generate_ls_eqs();
+            case NT_LEQ_NT:
+                generate_ls_eqs();
                 break;
 
-                case NT_LTN_NT:
-                    generate_lts();
+            case NT_LTN_NT:
+                generate_lts();
                 break;
 
-                case NT_MEQ_NT:
-                    generate_gt_eqs();
+            case NT_MEQ_NT:
+                generate_gt_eqs();
                 break;
 
-                case NT_MTN_NT:
-                    generate_gts();
+            case NT_MTN_NT:
+                generate_gts();
                 break;
 
-                default:
-                    break;
+            default:
+                break;
 
         }
     }
     stack_pop_count(&stack, count + 1);
     stack_push(&stack, NULL, NON_TERM, final_type);
-
+    save_location->data_type_of_token = final_type;
     return 0;
 }
+
 //TODO
 //pridat kontrolu deleni nulou
-    int expression(tDList *list, struct tToken *save_location) {
-        int result = SYNTAX_ERROR;
+int expression(tDList *list, struct tToken *save_location) {
+    struct tToken *tmp;
+    if ((tmp = symtable_get(&hTable, save_location->content_string)) != NULL)
+        save_location = tmp;
 
-        stack_init(&stack);
+    int result;
 
-        if (!stack_push(&stack, NULL, DOLLAR, UNDEFINED))
-            ErrorPrint(INTERNAL_ERROR, "[expressions.c][expression()]");
+    stack_init(&stack);
 
-        Sitem *top_stack_terminal;
-        set_type actual_symbol;
+    if (!stack_push(&stack, NULL, DOLLAR, UNDEFINED))
+        ErrorPrint(INTERNAL_ERROR, "[expressions.c][expression()]");
 
-        bool success = false;
-        DLFirst(list);
+    Sitem *top_stack_terminal;
+    set_type actual_symbol;
+    struct tToken *actual_token;
 
-        do {
-            if (list->Act != NULL)
-                actual_symbol = list->Act->token.set_type_of_token;
-            else
-                actual_symbol = DOLLAR;
-            top_stack_terminal = stack_get_top_term(&stack);
+    bool success = false;
+    DLFirst(list);
 
-            if (top_stack_terminal == NULL)
-                FREE_RESOURCES_RETURN(INTERNAL_ERROR);
+    do {
+        if (list->Act != NULL) {
+            actual_symbol = list->Act->token.set_type_of_token;
+            if ((actual_token = symtable_get(&hTable, list->Act->token.content_string)) == NULL)
+                actual_token = &list->Act->token;
+        } else
+            actual_symbol = DOLLAR;
+        top_stack_terminal = stack_get_top_term(&stack);
 
-            switch (prec_table[prec_table_index(top_stack_terminal->set)][prec_table_index(
-                    actual_symbol)]) {
-                case S:
-                    if (!stack_insert_after_top(&stack, NULL, STOP, UNDEFINED))
-                        FREE_RESOURCES_RETURN(INTERNAL_ERROR);
+        if (top_stack_terminal == NULL)
+            FREE_RESOURCES_RETURN(INTERNAL_ERROR);
 
-                    if (!stack_push(&stack, &list->Act->token, actual_symbol, list->Act->token.data_type_of_token))
-                        FREE_RESOURCES_RETURN(INTERNAL_ERROR);
+        switch (prec_table[prec_table_index(top_stack_terminal->set)][prec_table_index(
+                actual_symbol)]) {
+            case S:
+                if (!stack_insert_after_top(&stack, NULL, STOP, UNDEFINED))
+                    FREE_RESOURCES_RETURN(INTERNAL_ERROR);
 
-                    if (actual_symbol == IDENTIFIER_NAME) {
-                        GENERATE_CODE(generate_push_var, list->Act->token);
+                if (!stack_push(&stack, actual_token, actual_symbol, actual_token->data_type_of_token))
+                    FREE_RESOURCES_RETURN(INTERNAL_ERROR);
 
-                    } else if (actual_symbol == CHAR_INTEGER || actual_symbol == CHAR_DOUBLE ||
-                               actual_symbol == LITERAL_STRING) {
-                        GENERATE_CODE(generate_push_value, list->Act->token);
-                    }
-                    DLSucc(list);
+                if (actual_symbol == IDENTIFIER_NAME) {
+                    GENERATE_CODE(generate_push_var, *actual_token);
 
-                    break;
+                } else if (actual_symbol == CHAR_INTEGER || actual_symbol == CHAR_DOUBLE ||
+                           actual_symbol == LITERAL_STRING) {
+                    GENERATE_CODE(generate_push_value, *actual_token);
+                }
+                DLSucc(list);
 
-                case E:
-                    stack_push(&stack, &list->Act->token, actual_symbol, list->Act->token.data_type_of_token);
-                    DLSucc(list);
-                    break;
+                break;
 
-                case R:
-                    if ((result = reduce_by_rule()))
-                        FREE_RESOURCES_RETURN(result);
-                    break;
+            case E:
+                stack_push(&stack, actual_token, actual_symbol, actual_token->data_type_of_token);
+                DLSucc(list);
+                break;
 
-                case N:
-                    if (actual_symbol == DOLLAR && top_stack_terminal->set == DOLLAR)
-                        success = true;
-                    else
-                        FREE_RESOURCES_RETURN(SYNTAX_ERROR);
-                    break;
-            }
-        } while (!success);
+            case R:
+                if ((result = reduce_by_rule(save_location)))
+                    FREE_RESOURCES_RETURN(result);
+                break;
 
-        Sitem *final_non_terminal = stack.top;
-        if (final_non_terminal == NULL)
-            ErrorPrint(INTERNAL_ERROR, "[expressions]");
-        if (final_non_terminal->set != NON_TERM)
-            ErrorPrint(INTERNAL_ERROR, "[expressions]");
-
-        //TODO koknrola final non terminal data type a save loc data type
-
-        generate_pops();
-        if (save_location != NULL) {
-
-            switch (save_location->data_type_of_token) {
-                case INT:
-                    if (final_non_terminal->type == STRING_DT)
-                        FREE_RESOURCES_RETURN(PROG_SEM_ERROR);
-                    GENERATE_CODE(generate_save_result_to_var, *save_location);
-                    break;
-
-                case FLOAT:
-                    if (final_non_terminal->type == STRING_DT)
-                        FREE_RESOURCES_RETURN(PROG_SEM_ERROR);
-                    GENERATE_CODE(generate_save_result_to_var, *save_location);
-                    break;
-
-                case STRING_DT:
-                    if (final_non_terminal->type != STRING_DT)
-                        FREE_RESOURCES_RETURN(PROG_SEM_ERROR);
-                    GENERATE_CODE(generate_save_result_to_var, *save_location);
-                    break;
-
-                case UNDEFINED:
-                    GENERATE_CODE(generate_save_result_to_var, *save_location);
-                    break;
-
-                case BOOLEAN:
-                    if (final_non_terminal->type != BOOLEAN)
-                        FREE_RESOURCES_RETURN(PROG_SEM_ERROR);
-                    GENERATE_CODE(generate_save_result_to_var, *save_location);
-                    break;
-
-                default:
-                    break;
-            }
+            case N:
+                if (actual_symbol == DOLLAR && top_stack_terminal->set == DOLLAR)
+                    success = true;
+                else
+                    FREE_RESOURCES_RETURN(SYNTAX_ERROR);
+                break;
         }
+    } while (!success);
 
-        FREE_RESOURCES_RETURN(0);
+    Sitem *final_non_terminal = stack.top;
+    if (final_non_terminal == NULL)
+        ErrorPrint(INTERNAL_ERROR, "[expressions]");
+    if (final_non_terminal->set != NON_TERM)
+        ErrorPrint(INTERNAL_ERROR, "[expressions]");
+
+    //TODO koknrola final non terminal data type a save loc data type
+
+    if (save_location != NULL) {
+        generate_pops();
+        GENERATE_CODE(generate_save_result_to_var, *save_location);
     }
+
+    FREE_RESOURCES_RETURN(0);
+}
 
