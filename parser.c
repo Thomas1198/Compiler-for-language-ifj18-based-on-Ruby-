@@ -550,7 +550,9 @@ int parse_condition(tDList *token_list, int set) {
     }
 
 
-    expression(tmp_list, &tmp_list->First->token);
+    if((errcode=expression(tmp_list, end))!=0){
+        return errcode;
+    }
 
     free(tmp_list);
     return check_end_of_line(token_list);
@@ -988,7 +990,7 @@ int assign_value(tDList *token_list) {
 
     errcode = expression(&tmp_list, end);
     if (errcode != 0) {
-        return errcode;
+        exit(errcode);
     }
 
     return 0;
