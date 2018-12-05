@@ -86,7 +86,7 @@ bool stack_pop(Symstack *stack);
  * @param stack Pointer to stack.
  * @return Top item or NULL if it does not exist
  */
-Sitem *stack_get_top_item(Symstack *stack);
+Sitem *stack_get_top_term(Symstack *stack);
 
 /**
  * Checks if is stack empty.

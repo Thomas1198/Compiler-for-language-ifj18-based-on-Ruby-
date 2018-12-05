@@ -22,12 +22,13 @@ bool stack_push(Symstack *stack, struct tToken *token, set_type set, data_type t
         new_item->data = token;
         new_item->set = token->set_type_of_token;
         new_item->type =token->data_type_of_token;
-        new_item->next = stack->top;
     } else {
         new_item->data = NULL;
         new_item->set = set;
         new_item->type = type;
     }
+
+    new_item->next = stack->top;
 
     stack->top = new_item;
     return true;
@@ -53,7 +54,6 @@ bool stack_insert_after_top(Symstack *stack, struct tToken *token, set_type set,
                 new_item->data = token;
                 new_item->set = token->set_type_of_token;
                 new_item->type =token->data_type_of_token;
-                new_item->next = stack->top;
             } else {
                 new_item->data = NULL;
                 new_item->set = set;
@@ -88,22 +88,22 @@ bool stack_pop(Symstack *stack) {
     return false;
 }
 
-Sitem *stack_get_top_item(Symstack *stack) {
-    Sitem *tmp = stack->top;
+Sitem *stack_get_top_term(Symstack *stack) {
 
-    while (!stack_is_empty(stack)) {
+    for (Sitem *tmp = stack->top; tmp != NULL; tmp = tmp->next)
+    {
         if (tmp->set < STOP)
             return tmp;
-        tmp = tmp->next;
     }
+
     return NULL;
 }
 
 
 bool stack_is_empty(Symstack *stack) {
     if (stack->top != NULL)
-        return true;
-    return false;
+        return false;
+    return true;
 }
 
 

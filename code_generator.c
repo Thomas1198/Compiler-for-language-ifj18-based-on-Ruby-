@@ -144,7 +144,7 @@ void generate_value(struct tToken var) {
             ADD_CODE("\n");
             return;
         case FLOAT:
-            sprintf(string, "%g", var.value.d);
+            sprintf(string, "%a", var.value.d);
             ADD_CODE("float@");
             ADD_CODE(string);
             ADD_CODE("\n");
@@ -371,13 +371,13 @@ void generate_ls_eqs() {
 }
 
 void generate_pops() {
-    ADD_INSTRUCTION("POPS GF%result");
+    ADD_INSTRUCTION("POPS GF@%result");
 }
 
 void generate_save_result_to_var(struct tToken var) {
-    ADD_CODE("MOVE LF%");
+    ADD_CODE("MOVE LF@%");
     ADD_CODE(var.content_string->str);
-    ADD_CODE(" GF%result\n");
+    ADD_CODE(" GF@%result\n");
 }
 
 void generate_clear_stack() {

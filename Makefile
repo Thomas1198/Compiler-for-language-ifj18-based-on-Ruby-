@@ -10,7 +10,7 @@ TARGETS = ifj18
 
 all: $(TARGETS)
 
-ifj18: main.c scanner.o parser.o code_generator.o dynamic_string.o symtable.o token_list.o token.o error.o
+ifj18: main.c scanner.o parser.o code_generator.o dynamic_string.o symtable.o token_list.o token.o error.o expression.o stack.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 parser.o: parser.c error.o scanner.o token_list.o symtable.o
@@ -37,6 +37,13 @@ token.o: token.c dynamic_string.o
 
 error.o: error.c error.h
 	$(CC) $(CFLAGS) $^ -c
+
+expression.o: expression.c expression.h
+	$(CC) $(CFLAGS) $^ -c
+
+stack.o: stack.c stack.h
+	$(CC) $(CFLAGS) $^ -c
+
 
 clean:
 	@rm -f *.o *.zip ifj18

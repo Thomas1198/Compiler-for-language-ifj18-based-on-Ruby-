@@ -51,8 +51,8 @@ typedef enum {
     END_PRECE,
     EXPR,
     NONE,
-    STOP,
     DOLLAR,
+    STOP,
     NON_TERM
 } set_type;
 

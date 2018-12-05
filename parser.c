@@ -9,6 +9,8 @@ int run_parser(FILE *source_code) {
 
     symtable_create(&hTable);
 
+    func = false;
+
     generator_start();
     init_build_in();
     if ((error_code = first_run(&token_list, source_code)) != 0) {
@@ -314,9 +316,10 @@ int parsing(tDList token_list) {
 int parse_end(tDList *token_list) {
     end_req--;
 
-    if (end_req == 0) {
+    if (end_req == 0 && func) {
         generate_function_ret(*act_fun);
         generate_function_end(*act_fun);
+        func = false;
     }
 
     if (end_req < 0) {
@@ -330,6 +333,8 @@ int parse_end(tDList *token_list) {
 int parse_def(tDList *token_list) {
     int err_code;
     struct tToken token_actual;
+
+    func = true;
 
     act_fun = &token_list->Act->rptr->token;
 
@@ -399,10 +404,27 @@ int check_end_of_line(tDList *token_list) {
 }
 
 int parse_if(tDList *token_list) {
+    int err_code;
+    struct tToken main;
 
+    dynamic_string_add_const_str(main.content_string,"main");
+
+    generate_if_head();
+//TODO
+//tom podmínka
     end_req++;
+    err_code = parse_condition(token_list, KEY_WORD_THEN);
+    if (err_code != 0) {
+        return err_code;
+    }
 
-    return parse_condition(token_list, KEY_WORD_THEN);
+    if(func){
+        generate_if_start(main);
+    } else{
+        generate_if_start(act_fun,);
+    }
+
+    return 0;
 }
 
 int parse_while(tDList *token_list) {
@@ -574,10 +596,7 @@ int parse_assign_value(tDList *token_list) {
     token_list->Act = token_list->Act->lptr;
 
 
-    //vyhodnotit
-
-    expression(&tmp_list,value);
-
+    expression(&tmp_list, value);
 
 
     return 0;
@@ -838,7 +857,7 @@ int assign_value(tDList *token_list) {
 
 
     }
-    if (br_count != 0 || exp_value){
+    if (br_count != 0 || exp_value) {
 
         exit(SYNTAX_ERROR);
 

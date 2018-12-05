@@ -372,6 +372,7 @@ struct tToken process_integer(struct tToken token) {
 
     token.value.i = value;
     token.set_type_of_token = CHAR_INTEGER;
+    token.data_type_of_token = INT;
     return token;
 }
 
@@ -385,6 +386,7 @@ struct tToken process_decimal(struct tToken token) {
 
     token.value.d = value;
     token.set_type_of_token = CHAR_DOUBLE;
+    token.data_type_of_token = FLOAT;
     return token;
 }
 

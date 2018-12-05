@@ -6,17 +6,18 @@
 #include "stack.h"
 #include "error.h"
 #include "code_generator.h"
+#include "error.h"
 
 #define FREE_RESOURCES_RETURN(return_code)		\
 	do {										\
 		stack_free(&stack);						\
-		return return_code;						\
 	} while(0)
 
-#define GENERATE_CODE(_callback, ...)	(_callback(__VA_ARGS__))
+#define GENERATE_CODE(_callback, ...)								\
+	(_callback(__VA_ARGS__))
 
 
-#define PREC_TAB_SIZE 8
+#define PREC_TAB_SIZE 8 //TODO one smaller
 
 
 /**
@@ -65,20 +66,6 @@ typedef enum
     I_DATA,				/// i
     I_DOLLAR			/// $
 } Prec_table_index_enum;
-
-// Precedence table
-int prec_table[PREC_TAB_SIZE][PREC_TAB_SIZE] =
-        {
-                //	|+- | */| r | ( | ) | i | $ |
-                { R , S , S , S , R , S , R }, /// +-
-                { R , R , R , S , R , S , R }, /// */
-                { S , S , S , S , R , S , R }, /// r (relation operators) = <> <= < >= >
-                { S , S , S , S , E , S , N }, /// (
-                { R , R , R , N , R , N , R }, /// )
-                { R , R , R , N , R , N , R }, /// i (id, int, double, string)
-                { S , S , S , S , N , S , N }  /// $
-        };
-
 
 
 /**

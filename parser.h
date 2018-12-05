@@ -33,9 +33,9 @@
                         is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))
 
 
-int end_req;
+int end_req,if_id,if_deep,if_act;
 
-int if_count;
+bool func;
 
 struct tToken *act_fun, *inputs, *inputi, *inputf, *print;
 

@@ -1,5 +1,17 @@
 #include "expression.h"
 
+// Precedence table
+int prec_table[PREC_TAB_SIZE][PREC_TAB_SIZE] =
+        {
+                //	|+- | */| r | ( | ) | i | $ |
+                { R , S , S , S , R , S , R }, /// +-
+                { R , R , R , S , R , S , R }, /// */
+                { S , S , S , S , R , S , R }, /// r (relation operators) = <> <= < >= >
+                { S , S , S , S , E , S , N }, /// (
+                { R , R , R , N , R , N , R }, /// )
+                { R , R , R , N , R , N , R }, /// i (id, int, double, string)
+                { S , S , S , S , N , S , N }  /// $
+        };
 
 Symstack stack;
 
@@ -58,22 +70,21 @@ static Prec_tab_rules test_rule(int num, Sitem *op1, Sitem *op2, Sitem *op3) {
     switch (num) {
         case 1:
             // rule E -> i
-            if (op1->data->set_type_of_token == IDENTIFIER_NAME || op1->data->set_type_of_token == CHAR_INTEGER ||
-                op1->data->set_type_of_token == NUMBER_DOUBLE || op1->data->set_type_of_token == LITERAL_STRING)
+            if (op1->set == IDENTIFIER_NAME || op1->set == CHAR_INTEGER ||
+                op1->set == NUMBER_DOUBLE || op1->set == LITERAL_STRING)
                 return OPERAND;
 
             return NOT_A_RULE;
 
         case 3:
             // rule E -> (E)
-            if (op1->data->set_type_of_token == CHAR_LEFT_BRACKET && op2->data->set_type_of_token == NON_TERM &&
-                op3->data->set_type_of_token == CHAR_RIGHT_BRACKET)
+            if (op1->set == CHAR_LEFT_BRACKET && op2->set == NON_TERM &&
+                op3->set == CHAR_RIGHT_BRACKET)
                 return LBR_NT_RBR;
 
-            if (op1->data->set_type_of_token == NON_TERM &&
-                op3->data->set_type_of_token == NON_TERM) //TODO non term by mohlo znamenat ze je to nejaka blbost?
+            if (op1->set == NON_TERM && op3->set == NON_TERM)
             {
-                switch (op2->data->set_type_of_token) {
+                switch (op2->set) {
                     // rule E -> E + E
                     case CHAR_OPERATOR_PLUS:
                         return NT_PLUS_NT;
@@ -132,11 +143,11 @@ static Prec_tab_rules test_rule(int num, Sitem *op1, Sitem *op2, Sitem *op3) {
  * @return Number of charatcters after stop symbol. Is valid only when stop_found was set to true.
  */
 static int num_of_symbols_after_stop(bool *stop_found) {
-    Sitem *tmp = stack_get_top_item(&stack);
+    Sitem *tmp = stack.top;
     int count = 0;
 
     while (tmp != NULL) {
-        if (tmp->set != STOP) {    //TODO
+        if (tmp->set != STOP) {
             *stop_found = false;
             count++;
         } else {
@@ -167,59 +178,59 @@ static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *o
     bool retype_op3_to_integer = false;
 
     if (rule == OPERAND) {
-        if (op1->data->data_type_of_token == UNDEFINED)
+        if (op1->type == UNDEFINED)
             return PROG_SEM_ERROR;
 
-        if (op1->data->data_type_of_token == BOOLEAN)
+        if (op1->type == BOOLEAN)
             return PROG_SEM_ERROR;
     }
 
     if (rule == LBR_NT_RBR) {
-        if (op2->data->data_type_of_token == UNDEFINED)
+        if (op2->type == UNDEFINED)
             return PROG_SEM_ERROR;
         //TODO kontrola zda to neni boolean
     }
 
     if (rule != OPERAND && rule != LBR_NT_RBR) {
-        if (op1->data->data_type_of_token == UNDEFINED || op3->data->data_type_of_token == UNDEFINED)
+        if (op1->type == UNDEFINED || op3->type == UNDEFINED)
             return PROG_SEM_ERROR;
 
-        if (op1->data->data_type_of_token == BOOLEAN || op3->data->data_type_of_token == BOOLEAN)
+        if (op1->type == BOOLEAN || op3->type == BOOLEAN)
             return PROG_SEM_ERROR;
     }
 
     switch (rule) {
         case OPERAND:
-            *final_type = op1->data->data_type_of_token;
+            *final_type = op1->type;
             break;
 
         case LBR_NT_RBR:
-            *final_type = op2->data->data_type_of_token;
+            *final_type = op2->type;
             break;
 
         case NT_PLUS_NT:
         case NT_MINUS_NT:
         case NT_MUL_NT:
-            if (op1->data->data_type_of_token == STRING_DT && op3->data->data_type_of_token == STRING_DT &&
+            if (op1->type == STRING_DT && op3->type == STRING_DT &&
                 rule == NT_PLUS_NT) {
                 *final_type = STRING_DT;
                 break;
             }
 
-            if (op1->data->data_type_of_token == INT && op3->data->data_type_of_token == INT) {
+            if (op1->type == INT && op3->type == INT) {
                 *final_type = INT;
                 break;
             }
 
-            if (op1->data->data_type_of_token == STRING_DT || op3->data->data_type_of_token == STRING_DT)
+            if (op1->type == STRING_DT || op3->type == STRING_DT)
                 return PROG_SEM_ERROR;
 
             *final_type = FLOAT;
 
-            if (op1->data->data_type_of_token == INT)
+            if (op1->type == INT)
                 retype_op1_to_double = true;
 
-            if (op3->data->data_type_of_token == INT)
+            if (op3->type == INT)
                 retype_op3_to_double = true;
 
             break;
@@ -227,10 +238,10 @@ static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *o
         case NT_DIV_NT:
             *final_type = INT;
 
-            if (op1->data->data_type_of_token == STRING_DT || op3->data->data_type_of_token == STRING_DT)
+            if (op1->type == STRING_DT || op3->type == STRING_DT)
                 return PROG_SEM_ERROR;
 
-            if (op1->data->data_type_of_token == INT && op3->data->data_type_of_token == INT)
+            if (op1->type == INT && op3->type == INT)
                 break;
 /*TODO
  * Operátor / značí dělení dvou číselných operandů. Je-li alespoň jeden operand Float,
@@ -248,10 +259,10 @@ nepravda. Bez rozšíření BOOLOP není s výsledkem porovnání možné dále 
 jej využít pouze u příkazů if a while.
  */
             *final_type = FLOAT;
-            if (op1->data->data_type_of_token == FLOAT)
+            if (op1->type == FLOAT)
                 retype_op3_to_double = true;
 
-            if (op3->data->data_type_of_token == FLOAT)
+            if (op3->type == FLOAT)
                 retype_op1_to_double = true;
             break;
 
@@ -263,13 +274,13 @@ jej využít pouze u příkazů if a while.
         case NT_MTN_NT:
             *final_type = BOOLEAN;
 
-            if (op1->data->data_type_of_token == FLOAT && op3->data->data_type_of_token == INT)
+            if (op1->type == FLOAT && op3->type == INT)
                 retype_op3_to_double = true;
 
-            else if (op1->data->data_type_of_token == INT && op3->data->data_type_of_token == FLOAT)
+            else if (op1->type == INT && op3->type == FLOAT)
                 retype_op1_to_double = true;
 
-            else if (op1->data->data_type_of_token != op3->data->data_type_of_token)
+            else if (op1->type != op3->type)
                 return PROG_SEM_ERROR;
 
             break;
@@ -317,7 +328,6 @@ static int reduce_by_rule() {
 
     int count = num_of_symbols_after_stop(&found);
 
-
     if (count == 1 && found) {
         op1 = stack.top;
         rule_for_code_gen = test_rule(count, op1, NULL, NULL);
@@ -340,7 +350,6 @@ static int reduce_by_rule() {
         GENERATE_CODE(generate_concats);
     } else {
         switch (rule_for_code_gen) {
-            {
                 case NT_PLUS_NT:
                     generate_adds();
                 break;
@@ -355,10 +364,6 @@ static int reduce_by_rule() {
 
                 case NT_DIV_NT:
                     generate_divs();
-                break;
-
-                case NT_IDIV_NT:
-                    generate_idivs();
                 break;
 
                 case NT_EQ_NT:
@@ -384,16 +389,18 @@ static int reduce_by_rule() {
                 case NT_MTN_NT:
                     generate_gts();
                 break;
-            }
+
+                default:
+                    break;
+
         }
 
         stack_pop_count(&stack, count + 1);
         stack_push(&stack, NULL, NON_TERM, final_type);
-
-        return 0;
     }
+    return 0;
 }
-
+//TODO
 //pridat kontrolu deleni nulou
     int expression(tDList *list, struct tToken *save_location) {
         int result = SYNTAX_ERROR;
@@ -414,7 +421,7 @@ static int reduce_by_rule() {
                 actual_symbol = list->Act->token.set_type_of_token;
             else
                 actual_symbol = DOLLAR;
-            top_stack_terminal = stack_get_top_item(&stack);
+            top_stack_terminal = stack_get_top_term(&stack);
 
             if (top_stack_terminal == NULL)
                 FREE_RESOURCES_RETURN(INTERNAL_ERROR);
@@ -458,7 +465,7 @@ static int reduce_by_rule() {
             }
         } while (!success);
 
-        Sitem *final_non_terminal = stack_get_top_item(&stack);
+        Sitem *final_non_terminal = stack.top;
         if (final_non_terminal == NULL)
             ErrorPrint(INTERNAL_ERROR, "[expressions]");
         if (final_non_terminal->set != NON_TERM)
