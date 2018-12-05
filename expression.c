@@ -78,63 +78,50 @@ static Prec_table_index_enum prec_table_index(set_type type) {
  */
 static Prec_tab_rules test_rule(int num, Sitem *op1, Sitem *op2, Sitem *op3) {
     switch (num) {
-        case 1:
-            // rule E -> i
+        case 1:         // rule E -> i
             if (op1->set == IDENTIFIER_NAME || op1->set == CHAR_INTEGER ||
                 op1->set == CHAR_DOUBLE || op1->set == LITERAL_STRING)
                 return OPERAND;
 
             return NOT_A_RULE;
 
-        case 3:
-            // rule E -> (E)
+        case 3:         // E -> (E)
             if (op1->set == CHAR_LEFT_BRACKET && op2->set == NON_TERM &&
                 op3->set == CHAR_RIGHT_BRACKET)
                 return LBR_NT_RBR;
 
             if (op1->set == NON_TERM && op3->set == NON_TERM) {
                 switch (op2->set) {
-                    // rule E -> E + E
-                    case CHAR_OPERATOR_PLUS:
+                    case CHAR_OPERATOR_PLUS:    // E -> E + E
                         return NT_PLUS_NT;
 
-                        // rule E -> E - E
-                    case CHAR_OPERATOR_MINUS:
+                    case CHAR_OPERATOR_MINUS:   // E -> E - E
                         return NT_MINUS_NT;
 
-                        // rule E -> E * E
-                    case CHAR_OPERATOR_MUL:
+                    case CHAR_OPERATOR_MUL:     // E -> E * E
                         return NT_MUL_NT;
 
-                        // rule E -> E / E
-                    case CHAR_OPERATOR_DIV:
+                    case CHAR_OPERATOR_DIV:     // E -> E / E
                         return NT_DIV_NT;
 
-                        // rule E -> E = E
-                    case CHAR_EQUALS:
+                    case CHAR_EQUALS:           // E -> E = E
                         return NT_EQ_NT;
 
-                        // rule E -> E <> E
-                    case CHAR_NEQ:
+                    case CHAR_NEQ:              // E -> E <> E
                         return NT_NEQ_NT;
 
-                        // rule E -> E <= E
-                    case CHAR_LEQ:
+                    case CHAR_LEQ:              // E -> E <= E
                         return NT_LEQ_NT;
 
-                        // rule E -> E < E
-                    case CHAR_LT:
+                    case CHAR_LT:               // E -> E < E
                         return NT_LTN_NT;
 
-                        // rule E -> E >= E
-                    case CHAR_GEQ:
+                    case CHAR_GEQ:              // E -> E >= E
                         return NT_MEQ_NT;
 
-                        // rule E -> E > E
-                    case CHAR_GT:
+                    case CHAR_GT:               // E -> E > E
                         return NT_MTN_NT;
 
-                        // invalid operator
                     default:
                         return NOT_A_RULE;
                 }
@@ -350,7 +337,10 @@ static int reduce_by_rule(struct tToken *save_location) {
                 break;
 
             case NT_DIV_NT:
-                generate_divs();
+                if(final_type == FLOAT)
+                    generate_divs();
+                else
+                    generate_idivs();
                 break;
 
             case NT_EQ_NT:
@@ -390,8 +380,6 @@ static int reduce_by_rule(struct tToken *save_location) {
     return 0;
 }
 
-//TODO
-//pridat kontrolu deleni nulou
 int expression(tDList *list, struct tToken *save_location) {
     struct tToken *tmp;
     if ((tmp = symtable_get(&hTable, save_location->content_string)) != NULL)
