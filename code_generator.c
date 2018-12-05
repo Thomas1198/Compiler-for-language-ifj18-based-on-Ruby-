@@ -144,7 +144,7 @@ void generate_value(struct tToken var) {
             ADD_CODE("\n");
             return;
         case FLOAT:
-            sprintf(string, "%a", var.value.d);
+            sprintf(string, "%a", var.value.f);
             ADD_CODE("float@");
             ADD_CODE(string);
             ADD_CODE("\n");
@@ -207,7 +207,6 @@ void generate_label(int label_index) {
     ADD_CODE("LABEL $");
     ADD_CODE("%");
     ADD_INTEGER(label_index);
-    ADD_CODE("\n");
 
 }
 
@@ -219,19 +218,21 @@ void generate_if_start(int label_index) {
     ADD_CODE("JUMPIFEQ $");
     ADD_CODE("%");
     ADD_INTEGER(label_index);
-    ADD_CODE(" GF@%result bool@false\n");
+    ADD_CODE("_else GF@%result bool@false\n");
 }
 
 
 void generate_if_else_part(int label_index) {
     ADD_CODE("JUMP $");
     ADD_CODE("%");
-    ADD_INTEGER(label_index );
+    ADD_INTEGER(label_index);
     ADD_CODE("\n");
 
     ADD_INSTRUCTION("# Else");
 
     generate_label(label_index);
+    ADD_CODE("_else \n");
+
 
 }
 
@@ -239,6 +240,8 @@ void generate_if_else_part(int label_index) {
 void generate_if_end(int label_index) {
     ADD_INSTRUCTION("# End If");
     generate_label(label_index);
+    ADD_CODE("\n");
+
 }
 
 
@@ -246,6 +249,8 @@ void generate_while_head(int label_index) {
     ADD_INSTRUCTION("\n# Do While");
 
     generate_label(label_index);
+    ADD_CODE("\n");
+
 }
 
 
@@ -253,6 +258,7 @@ void generate_while_start(int label_index) {
     ADD_CODE("JUMPIFEQ $");
     ADD_CODE("%");
     ADD_INTEGER(label_index);
+    ADD_CODE("\n");
     ADD_CODE(" GF@%result bool@false");
     ADD_CODE("\n");
 }
@@ -267,6 +273,8 @@ void generate_while_end(int label_index) {
     ADD_INSTRUCTION("# Loop");
 
     generate_label(label_index);
+    ADD_CODE("\n");
+
 }
 
 

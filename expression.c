@@ -183,8 +183,6 @@ static int num_of_symbols_after_stop(bool *stop_found) {
 static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *op3, data_type *final_type) {
     bool retype_op1_to_double = false;
     bool retype_op3_to_double = false;
-    bool retype_op1_to_integer = false;
-    bool retype_op3_to_integer = false;
 
     if (rule == OPERAND) {
         if (op1->set == UNDEFINED)
@@ -197,7 +195,6 @@ static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *o
     if (rule == LBR_NT_RBR) {
         if (op2->type == UNDEFINED)
             return PROG_SEM_ERROR;
-        //TODO kontrola zda to neni boolean
     }
 
     if (rule != OPERAND && rule != LBR_NT_RBR) {
@@ -250,23 +247,12 @@ static int check_semantics(Prec_tab_rules rule, Sitem *op1, Sitem *op2, Sitem *o
             if (op1->type == STRING_DT || op3->type == STRING_DT)
                 return PROG_SEM_ERROR;
 
+            if (op3->is_null)
+                return ZERO_DIVISION_ERROR;
+
             if (op1->type == INT && op3->type == INT)
                 break;
-/*TODO
- * Operátor / značí dělení dvou číselných operandů. Je-li alespoň jeden operand Float,
-je výsledek dělení Float, jinak je operátor proveden jako celočíselné dělení a výsledkem
-je Integer. Při dělení nulou dochází k běhové14 chybě 9.
 
-Pro relační operátory <, >, <=, >=, ==, != platí, že výsledkem porovnání je pravdi-
-vostní hodnota a že mají stejnou sémantiku jako v jazyce Ruby. Tyto operátory pracují s ope-
-randy stejného typu, a to Integer, Float nebo String. Je-li jeden operand Integer a
-
-druhý Float, je operand typu Integer konvertován na Float. U řetězců se porovnání
-provádí lexikograficky. Operátory == a != umožňují porovnávat i operandy různých typů
-(včetně nil), kdy, nedojde-li k implicitní konverzi mezi Integer a Float, je výsledek
-nepravda. Bez rozšíření BOOLOP není s výsledkem porovnání možné dále pracovat a lze
-jej využít pouze u příkazů if a while.
- */
             *final_type = FLOAT;
             if (op1->type == FLOAT)
                 retype_op3_to_double = true;
@@ -298,21 +284,12 @@ jej využít pouze u příkazů if a while.
             break;
     }
 
-    //TODO
     if (retype_op1_to_double) {
         GENERATE_CODE(generate_stack_op2_to_double);
     }
 
     if (retype_op3_to_double) {
         GENERATE_CODE(generate_stack_op1_to_double);
-    }
-
-    if (retype_op1_to_integer) {
-        GENERATE_CODE(generate_stack_op2_to_integer);
-    }
-
-    if (retype_op3_to_integer) {
-        GENERATE_CODE(generate_stack_op1_to_integer);
     }
 
     return 0;
@@ -405,9 +382,11 @@ static int reduce_by_rule(struct tToken *save_location) {
 
         }
     }
+    bool is_null_tmp = stack.top->is_null;
     stack_pop_count(&stack, count + 1);
     stack_push(&stack, NULL, NON_TERM, final_type);
     save_location->data_type_of_token = final_type;
+    stack.top->is_null =is_null_tmp;
     return 0;
 }
 

@@ -23,6 +23,7 @@ typedef struct stack_item {
     struct tToken *data;      /// pointer to token
     set_type set;
     data_type type;
+    bool is_null;
     struct stack_item *next; /// pointer to next item
 } Sitem;
 

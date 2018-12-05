@@ -8,7 +8,7 @@
 #include "code_generator.h"
 #include "error.h"
 #include "symtable.h"
-#define PREC_TAB_SIZE 8 //TODO one smaller
+#define PREC_TAB_SIZE 7
 
 
 /**

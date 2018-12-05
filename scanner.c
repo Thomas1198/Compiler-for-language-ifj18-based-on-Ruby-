@@ -378,13 +378,13 @@ struct tToken process_integer(struct tToken token) {
 
 struct tToken process_decimal(struct tToken token) {
     char *arrayofchars;
-    double value = strtod(token.content_string->str, &arrayofchars);
+    float value = (float) strtod(token.content_string->str, &arrayofchars);
     if (*arrayofchars) {
         dynamic_string_free(token.content_string);
         ErrorPrint(INTERNAL_ERROR, "[scanner.c][process_decimal]");
     }
 
-    token.value.d = value;
+    token.value.f = value;
     token.set_type_of_token = CHAR_DOUBLE;
     token.data_type_of_token = FLOAT;
     return token;
