@@ -37,7 +37,7 @@ int end_req, lable,if_count;
 
 bool func,b_else;
 
-struct tToken *act_fun, *inputs, *inputi, *inputf, *print,*length,*subsrt,*ord,*chr;
+struct tToken *act_fun, *inputs, *inputi, *inputf, *print,*length,*subsrt,*ord,*chr,*end;
 
 Symtable hTable;
 

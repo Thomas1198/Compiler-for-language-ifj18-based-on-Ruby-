@@ -224,6 +224,11 @@ void init_build_in() {
     dynamic_string_add_const_str(chr->content_string, "chr");
     chr->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, chr);
+
+    end = (struct tToken *) malloc(sizeof(struct tToken));
+    init_token(end);
+    chr->set_type_of_token = KEY_WORD_END;
+
 }
 
 bool is_set_type(struct tToken token, set_type set_type1) {
@@ -981,7 +986,7 @@ int assign_value(tDList *token_list) {
 
     }
 
-    errcode = expression(&tmp_list, &token_actual);
+    errcode = expression(&tmp_list, end);
     if (errcode != 0) {
         return errcode;
     }
@@ -1000,6 +1005,7 @@ void free_build_in() {
     free(subsrt);
     free(ord);
     free(chr);
+    free(end);
 }
 
 int parse_else(tDList *token_list) {
