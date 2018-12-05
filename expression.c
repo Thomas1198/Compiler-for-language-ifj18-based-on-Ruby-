@@ -70,22 +70,22 @@ static Prec_tab_rules test_rule(int num, Sitem *op1, Sitem *op2, Sitem *op3) {
     switch (num) {
         case 1:
             // rule E -> i
-            if (op1->data->set_type_of_token == IDENTIFIER_NAME || op1->data->set_type_of_token == CHAR_INTEGER ||
-                op1->data->set_type_of_token == NUMBER_DOUBLE || op1->data->set_type_of_token == LITERAL_STRING)
+            if (op1->set == IDENTIFIER_NAME || op1->set == CHAR_INTEGER ||
+                op1->set == NUMBER_DOUBLE || op1->set == LITERAL_STRING)
                 return OPERAND;
 
             return NOT_A_RULE;
 
         case 3:
             // rule E -> (E)
-            if (op1->data->set_type_of_token == CHAR_LEFT_BRACKET && op2->data->set_type_of_token == NON_TERM &&
-                op3->data->set_type_of_token == CHAR_RIGHT_BRACKET)
+            if (op1->set == CHAR_LEFT_BRACKET && op2->set == NON_TERM &&
+                op3->set == CHAR_RIGHT_BRACKET)
                 return LBR_NT_RBR;
 
-            if (op1->data->set_type_of_token == NON_TERM &&
-                op3->data->set_type_of_token == NON_TERM) //TODO non term by mohlo znamenat ze je to nejaka blbost?
+            if (op1->set == NON_TERM &&
+                op3->set == NON_TERM) //TODO non term by mohlo znamenat ze je to nejaka blbost?
             {
-                switch (op2->data->set_type_of_token) {
+                switch (op2->set) {
                     // rule E -> E + E
                     case CHAR_OPERATOR_PLUS:
                         return NT_PLUS_NT;
