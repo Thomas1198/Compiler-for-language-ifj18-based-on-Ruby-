@@ -181,6 +181,48 @@ void init_build_in() {
     dynamic_string_add_const_str(print->content_string, "print");
     print->set_type_of_token = IDENTIFIER_NAME;
     symtable_insert(&hTable, print);
+
+
+    length = (struct tToken *) malloc(sizeof(struct tToken));
+    init_token(length);
+    length->funkce = true;
+    length->defined = true;
+    length->par_count = 1;
+    length->build_id = true;
+    dynamic_string_add_const_str(print->content_string, "length");
+    length->set_type_of_token = IDENTIFIER_NAME;
+    symtable_insert(&hTable, length);
+
+    subsrt = (struct tToken *) malloc(sizeof(struct tToken));
+    init_token(subsrt);
+    subsrt->funkce = true;
+    subsrt->defined = true;
+    subsrt->par_count = 3;
+    subsrt->build_id = true;
+    dynamic_string_add_const_str(print->content_string, "subsrt");
+    subsrt->set_type_of_token = IDENTIFIER_NAME;
+    symtable_insert(&hTable, subsrt);
+
+
+    ord = (struct tToken *) malloc(sizeof(struct tToken));
+    init_token(ord);
+    ord->funkce = true;
+    ord->defined = true;
+    ord->par_count = 2;
+    ord->build_id = true;
+    dynamic_string_add_const_str(print->content_string, "ord");
+    ord->set_type_of_token = IDENTIFIER_NAME;
+    symtable_insert(&hTable, ord);
+
+    chr = (struct tToken *) malloc(sizeof(struct tToken));
+    init_token(chr);
+    chr->funkce = true;
+    chr->defined = true;
+    chr->par_count = 1;
+    chr->build_id = true;
+    dynamic_string_add_const_str(print->content_string, "chr");
+    chr->set_type_of_token = IDENTIFIER_NAME;
+    symtable_insert(&hTable, chr);
 }
 
 bool is_set_type(struct tToken token, set_type set_type1) {
@@ -938,6 +980,10 @@ int assign_value(tDList *token_list) {
 
     }
 
+    errcode = expression(&tmp_list, &token_actual);
+    if (errcode != 0) {
+        return errcode;
+    }
 
     return 0;
 
@@ -949,6 +995,10 @@ void free_build_in() {
     free(inputi);
     free(inputs);
     free(print);
+    free(length);
+    free(subsrt);
+    free(ord);
+    free(chr);
 }
 
 int parse_else(tDList *token_list) {
