@@ -202,20 +202,9 @@ void generate_var_decl(struct tToken var) {
 }
 
 
-void generate_var_pass_value(struct tToken var) {
-    ADD_CODE("MOVE LF@%");
-    ADD_CODE(var.content_string->str);
-    ADD_CODE(" ");
-    generate_value(var);
-    ADD_CODE("\n");
-}
 
-
-void generate_label(struct tToken function, int label_index, int label_deep) {
+void generate_label(int label_index) {
     ADD_CODE("LABEL $");
-    ADD_CODE(function.content_string->str);
-    ADD_CODE("%");
-    ADD_INTEGER(label_deep);
     ADD_CODE("%");
     ADD_INTEGER(label_index);
     ADD_CODE("\n");
@@ -226,51 +215,42 @@ void generate_if_head() {
     ADD_INSTRUCTION("\n# If Then");
 }
 
-void generate_if_start(struct tToken function, int label_index, int label_deep) {
+void generate_if_start(int label_index) {
     ADD_CODE("JUMPIFEQ $");
-    ADD_CODE(function.content_string->str);
-    ADD_CODE("%");
-    ADD_INTEGER(label_deep);
     ADD_CODE("%");
     ADD_INTEGER(label_index);
     ADD_CODE(" GF@%result bool@false\n");
 }
 
 
-void generate_if_else_part(struct tToken function, int label_index, int label_deep) {
+void generate_if_else_part(int label_index) {
     ADD_CODE("JUMP $");
-    ADD_CODE(function.content_string->str);
     ADD_CODE("%");
-    ADD_INTEGER(label_deep);
-    ADD_CODE("%");
-    ADD_INTEGER(label_index + 1);
+    ADD_INTEGER(label_index );
     ADD_CODE("\n");
 
     ADD_INSTRUCTION("# Else");
 
-    generate_label(function, label_index, label_deep);
+    generate_label(label_index);
 
 }
 
 
-void generate_if_end(struct tToken function, int label_index, int label_deep) {
+void generate_if_end(int label_index) {
     ADD_INSTRUCTION("# End If");
-    generate_label(function, label_index, label_deep);
+    generate_label(label_index);
 }
 
 
-void generate_while_head(struct tToken function, int label_index, int label_deep) {
+void generate_while_head(int label_index) {
     ADD_INSTRUCTION("\n# Do While");
 
-    generate_label(function, label_index, label_deep);
+    generate_label(label_index);
 }
 
 
-void generate_while_start(struct tToken function, int label_index, int label_deep) {
+void generate_while_start(int label_index) {
     ADD_CODE("JUMPIFEQ $");
-    ADD_CODE(function.content_string->str);
-    ADD_CODE("%");
-    ADD_INTEGER(label_deep);
     ADD_CODE("%");
     ADD_INTEGER(label_index);
     ADD_CODE(" GF@%result bool@false");
@@ -278,18 +258,15 @@ void generate_while_start(struct tToken function, int label_index, int label_dee
 }
 
 
-void generate_while_end(struct tToken function, int label_index, int label_deep) {
+void generate_while_end(int label_index) {
     ADD_CODE("JUMP $");
-    ADD_CODE(function.content_string->str);
-    ADD_CODE("%");
-    ADD_INTEGER(label_deep);
     ADD_CODE("%");
     ADD_INTEGER(label_index - 1);
     ADD_CODE("\n");
 
     ADD_INSTRUCTION("# Loop");
 
-    generate_label(function, label_index, label_deep);
+    generate_label(label_index);
 }
 
 

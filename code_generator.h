@@ -300,7 +300,7 @@ void generate_var_decl(struct tToken var);
  * Nepouzivej
  */
 
-void generate_label(struct tToken function, int label_index, int label_deep);
+void generate_label(int label_index);
 
 /**
  * @brief generate if head
@@ -313,7 +313,7 @@ void generate_if_head();
  * @param label_index index of label
  * @param label_deep deep of label
  */
-void generate_if_start(struct tToken function, int label_index, int label_deep);
+void generate_if_start(int label_index);
 
 /**
  * @brief generate if else
@@ -321,7 +321,7 @@ void generate_if_start(struct tToken function, int label_index, int label_deep);
  * @param label_index index of label
  * @param label_deep deep of label
  */
-void generate_if_else_part(struct tToken function, int label_index, int label_deep);
+void generate_if_else_part(int label_index);
 
 /**
  * @brief generate if end
@@ -329,7 +329,7 @@ void generate_if_else_part(struct tToken function, int label_index, int label_de
  * @param label_index index of label
  * @param label_deep deep of label
  */
-void generate_if_end(struct tToken function, int label_index, int label_deep);
+void generate_if_end(int label_index);
 
 /**
  * @brief generate while end
@@ -337,7 +337,7 @@ void generate_if_end(struct tToken function, int label_index, int label_deep);
  * @param label_index index of label
  * @param label_deep deep of label
  */
-void generate_while_head(struct tToken function, int label_index, int label_deep);
+void generate_while_head(int label_index);
 
 /**
  * @brief generate while start
@@ -345,7 +345,7 @@ void generate_while_head(struct tToken function, int label_index, int label_deep
  * @param label_index index of label
  * @param label_deep deep of label
  */
-void generate_while_start(struct tToken function, int label_index, int label_deep);
+void generate_while_start(int label_index);
 
 /**
  * @brief generate while end
@@ -353,7 +353,7 @@ void generate_while_start(struct tToken function, int label_index, int label_dee
  * @param label_index index of label
  * @param label_deep deep of label
  */
-void generate_while_end(struct tToken function, int label_index, int label_deep);
+void generate_while_end(int label_index);
 
 
 /**

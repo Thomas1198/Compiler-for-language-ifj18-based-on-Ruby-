@@ -30,7 +30,7 @@ typedef struct stack_item {
 /**
  * @struct Stack representation.
  */
-typedef struct {
+typedef struct tStack{
     Sitem *top; /// Pointer to stack item on top of stack.
 } Symstack;
 
@@ -104,5 +104,6 @@ bool stack_is_empty(Symstack *stack);
  */
 void stack_free(Symstack *stack);
 
+struct tToken *get_top(Symstack *stack);
 
 #endif //PROJECT_STACK_H

@@ -33,7 +33,7 @@
                         is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))
 
 
-int end_req, if_id, if_deep, if_act;
+int end_req,lable;
 
 bool func;
 
@@ -43,12 +43,7 @@ Symtable hTable;
 
 tDList token_list;
 
-enum Exp_end {
-    OP_IF,
-    OP_WHILE
-};
-
-enum Exp_end exp_end;
+struct tStack *lables_stack;
 
 int run_parser(FILE *source_code);
 

@@ -81,6 +81,7 @@ struct tToken {
     int par_count;
     bool more_params;
     bool build_id;
+    bool assigned;
 };
 
 //TODO: dopsat komentar

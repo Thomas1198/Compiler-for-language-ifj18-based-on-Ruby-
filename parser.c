@@ -9,6 +9,10 @@ int run_parser(FILE *source_code) {
 
     symtable_create(&hTable);
 
+    stack_init(lables_stack);
+
+    lables_stack=(struct tStack*)malloc(sizeof(struct tStack));
+
     func = false;
 
     generator_start();
@@ -16,7 +20,7 @@ int run_parser(FILE *source_code) {
     if ((error_code = first_run(&token_list, source_code)) != 0) {
         //TODO uvolnění paměti
         generator_clear();
-
+        stack_free(lables_stack);
         exit(error_code);
     }
 
@@ -24,14 +28,16 @@ int run_parser(FILE *source_code) {
     if ((error_code = parsing(token_list)) != 0) {
         //TODO uvolneni pameti
         //generator_clear();
+        stack_free(lables_stack);
         free_build_in();
         exit(error_code);
     }
-
+    stack_free(lables_stack);
     write_code();
     generator_clear();
     free_build_in();
     DLDisposeList(&token_list);
+    free(lables_stack);
     return 0;
 }
 
@@ -315,26 +321,31 @@ int parsing(tDList token_list) {
 
 int parse_end(tDList *token_list) {
     end_req--;
-    struct tToken *main;
-    main = (struct tToken *) malloc(sizeof(struct tToken));
-    init_token(main);
-
-
-    dynamic_string_add_const_str(main->content_string, "main");
-    if (end_req == 0 && func) {
-        generate_function_ret(*act_fun);
-        generate_function_end(*act_fun);
-        func = false;
-    } else {
-        generate_if_end(*main, if_id + 1, if_deep);
-        if_deep--;
-    }
 
     if (end_req < 0) {
         return SYNTAX_ERROR;
     }
 
-    free(main);
+    if (end_req == 0 && func) {
+        generate_function_ret(*act_fun);
+        generate_function_end(*act_fun);
+        func = false;
+    } else {
+        struct tToken *tmp = get_top(lables_stack);
+
+        if (is_set_type(*tmp, KEY_WORD_IF)) {
+
+            generate_if_end(tmp->value.i);
+
+        } else if (is_set_type(*tmp, KEY_WORD_WHILE)) {
+            generate_while_end(tmp->value.i);
+        } else {
+            exit(99);
+        }
+        stack_pop(lables_stack);
+    }
+
+
     return check_end_of_line(&(*token_list));
 }
 
@@ -413,17 +424,6 @@ int check_end_of_line(tDList *token_list) {
 
 int parse_if(tDList *token_list) {
     int err_code;
-    struct tToken *main;
-
-    if_deep++;
-    if_act = if_id;
-    if_id = if_id + 2;
-
-    main = (struct tToken *) malloc(sizeof(struct tToken));
-
-    init_token(main);
-
-    dynamic_string_add_const_str(main->content_string, "main");
 
     generate_if_head();
 
@@ -433,13 +433,20 @@ int parse_if(tDList *token_list) {
         return err_code;
     }
 
-    if (!func) {
-        generate_if_start(*main, if_act, if_deep);
-    } else {
-        generate_if_start(*act_fun, if_act, if_deep);
-    }
+    struct tToken *tmp;
 
-    free(main);
+    tmp = (struct tToken *) malloc(sizeof(struct tToken));
+    init_token(tmp);
+
+    tmp->value.i = lable++;
+
+    stack_push(lables_stack, tmp, KEY_WORD_IF, INT);
+
+    if (!func) {
+        generate_if_start(tmp->value.i);
+    } else {
+        generate_if_start(tmp->value.i);
+    }
     return 0;
 }
 
@@ -543,7 +550,16 @@ int parse_assign_value(tDList *token_list) {
 
     DLInitList(&tmp_list);
 
-    generate_var_decl(token_list->Act->lptr->token);
+
+
+    tmp=symtable_get(&hTable, token_actual.content_string);
+
+    if(tmp!=NULL){
+        if(!tmp->assigned){
+            tmp->assigned=true;
+            generate_var_decl(token_list->Act->lptr->token);
+        }
+    }
 
     value = &token_list->Act->lptr->token;
 

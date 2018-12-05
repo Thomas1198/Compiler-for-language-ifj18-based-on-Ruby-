@@ -99,6 +99,10 @@ Sitem *stack_get_top_term(Symstack *stack) {
     return NULL;
 }
 
+struct tToken *get_top(Symstack *stack) {
+
+    return stack->top->data;
+}
 
 bool stack_is_empty(Symstack *stack) {
     if (stack->top != NULL)
