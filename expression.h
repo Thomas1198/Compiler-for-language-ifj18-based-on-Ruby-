@@ -8,15 +8,6 @@
 #include "code_generator.h"
 #include "error.h"
 
-#define FREE_RESOURCES_RETURN(return_code)		\
-	do {										\
-		stack_free(&stack);						\
-	} while(0)
-
-#define GENERATE_CODE(_callback, ...)								\
-	(_callback(__VA_ARGS__))
-
-
 #define PREC_TAB_SIZE 8 //TODO one smaller
 
 
