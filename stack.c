@@ -22,12 +22,13 @@ bool stack_push(Symstack *stack, struct tToken *token, set_type set, data_type t
         new_item->data = token;
         new_item->set = token->set_type_of_token;
         new_item->type =token->data_type_of_token;
-        new_item->next = stack->top;
     } else {
         new_item->data = NULL;
         new_item->set = set;
         new_item->type = type;
     }
+
+    new_item->next = stack->top;
 
     stack->top = new_item;
     return true;
@@ -53,7 +54,6 @@ bool stack_insert_after_top(Symstack *stack, struct tToken *token, set_type set,
                 new_item->data = token;
                 new_item->set = token->set_type_of_token;
                 new_item->type =token->data_type_of_token;
-                new_item->next = stack->top;
             } else {
                 new_item->data = NULL;
                 new_item->set = set;

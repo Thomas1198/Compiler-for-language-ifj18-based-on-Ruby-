@@ -148,7 +148,7 @@ static int num_of_symbols_after_stop(bool *stop_found) {
     int count = 0;
 
     while (tmp != NULL) {
-        if (tmp->set != STOP) {    //TODO
+        if (tmp->set != STOP) {
             *stop_found = false;
             count++;
         } else {
@@ -328,7 +328,7 @@ static int reduce_by_rule() {
     bool found = false;
 
     int count = num_of_symbols_after_stop(&found);
-
+    //TODO z nejakeho duvodu u posledniho "tokenu" napocita count 2 misto tri, zastavi se na tom, ze '+' ktere ma nonterm je vetsi nez STOP
 
     if (count == 1 && found) {
         op1 = stack.top;
@@ -339,7 +339,7 @@ static int reduce_by_rule() {
         op3 = stack.top;
         rule_for_code_gen = test_rule(count, op1, op2, op3);
     } else
-        return SYNTAX_ERROR;
+        return SYNTAX_ERROR;    //TODO TADY SPADNE
 
     if (rule_for_code_gen == NOT_A_RULE)
         return SYNTAX_ERROR;
