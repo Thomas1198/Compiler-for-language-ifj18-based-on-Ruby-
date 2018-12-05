@@ -13,10 +13,8 @@
 		return return_code;						\
 	} while(0)
 
-#define GENERATE_CODE(_callback, ...)								\
-	do {										\
-	(_callback(__VA_ARGS__))	\
-	} while(0)
+#define GENERATE_CODE(_callback, ...)	(_callback(__VA_ARGS__))
+
 
 #define PREC_TAB_SIZE 8
 
@@ -89,6 +87,6 @@ int prec_table[PREC_TAB_SIZE][PREC_TAB_SIZE] =
  * @param data Pointer to parser's internal data.
  * @return Given exit code.
  */
-int expression(tDList *list, struct tToken *save_location)
+int expression(tDList *list, struct tToken *save_location);
 
 #endif //PROJECT_EXPRESSION_H

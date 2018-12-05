@@ -801,7 +801,7 @@ int assign_value(tDList *token_list) {
                 return SYNTAX_ERROR;
             }
         } else if (is_set_type(token_actual, IDENTIFIER_NAME) || is_set_type(token_actual, CHAR_INTEGER) ||
-                   is_set_type(token_actual, DOUBLE) ||
+                   is_set_type(token_actual, CHAR_DOUBLE) ||
                    is_set_type(token_actual, LITERAL_STRING)) {
 
             tmp = symtable_get(&hTable, token_actual.content_string);
