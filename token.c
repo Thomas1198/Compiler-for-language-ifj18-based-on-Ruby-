@@ -12,9 +12,10 @@ void init_token(struct tToken *token) {
     token->defined = false;
     token->value.i = 0;
     token->value.f = 0.0;
-    token->funkce = false;
     token->content_string = dynamic_string_init();
     token->par_count = 0;
     token->more_params=false;
-    token->build_id;
+    token->build_id=false;
+    token->assigned=false;
+    token->funkce = false;
 }

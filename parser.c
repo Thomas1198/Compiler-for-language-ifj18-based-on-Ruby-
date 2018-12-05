@@ -849,7 +849,7 @@ int parse_condition_expr(tDList *token_list, int set, tDList *tmp_list) {
 
 int assign_value(tDList *token_list) {
     int br_count = 0, errcode = 0;
-    struct tToken token_actual, *tmp;
+    struct tToken token_actual, *tmp=NULL;
     bool exp_value = false, exp_ar = false, first = false;
     tDList tmp_list;
 
@@ -863,7 +863,7 @@ int assign_value(tDList *token_list) {
             try_next_token_list_p(token_actual, token_list);
         }
         first = true;
-        if (is_set_type(token_actual, IDENTIFIER_NAME)) {
+        if (token_actual.set_type_of_token==IDENTIFIER_NAME) {
             tmp = symtable_get(&hTable, token_actual.content_string);
         }
         if (tmp != NULL) {
