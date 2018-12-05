@@ -315,18 +315,24 @@ int parsing(tDList token_list) {
 
 int parse_end(tDList *token_list) {
     end_req--;
+    struct tToken *main;
+    main = (struct tToken *) malloc(sizeof(struct tToken));
+    init_token(main);
 
+    dynamic_string_add_const_str(main->content_string, "main");
     if (end_req == 0 && func) {
         generate_function_ret(*act_fun);
         generate_function_end(*act_fun);
         func = false;
     }
+    //  generate_if_end(*main,1,1);
+
 
     if (end_req < 0) {
         return SYNTAX_ERROR;
     }
 
-
+    free(main);
     return check_end_of_line(&(*token_list));
 }
 
@@ -405,9 +411,12 @@ int check_end_of_line(tDList *token_list) {
 
 int parse_if(tDList *token_list) {
     int err_code;
-    struct tToken main;
+    struct tToken *main;
+    main = (struct tToken *) malloc(sizeof(struct tToken));
 
-    dynamic_string_add_const_str(main.content_string,"main");
+    init_token(main);
+
+    dynamic_string_add_const_str(main->content_string, "main");
 
     generate_if_head();
 //TODO
@@ -418,12 +427,13 @@ int parse_if(tDList *token_list) {
         return err_code;
     }
 
-    if(func){
-        generate_if_start(main);
-    } else{
-        generate_if_start(act_fun,);
+    if (func) {
+        //     generate_if_start(*main,1,1);
+    } else {
+        //   generate_if_start(*act_fun,1,1);
     }
 
+    free(main);
     return 0;
 }
 
@@ -438,14 +448,22 @@ int parse_while(tDList *token_list) {
 int parse_condition(tDList *token_list, int set) {
     int errcode;
 
-    if ((errcode = parse_condition_expr(token_list, NONE)) != 0) {
+    tDList *tmp_list;
+    tmp_list = (tDList *) malloc(sizeof(tDList));
+
+    DLInitList(tmp_list);
+
+    if ((errcode = parse_condition_expr(token_list, NONE, tmp_list)) != 0) {
+        free(tmp_list);
         return errcode;
     }
 
-    if ((errcode = parse_condition_expr(token_list, set)) != 0) {
+    if ((errcode = parse_condition_expr(token_list, set, tmp_list)) != 0) {
+        free(tmp_list);
         return errcode;
     }
 
+    free(tmp_list);
     return check_end_of_line(token_list);
 }
 
@@ -535,7 +553,7 @@ int parse_assign_value(tDList *token_list) {
         }
         if (is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
             br_count++;
-
+            DLInsertLast(&(tmp_list), token_actual);
             if (exp_ar) {
                 return SYNTAX_ERROR;
             }
@@ -544,7 +562,7 @@ int parse_assign_value(tDList *token_list) {
             exp_ar = false;
         } else if (is_set_type(token_actual, CHAR_RIGHT_BRACKET)) {
             br_count--;
-
+            DLInsertLast(&(tmp_list), token_actual);
             if (exp_value) {
                 return SYNTAX_ERROR;
             }
@@ -596,10 +614,10 @@ int parse_assign_value(tDList *token_list) {
     token_list->Act = token_list->Act->lptr;
 
 
-    expression(&tmp_list, value);
+    errcode = expression(&tmp_list, value);
 
 
-    return 0;
+    return errcode;
 
 }
 
@@ -700,8 +718,8 @@ int parse_call_function(tDList *token_list, int count) {
 
 }
 
-int parse_condition_expr(tDList *token_list, int set) {
-    int br_count = 0;
+int parse_condition_expr(tDList *token_list, int set, tDList *tmp_list) {
+    int br_count = 0, errorcode;
     struct tToken token_actual, *tmp;
     bool exp_value = false, exp_ar = false;
 
@@ -710,6 +728,7 @@ int parse_condition_expr(tDList *token_list, int set) {
 
         if (is_set_type(token_actual, CHAR_LEFT_BRACKET)) {
             br_count++;
+            DLInsertLast(tmp_list, token_actual);
 
             if (exp_ar) {
                 return SYNTAX_ERROR;
@@ -719,7 +738,7 @@ int parse_condition_expr(tDList *token_list, int set) {
             exp_ar = false;
         } else if (is_set_type(token_actual, CHAR_RIGHT_BRACKET)) {
             br_count--;
-
+            DLInsertLast(tmp_list, token_actual);
             if (exp_value) {
                 return SYNTAX_ERROR;
             }
@@ -733,6 +752,7 @@ int parse_condition_expr(tDList *token_list, int set) {
                    is_set_type(token_actual, CHAR_DOUBLE) ||
                    is_set_type(token_actual, LITERAL_STRING)) {
 
+            DLInsertLast(tmp_list, token_actual);
             tmp = symtable_get(&hTable, token_actual.content_string);
 
             if (tmp != NULL && !tmp->defined) {
@@ -748,7 +768,7 @@ int parse_condition_expr(tDList *token_list, int set) {
 
 
         } else if (aritmetic_char) {
-
+            DLInsertLast(tmp_list, token_actual);
             if (!exp_ar) {
                 return SYNTAX_ERROR;
             }
@@ -759,6 +779,7 @@ int parse_condition_expr(tDList *token_list, int set) {
                    is_set_type(token_actual, set)) {
             break;
         } else if (reational_char) {
+            DLInsertLast(tmp_list, token_actual);
             break;
         } else {
             return SYNTAX_ERROR;
@@ -768,7 +789,9 @@ int parse_condition_expr(tDList *token_list, int set) {
         return SYNTAX_ERROR;
     }
 
-    return 0;
+    errorcode = expression(tmp_list, &token_actual);
+
+    return errorcode;
 }
 
 

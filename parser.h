@@ -33,7 +33,7 @@
                         is_set_type(token_actual, CHAR_GT) || is_set_type(token_actual, KEY_WORD_NOT))
 
 
-int end_req,if_id,if_deep,if_act;
+int end_req, if_id, if_deep, if_act;
 
 bool func;
 
@@ -42,6 +42,13 @@ struct tToken *act_fun, *inputs, *inputi, *inputf, *print;
 Symtable hTable;
 
 tDList token_list;
+
+enum Exp_end {
+    OP_IF,
+    OP_WHILE
+};
+
+enum Exp_end exp_end;
 
 int run_parser(FILE *source_code);
 
@@ -71,7 +78,7 @@ int parse_assign_value(tDList *token_list);
 
 int parse_call_function(tDList *token_list, int count);
 
-int parse_condition_expr(tDList *token_list, int set);
+int parse_condition_expr(tDList *token_list, int set, tDList *tmp_list);
 
 int assign_value(tDList *token_list);
 
