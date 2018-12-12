@@ -1,0 +1,45 @@
+CC=gcc
+CFLAGS=-lm -Wall -pedantic
+TARGETS = symtable_test
+
+all: $(TARGETS)
+
+symtable_test: symtable.o symtable_test.c
+		$(CC) $(CFLAGS) symtable.o symtable_test.c -o symtable_test
+
+symtable.o: token.h symtable.c symtable.h dynamic_string.o error.o
+		$(CC) $(CFLAGS) token.h symtable.c symtable.h dynamic_string.o error.o -c
+
+dynamic_string_test: dynamic_string.o dynamic_string_test.c
+		$(CC) $(CFLAGS) dynamic_string.o dynamic_string_test.c -o dynamic_string_test
+
+dynamic_string.o: dynamic_string.c dynamic_string.h
+		$(CC) $(CFLAGS) dynamic_string.c dynamic_string.h -c
+
+generator_test_1: generator_test_1.c code_generator.o
+	$(CC) $(CFLAGS) code_generator.o dynamic_string.o generator_test_1.c -o generator_test_1
+
+generator_test_2: generator_test_2.c code_generator.o token.o
+	$(CC) $(CFLAGS) code_generator.o dynamic_string.o generator_test_2.c -o generator_test_2
+
+code_generator.o: code_generator.c code_generator.h
+	$(CC) $(CFLAGS) code_generator.c code_generator.h -c
+
+token_list_test:  token_list_test.c dynamic_string.o token_list.o token.h error.o
+		$(CC) $(CFLAGS) token_list_test.c dynamic_string.o token_list.o token.h error.o -o token_list_test
+
+token_list.o: token_list.c token_list.h token.o dynamic_string.o
+	$(CC) $(CFLAGS) token_list.c token_list.h -c
+
+error.o: error.h error.c
+	$(CC) $(CFLAGS) error.h error.c -c
+
+
+clean:
+	rm -f *.o
+
+run:
+	time ./generator_test_1
+
+zip: *.c *.h Makefile
+	zip xdorda00.zip *.c *.h Makefile
