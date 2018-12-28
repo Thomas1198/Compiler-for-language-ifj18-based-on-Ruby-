@@ -6,4 +6,6 @@ You can find more in task.pdf (for english google translate usually works quite 
 You can find translated task description using google translate in /docs/Task description-EN.pdf.
 (Translated only by google translator so excuse please things like translator instead of compiler...)
 
-
+Launch with ./ifj18 {FILE}
+where FILE is ruby file with input (code.ruby)
+if FILE is not entered compiler uses stdin
